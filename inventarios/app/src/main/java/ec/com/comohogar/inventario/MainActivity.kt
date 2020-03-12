@@ -1,8 +1,7 @@
 package ec.com.comohogar.inventario
 
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
+import android.util.Log
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -10,11 +9,13 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
+import androidx.navigation.fragment.NavHostFragment
+import ec.com.comohogar.inventario.scanner.ScanActivity
+import ec.com.comohogar.inventario.ui.conteo.ConteoFragment
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ScanActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -24,11 +25,6 @@ class MainActivity : AppCompatActivity() {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        val fab: FloatingActionButton = findViewById(R.id.fab)
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
@@ -53,5 +49,29 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    override fun refrescarPantalla(codigoLeido: String) {
+        Log.i("hijo", "hijo")
+        val navHostFragment = supportFragmentManager.fragments.first() as? NavHostFragment
+        if(navHostFragment != null) {
+            val childFragments = navHostFragment.childFragmentManager.fragments
+            val fragment = childFragments.get(0)
+            if(fragment is ConteoFragment){
+                fragment.refrescarPantalla(codigoLeido)
+            }
+        }
+    }
+
+    override fun refrescarEstado(estado: String) {
+        Log.i("hijo", "hijo")
+        val navHostFragment = supportFragmentManager.fragments.first() as? NavHostFragment
+        if(navHostFragment != null) {
+            val childFragments = navHostFragment.childFragmentManager.fragments
+            val fragment = childFragments.get(0)
+            if(fragment is ConteoFragment){
+                fragment.refrescarEstado(estado)
+            }
+        }
     }
 }

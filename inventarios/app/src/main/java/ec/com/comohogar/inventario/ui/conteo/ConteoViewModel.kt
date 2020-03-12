@@ -1,21 +1,23 @@
 package ec.com.comohogar.inventario.ui.conteo
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import ec.com.comohogar.inventario.modelo.UsuarioResponse
-import ec.com.comohogar.inventario.webservice.APIService
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import ec.com.comohogar.inventario.webservice.ApiClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class ConteoViewModel : ViewModel() {
 
     var zona = MutableLiveData<String>()
     var barra = MutableLiveData<String>()
-    var cantidad = MutableLiveData<Int>()
+    var cantidad = MutableLiveData<String>()
     var barraAnterior = MutableLiveData<String>()
-    var cantidadAnterior = MutableLiveData<Int>()
+    var cantidadAnterior = MutableLiveData<String>()
+
+    var saltoPorScaneo: Boolean? = false
+
 
     fun setZona(value: String) {
         this.zona.value = value
@@ -25,7 +27,7 @@ class ConteoViewModel : ViewModel() {
         this.barra.value = value
     }
 
-    fun setCantidad(value: Int) {
+    fun setCantidad(value: String) {
         this.cantidad.value = value
     }
 
@@ -33,36 +35,53 @@ class ConteoViewModel : ViewModel() {
         this.barraAnterior.value = value
     }
 
-    fun setCantidadAnterior(value: Int) {
+    fun setCantidadAnterior(value: String) {
         this.cantidadAnterior.value = value
     }
 
     fun guardarConteo() {
-        login()
-        if (!barra.value.toString().equals("")) {
+        guardar()
+        if (!saltoPorScaneo!! && !barra.value.toString().equals("")) {
             this.barraAnterior.value = barra.value.toString()
+            this.cantidadAnterior.value = cantidad.value.toString()
         }
     }
 
-    private fun login() {
-        doAsync {
-            val call = getRetrofit().create(APIService::class.java).login().execute()
-            val usuario = call.body() as UsuarioResponse
-            uiThread {
-                if(usuario.idUsuario != null) {
+    fun limpiarFormulario() {
+        if(!saltoPorScaneo!!) {
+            this.barra.value = ""
+        }else{
+            saltoPorScaneo = false
+        }
+        this.cantidad.value = ""
+    }
 
-                }else{
+    private fun guardar() {
+        var cant: String? = cantidad.value.toString()
+        var barr: String? = barra.value.toString()
 
-                }
+        if(saltoPorScaneo!!) {
+
+            barr = barraAnterior.value
+            cant = cantidadAnterior.value
+        }
+        Log.i("barra", barr + " / " + cant)
+        val call: Call<Long> = ApiClient.getClient.ingresarConteo(178,1144, zona.value!!, barr!!,
+            cant!!.toInt()
+        )
+       // val call: Call<Usuario> = ApiClient.getClient.ingresarConteoUsuario(178,1144,"1004-02-2","8711269927381", 10,70,1 )
+        call.enqueue(object : Callback<Long> {
+
+            override fun onResponse(call: Call<Long>?, response: Response<Long>?) {
+                Log.i("respuesta", response!!.body()!!.toString())
+                limpiarFormulario()
             }
-        }
-    }
 
-    private fun getRetrofit(): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl("http://app.sukasa.com:8080/erp-rest/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+            override fun onFailure(call: Call<Long>, t: Throwable) {
+                Log.i("error", "error")
+            }
+
+        })
     }
 
 }

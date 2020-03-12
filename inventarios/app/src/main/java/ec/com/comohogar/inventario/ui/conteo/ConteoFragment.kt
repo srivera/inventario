@@ -1,9 +1,11 @@
 package ec.com.comohogar.inventario.ui.conteo
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -12,14 +14,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import ec.com.comohogar.inventario.R
 import ec.com.comohogar.inventario.databinding.FragmentConteoBinding
-import ec.com.comohogar.inventario.modelo.UsuarioResponse
-import ec.com.comohogar.inventario.webservice.APIService
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import android.content.Context
+import android.view.KeyEvent
 
-class ConteoFragment : Fragment() {
+class ConteoFragment : Fragment(), View.OnKeyListener {
 
     private lateinit var conteoViewModel: ConteoViewModel
 
@@ -29,6 +27,7 @@ class ConteoFragment : Fragment() {
 
     private var textBarraAnterior: TextView? = null
     private var textCantidadAnterior: TextView? = null
+    private var textEstado: TextView? = null
 
     private var buttonGuardar: Button? = null
 
@@ -61,33 +60,96 @@ class ConteoFragment : Fragment() {
 
         textBarraAnterior = root.findViewById(R.id.textBarraAnterior)
         textCantidadAnterior = root.findViewById(R.id.textCantidadAnterior)
+        textEstado = root.findViewById(R.id.textEstado)
 
         buttonGuardar = root.findViewById(R.id.buttonGuardar)
 
+        editCantidad?.setOnKeyListener(this)
+
+        editCantidad?.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus) {
+                val imm =
+                    activity?.applicationContext?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm!!.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+            }
+
+        }
+        editBarra?.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus) {
+                val imm = activity?.applicationContext?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(view.windowToken, 0)
+            }
+
+        }
+        editZona?.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus) {
+                conteoViewModel.zona.value = ""
+                val imm = activity?.applicationContext?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(view.windowToken, 0)
+            }
+
+        }
         return root
     }
 
 
-    private fun getRetrofit(): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl("http://app.sukasa.com:8080/erp-rest/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+     fun refrescarPantalla(codigoLeido: String) {
+        Log.i("fragment", "fragment")
+         if(editZona!!.hasFocus()) {
+             editZona!!.setText(codigoLeido)
+             editBarra?.requestFocus()
+         } else if(editBarra!!.hasFocus()) {
+             editBarra!!.setText(codigoLeido)
+             editCantidad?.requestFocus()
+         } else if(editCantidad!!.hasFocus()) {
+             conteoViewModel.saltoPorScaneo = true
+             conteoViewModel.barraAnterior.value = conteoViewModel.barra.value
+             conteoViewModel.cantidadAnterior.value = conteoViewModel.cantidad.value
+             conteoViewModel.barra.value = codigoLeido
+             //conteoViewModel.cantidad.value = ""
+             editBarra!!.setText(codigoLeido)
+             editCantidad?.requestFocus()
+             guardarConteo()
+         }
+     }
+
+    fun refrescarEstado(estado: String) {
+        textEstado?.setText(estado)
     }
 
-    private fun searchByName(query: String) {
-        doAsync {
-            val call = getRetrofit().create(APIService::class.java).consultarUsuario("$query/images").execute()
-            val usuario = call.body() as UsuarioResponse
-            uiThread {
-                if(usuario.idUsuario != null) {
+    override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_ENTER && event?.action == KeyEvent.ACTION_UP){
+            if(v?.id == R.id.editCantidad){
+                guardarConteo()
 
-                }else{
-
-                }
             }
         }
+        return false
     }
 
-
+    fun guardarConteo() {
+        var guardar: Boolean? = true
+        if (editZona?.text.isNullOrBlank()) {
+            editZona?.error = "Ingrese la zona"
+            guardar = false
+        }else{
+            editZona?.error = null
+        }
+        if (editBarra?.text.isNullOrBlank()) {
+            editBarra?.error = "Ingrese la barra"
+            guardar = false
+        }else{
+            editBarra?.error = null
+        }
+        if (editCantidad?.text.isNullOrBlank()) {
+            editCantidad?.error = "Ingrese la cantidad"
+            guardar = false
+        }else{
+            editCantidad?.error = null
+        }
+        if(guardar!!) {
+            //editBarra?.requestFocus()
+            conteoViewModel.guardarConteo()
+        }
+    }
 }
