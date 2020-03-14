@@ -26,7 +26,7 @@
     <string name="cantidadAnterior">Cantidad anterior</string>
     <string name="buttonGuardar">Guardar</string>
     <string name="title_activity_login">Ingresar</string>
-    <string name="prompt_email">Email</string>
+    <string name="empleado">Número de empleado</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>

@@ -6,12 +6,12 @@
     <data>
 
         <variable
-            name="conteoViewModel"
-            type="ec.com.comohogar.inventario.ui.conteo.ConteoViewModel" />
+            name="reconteoLocalViewModel"
+            type="ec.com.comohogar.inventario.ui.reconteolocal.ReconteoLocalViewModel" />
 
         <variable
             name="uiController"
-            type="ec.com.comohogar.inventario.ui.conteo.ConteoFragment" />
+            type="ec.com.comohogar.inventario.ui.reconteolocal.ReconteoLocalFragment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -98,7 +98,7 @@
                             android:singleLine="true"
                             android:nextFocusDown="@+id/editBarra"
                             android:background="@drawable/rounded_corner"
-                            android:text="@={conteoViewModel.zona}"
+                            android:text="@={reconteoLocalViewModel.zona}"
                             android:inputType="phone"
                             android:textSize="18sp" />
 
@@ -133,7 +133,7 @@
                             android:nextFocusDown="@+id/editCantidad"
                             android:fontFamily="sans-serif"
                             android:background="@drawable/rounded_corner"
-                            android:text="@={conteoViewModel.barra}"
+                            android:text="@={reconteoLocalViewModel.barra}"
                             android:singleLine="true"
                             android:inputType="phone"
                             android:textSize="18sp" />
@@ -169,7 +169,7 @@
                             android:fontFamily="sans-serif"
                             android:inputType="numberSigned"
                             android:background="@drawable/rounded_corner"
-                            android:text="@={conteoViewModel.cantidad}" />
+                            android:text="@={reconteoLocalViewModel.cantidad}" />
                     </LinearLayout>
                     <Button
                         android:id="@+id/buttonGuardar"
@@ -251,7 +251,7 @@
                             android:fontFamily="sans-serif"
                             android:gravity="right"
                             android:layout_gravity="right"
-                            android:text="@={conteoViewModel.barraAnterior}"
+                            android:text="@={reconteoLocalViewModel.barraAnterior}"
                             android:textSize="14sp" />
 
                     </LinearLayout>
@@ -282,7 +282,7 @@
                             android:layout_weight="0.7"
                             android:fontFamily="sans-serif"
                             android:layout_gravity="right"
-                            android:text='@={conteoViewModel.cantidadAnterior}'
+                            android:text='@={reconteoLocalViewModel.cantidadAnterior}'
                             android:gravity="right"
                             android:textSize="14sp" />
 

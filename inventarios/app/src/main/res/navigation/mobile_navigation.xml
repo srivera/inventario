@@ -12,8 +12,8 @@
         tools:layout="@layout/fragment_conteo" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="ec.com.comohogar.inventario.ui.gallery.GalleryFragment"
+        android:id="@+id/nav_reconteo_local"
+        android:name="ec.com.comohogar.inventario.ui.reconteolocal.ReconteoLocalFragment"
         android:label="@string/menu_gallery"
         tools:layout="@layout/fragment_gallery" />
 

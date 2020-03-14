@@ -1,6 +1,5 @@
 package ec.com.comohogar.inventario.scanner;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -10,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.symbol.emdk.EMDKManager;
-import com.symbol.emdk.EMDKResults;
 import com.symbol.emdk.barcode.BarcodeManager;
 import com.symbol.emdk.barcode.ScanDataCollection;
 import com.symbol.emdk.barcode.Scanner;
@@ -20,11 +18,7 @@ import com.symbol.emdk.barcode.ScannerInfo;
 import com.symbol.emdk.barcode.ScannerResults;
 import com.symbol.emdk.barcode.StatusData;
 
-import java.io.Console;
-import java.util.ArrayList;
 import java.util.List;
-
-import ec.com.comohogar.inventario.R;
 
 public abstract class ScanActivity extends AppCompatActivity implements
         EMDKManager.EMDKListener, Scanner.DataListener, Scanner.StatusListener,
