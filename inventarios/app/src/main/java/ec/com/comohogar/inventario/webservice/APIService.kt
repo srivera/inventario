@@ -1,11 +1,11 @@
 package ec.com.comohogar.inventario.webservice
 
 import ec.com.comohogar.inventario.modelo.*
+import ec.com.comohogar.inventario.persistencia.entities.ReconteoBodega
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Path
-import retrofit2.http.Url
 
 interface APIService {
     //@GET
@@ -21,13 +21,13 @@ interface APIService {
     fun consultarInventarioLugar(@Path(value="idLocal") idLocal: Long): Call<Inventario>
 
     @GET("erp-movil/inv/binTipoInventario/{idInventario}")
-    fun binTipoInventario(@Path(value="idInventario") idInventario: Long): Call<Int>
+    fun binTipoInventario(@Path(value="idInventario") idInventario: Int?): Call<Int>
 
     @GET("erp-movil/inv/consultarLocales")
     fun consultarLocales(): Call<List<Lugar>>
 
     @GET("erp-movil/inv/consultarAsignacionUsuario/{empCodigo}/{nombrePocket}")
-    fun consultarAsignacionUsuario(@Path(value="empCodigo") empCodigo: Long,  @Path(value="nombrePocket")  nombrePocket: String): Call<Usuario>
+    fun consultarAsignacionUsuario(@Path(value="empCodigo") empCodigo: Long,  @Path(value="nombrePocket")  nombrePocket: String): Call<List<AsignacionUsuario>>
 
     @GET("erp-movil/inv/consultarConteo/{idConteo}/{idUsuario}/{barras}")
     fun consultarConteo(@Path(value="idConteo") idConteo: Long,  @Path(value="idUsuario")  idUsuario: Long, @Path(value="barras")  barras: String): Call<Int>
@@ -84,5 +84,9 @@ interface APIService {
     fun actualizarListaReconteo(@Path(value="idUsuario") idUsuario: Long, @Path(value="idInventario")  idInventario: Long,
                                 @Path(value="numeroReconteo")  numeroReconteo: Long, @Path(value="cantidad") cantidad: Int): Call<Long>
 
+
+    @GET("erp-movil/inv/consultarRutaUsuario/{idInventario}/{numConteo}/{idUsuario}")
+    fun consultarRutaUsuario(@Path(value="idInventario")  idInventario: Long, @Path(value="numConteo")  numConteo: Long,
+                             @Path(value="idUsuario") idUsuario: Long): Call<List<ReconteoBodega>>
 
 }

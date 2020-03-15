@@ -1,6 +1,7 @@
 package ec.com.comohogar.inventario.ui.login
 
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -22,7 +23,8 @@ import ec.com.comohogar.inventario.util.Constantes
 import android.provider.Settings.Secure
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import ec.com.comohogar.inventario.modelo.Usuario
+import ec.com.comohogar.inventario.MainActivity
+import ec.com.comohogar.inventario.modelo.AsignacionUsuario
 
 
 class LoginActivity : AppCompatActivity(), View.OnKeyListener {
@@ -110,24 +112,47 @@ class LoginActivity : AppCompatActivity(), View.OnKeyListener {
 
         val deviceUniqueId = Secure.getString(getContentResolver(), Secure.ANDROID_ID)
 
-        val call: Call<Usuario> = ApiClient.getClient.consultarAsignacionUsuario(editUsuario.text.toString().toLong(), deviceUniqueId.toString())
-        call.enqueue(object : Callback<Usuario> {
+        val call: Call<List<AsignacionUsuario>> = ApiClient.getClient.consultarAsignacionUsuario(editUsuario.text.toString().toLong(), deviceUniqueId.toString())
+        call.enqueue(object : Callback<List<AsignacionUsuario>> {
 
-            override fun onResponse(call: Call<Usuario>?, response: Response<Usuario>?) {
+            override fun onResponse(call: Call<List<AsignacionUsuario>>?, response: Response<List<AsignacionUsuario>>?) {
                 Log.i("respuesta", response!!.body()!!.toString())
+                val asignacionUsuario = response.body()?.get(0)
                 val inventarioPreferences: SharedPreferences = getSharedPreferences(Constantes.PREF_NAME, 0)
                 val prefsEditor = inventarioPreferences.edit()
                 val gson = Gson()
-                val json = gson.toJson(response.body())
-                prefsEditor.putString(Constantes.USUARIO, json)
+                val json = gson.toJson(asignacionUsuario)
+                prefsEditor.putString(Constantes.ASIGNACION_USUARIO, json)
                 prefsEditor.commit()
+                verificarTipoInventario(asignacionUsuario?.binId?.toInt())
             }
 
-            override fun onFailure(call: Call<Usuario>, t: Throwable) {
+            override fun onFailure(call: Call<List<AsignacionUsuario>>, t: Throwable) {
                 Log.i("error", "error")
             }
 
         })
     }
 
+    private fun verificarTipoInventario(idInventario: Int?) {
+
+        val call: Call<Int> = ApiClient.getClient.binTipoInventario(idInventario)
+        call.enqueue(object : Callback<Int> {
+
+            override fun onResponse(call: Call<Int>?, response: Response<Int>?) {
+                Log.i("respuesta", response!!.body()!!.toString())
+                var tipoInventario = response.body().toString().toInt()
+                val inventarioPreferences: SharedPreferences = getSharedPreferences(Constantes.PREF_NAME, 0)
+                val prefsEditor = inventarioPreferences.edit()
+                prefsEditor.putInt(Constantes.TIPO_INVENTARIO, tipoInventario)
+                prefsEditor.commit()
+                startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+            }
+
+            override fun onFailure(call: Call<Int>, t: Throwable) {
+                Log.i("error", "error")
+            }
+
+        })
+    }
 }

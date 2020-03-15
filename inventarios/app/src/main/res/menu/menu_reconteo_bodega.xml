@@ -5,14 +5,6 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_conteo"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="@string/menu_conteo" />
-        <item
-            android:id="@+id/nav_reconteo_local"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="@string/reconteo_local" />
-        <item
             android:id="@+id/nav_reconteo_bodega"
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/reconteo_bodega" />

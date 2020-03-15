@@ -35,4 +35,12 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="inventarios_comohogar">Inventarios COMOHOGAR</string>
+    <string name="reconteo_bodega">Reconteo Bodega</string>
+    <string name="reconteo_local">Reconteo Local</string>
+    <string name="siguiente">Siguiente:</string>
+    <string name="actual">Actual:</string>
+    <string name="item">Item:</string>
+    <string name="descripcion">Descripción:</string>
+    <string name="vacio">Vacío</string>
+    <string name="siguiente_button">Siguiente</string>
 </resources>
