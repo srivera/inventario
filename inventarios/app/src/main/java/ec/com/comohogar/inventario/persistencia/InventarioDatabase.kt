@@ -9,7 +9,7 @@ import ec.com.comohogar.inventario.persistencia.dao.ReconteoBodegaDao
 import ec.com.comohogar.inventario.persistencia.entities.Conteo
 import ec.com.comohogar.inventario.persistencia.entities.ReconteoBodega
 
-@Database(entities = [Conteo::class, ReconteoBodega::class], version = 2)
+@Database(entities = [Conteo::class, ReconteoBodega::class], version = 1)
 abstract class InventarioDatabase : RoomDatabase() {
     abstract fun conteoDao(): ConteoDao
 

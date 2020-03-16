@@ -19,6 +19,7 @@ import android.os.AsyncTask
 import android.view.KeyEvent
 import com.google.gson.Gson
 import ec.com.comohogar.inventario.MainActivity
+import ec.com.comohogar.inventario.SesionAplicacion
 import ec.com.comohogar.inventario.databinding.FragmentReconteoBodegaBinding
 import ec.com.comohogar.inventario.modelo.AsignacionUsuario
 import ec.com.comohogar.inventario.persistencia.InventarioDatabase
@@ -40,6 +41,7 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
     private var textItem: TextView? = null
     private var textDescripcion: TextView? = null
     private var textEstado: TextView? = null
+    private var textPaginacion: TextView? = null
 
     private var editCodigoBarra: EditText? = null
     private var editCantidad: EditText? = null
@@ -49,6 +51,8 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
 
     private var db: InventarioDatabase? = null
     private var reconteoBodegaDao: ReconteoBodegaDao? = null
+
+    private var sesionAplicacion: SesionAplicacion? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -77,6 +81,7 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
         textItem = root.findViewById(R.id.textItem)
         textDescripcion = root.findViewById(R.id.textDescripcion)
         textEstado = root.findViewById(R.id.textEstado)
+        textPaginacion = root.findViewById(R.id.textPaginacion)
 
         editCodigoBarra = root.findViewById(R.id.editCodigoBarra)
         editCantidad = root.findViewById(R.id.editCantidad)
@@ -94,11 +99,13 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
             }
         }
 
+        sesionAplicacion = activity?.applicationContext as SesionAplicacion?
+
         db = InventarioDatabase.getInventarioDataBase(context = activity?.applicationContext!!)
         reconteoBodegaDao = db?.reconteoBodegaDao()
-        reconteoBodegaViewModel.indice.value = 1
+        reconteoBodegaViewModel.indice.value = 0
         cargarDatosPantalla()
-    //    recuperarReconteo()
+       // recuperarReconteo()
 
         return root
     }
@@ -182,37 +189,52 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
 
     }
 
-    private fun moverSiguiente() {
+    fun moverSiguiente() {
+        reconteoBodegaViewModel.indice.value = reconteoBodegaViewModel.indice.value?.plus(1)
+        reconteoBodegaViewModel.zonaActual.value = sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!)?.rcoUbicacion
+        reconteoBodegaViewModel.descripcion.value = sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!)?.descripcionItem
+        reconteoBodegaViewModel.barra.value = sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!)?.barra
+        reconteoBodegaViewModel.item.value = sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!)?.codigoItem
 
+        if(sesionAplicacion?.listaReconteoBodega?.size!! >= (reconteoBodegaViewModel.indice.value?.plus(1)!!)){
+            reconteoBodegaViewModel.zonaSiguiente.value = sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!.plus(1))?.rcoUbicacion
+        }
+        textPaginacion?.text = "Reg. " + reconteoBodegaViewModel.indice.value.toString() + "/" + reconteoBodegaViewModel.total.value.toString()
     }
 
 
-    class AsyncTaskCargarDatosReconteo(private var activity: MainActivity?, var reconteoBodegaViewModel: ReconteoBodegaViewModel) : AsyncTask<String, String, String>() {
+    class AsyncTaskCargarDatosReconteo(private var activity: MainActivity?, var reconteoBodegaViewModel: ReconteoBodegaViewModel) : AsyncTask<String, String, Int>() {
 
-        var listaReconteoBodega: List<ReconteoBodega>? = null
+        var sesionAplicacion: SesionAplicacion? = null
 
         override fun onPreExecute() {
             super.onPreExecute()
             activity?.progressBar?.visibility = View.VISIBLE
         }
 
-        override fun doInBackground(vararg p0: String?): String {
-            listaReconteoBodega = ArrayList<ReconteoBodega>()
+        override fun doInBackground(vararg p0: String?): Int? {
+            sesionAplicacion = activity?.applicationContext as SesionAplicacion?
             var db: InventarioDatabase? = null
             var reconteoBodegaDao: ReconteoBodegaDao? = null
             db = InventarioDatabase.getInventarioDataBase(context = activity?.applicationContext!!)
             reconteoBodegaDao = db?.reconteoBodegaDao()
-            listaReconteoBodega = reconteoBodegaDao?.getReconteosBodega()
-            return ""
+            sesionAplicacion?.listaReconteoBodega = reconteoBodegaDao?.getReconteosBodega()
+
+            return reconteoBodegaDao?.count()
         }
 
-        override fun onPostExecute(result: String?) {
+        override fun onPostExecute(result: Int?) {
             super.onPostExecute(result)
+            reconteoBodegaViewModel.total.value = result
             activity?.progressBar?.visibility = View.INVISIBLE
-            reconteoBodegaViewModel.zonaActual.value = listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!)?.rcoUbicacion
-            reconteoBodegaViewModel.descripcion.value = listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!)?.descripcionItem
-            reconteoBodegaViewModel.barra.value = listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!)?.barra
-            reconteoBodegaViewModel.item.value = listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!)?.codigoItem
+            reconteoBodegaViewModel.zonaActual.value = sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!)?.rcoUbicacion
+            reconteoBodegaViewModel.descripcion.value = sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!)?.descripcionItem
+            reconteoBodegaViewModel.barra.value = sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!)?.barra
+            reconteoBodegaViewModel.item.value = sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!)?.codigoItem
+
+            if(sesionAplicacion?.listaReconteoBodega?.size!! >= (reconteoBodegaViewModel.indice.value?.plus(1)!!)){
+                reconteoBodegaViewModel.zonaSiguiente.value = sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!.plus(1))?.rcoUbicacion
+            }
         }
     }
 }

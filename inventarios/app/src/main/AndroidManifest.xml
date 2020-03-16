@@ -8,7 +8,7 @@
 
     <application
         android:name=".SesionAplicacion"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@drawable/boxes"
         android:label="@string/app_name"
         android:roundIcon="@drawable/boxes"
