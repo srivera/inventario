@@ -104,8 +104,8 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
         db = InventarioDatabase.getInventarioDataBase(context = activity?.applicationContext!!)
         reconteoBodegaDao = db?.reconteoBodegaDao()
         reconteoBodegaViewModel.indice.value = 0
-        cargarDatosPantalla()
-       // recuperarReconteo()
+
+       recuperarReconteo()
 
         return root
     }
@@ -162,10 +162,13 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
                 var listaReconteoBodega = response!!.body()
 
                 AsyncTask.execute {
+                    reconteoBodegaDao?.eliminar()
                     for(reconteo in listaReconteoBodega!!){
                         reconteoBodegaDao?.insertarReconteoBodega(reconteo)
                         val i = reconteoBodegaDao?.count()
+                        Log.i("total", i.toString())
                     }
+                    cargarDatosPantalla()
                 }
             }
 
@@ -178,14 +181,6 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
 
     private fun cargarDatosPantalla() {
         AsyncTaskCargarDatosReconteo(this.activity as MainActivity?, reconteoBodegaViewModel).execute()
-        /* AsyncTask.execute {
-             var listaReconteoBodega = reconteoBodegaDao?.getReconteosBodega()
-             reconteoBodegaViewModel.zonaActual.value = listaReconteoBodega?.get(
-                 reconteoBodegaViewModel.indice.value!!
-             )
-                 ?.rcoUbicacion
-
-         }*/
 
     }
 

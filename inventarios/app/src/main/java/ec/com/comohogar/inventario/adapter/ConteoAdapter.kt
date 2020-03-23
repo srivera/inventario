@@ -7,10 +7,10 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import ec.com.comohogar.inventario.R
-import ec.com.comohogar.inventario.modelo.Lugar
+import ec.com.comohogar.inventario.modelo.Conteo
 
 
-class LocalAdapter(val context: Context, var listItemsTxt: List<Lugar>?) : BaseAdapter() {
+class ConteoAdapter(val context: Context, var listItemsTxt: List<Conteo>?) : BaseAdapter() {
 
 
     val mInflater: LayoutInflater = LayoutInflater.from(context)
@@ -33,7 +33,7 @@ class LocalAdapter(val context: Context, var listItemsTxt: List<Lugar>?) : BaseA
         params.height = 60
         view.layoutParams = params
 
-        vh.label.text = "   " + listItemsTxt?.get(position)?.lugNombre
+        vh.label.text =  "  Conteo: " + listItemsTxt?.get(position)?.cinNumConteo + " Id: " + listItemsTxt?.get(position)?.cinId
         return view
     }
 

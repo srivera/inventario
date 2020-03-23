@@ -6,21 +6,20 @@ import com.google.gson.annotations.SerializedName
 
 data class Conteo(
 
-
-        @SerializedName("lugId")
-        var lugId: kotlin.Long,
-        @SerializedName("forId")
-        var forId: kotlin.Long,
-        @SerializedName("forNombre")
-        val forNombre: String,
-        @SerializedName("lugCodigo")
-        val lugCodigo: String,
+        @SerializedName("cinId")
+        var cinId: kotlin.Long,
+        @SerializedName("binId")
+        var binId: kotlin.Long,
+        @SerializedName("cinObservacion")
+        val cinObservacion: String,
+        @SerializedName("usuId")
+        val usuId: Long,
         @SerializedName("lugNombre")
         val lugNombre: String,
-        @SerializedName("lugTipo")
-        var lugTipo: kotlin.Long,
-        @SerializedName("lugDireccion")
-        val lugDireccion: String,
-        @SerializedName("lugCodigoSri")
-        val lugCodigoSri: String)
+        @SerializedName("cinNumConteo")
+        var cinNumConteo: kotlin.Int,
+        @SerializedName("cinEstadoConteo")
+        val cinEstadoConteo: Int,
+        @SerializedName("cinTipoConteo")
+        val cinTipoConteo: String)
 

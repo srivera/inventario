@@ -18,7 +18,7 @@ interface APIService {
     fun login(): Call<Usuario>
 
     @GET("erp-movil/inv/consultarInventarioLugar/{idLocal}")
-    fun consultarInventarioLugar(@Path(value="idLocal") idLocal: Long): Call<Inventario>
+    fun consultarInventarioLugar(@Path(value="idLocal") idLocal: Long?): Call<List<Inventario>>
 
     @GET("erp-movil/inv/binTipoInventario/{idInventario}")
     fun binTipoInventario(@Path(value="idInventario") idInventario: Int?): Call<Int>
@@ -41,7 +41,7 @@ interface APIService {
                            @Path(value="idInventario") idInventario: Long): Call<ConteoPocketHistorico>
 
     @GET("erp-movil/inv/consultarNumeroConteo/{idInventario}")
-    fun consultarNumeroConteo(@Path(value="idInventario") idInventario: Long): Call<Conteo>
+    fun consultarNumeroConteo(@Path(value="idInventario") idInventario: Long?): Call<List<Conteo>>
 
     @GET("erp-movil/inv/consultarReconteoUsuario/{idInventario}/{numConteo}/{idUsuario}")
     fun consultarReconteoUsuario(@Path(value="idInventario") idInventario: Long, @Path(value="numConteo") numConteo: Long,
@@ -57,7 +57,7 @@ interface APIService {
     fun consultarZona(@Path(value="codigo") codigo: String): Call<EstructuraBodega>
 
     @GET("erp-movil/inv/ingresarConteo/{idUsuario}/{numeroConteo}/{zona}/{barra}/{cantidad}")
-    fun ingresarConteo(@Path(value="idUsuario") idUsuario: Long,  @Path(value="numeroConteo")  numeroConteo: Long,
+    fun ingresarConteo(@Path(value="idUsuario") idUsuario: Long?,  @Path(value="numeroConteo")  numeroConteo: Long?,
                        @Path(value="zona")  zona: String, @Path(value="barra")  barra: String,
                        @Path(value="cantidad")  cantidad: Int): Call<Long>
 

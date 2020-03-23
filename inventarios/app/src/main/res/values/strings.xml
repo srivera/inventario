@@ -28,12 +28,9 @@
     <string name="title_activity_login">Ingresar</string>
     <string name="empleado">Número de empleado</string>
     <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in">Ingresar</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">"Welcome !"</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
-    <string name="login_failed">"Login failed"</string>
     <string name="inventarios_comohogar">Inventarios COMOHOGAR</string>
     <string name="reconteo_bodega">Reconteo Bodega</string>
     <string name="reconteo_local">Reconteo Local</string>
@@ -43,4 +40,11 @@
     <string name="descripcion">Descripción:</string>
     <string name="vacio">Vacío</string>
     <string name="siguiente_button">Siguiente</string>
+    <string name="anterior">Anterior</string>
+    <string name="siguiente_btn">Siguiente</string>
+    <string name="ingresar">Ingresar</string>
+    <string name="seleccione_el_local">Seleccione el local</string>
+    <string name="ingresa_tu_n_mero_de_empleado">Ingrese su número de empleado</string>
+    <string name="selecciona_el_conteo">Seleccione el conteo</string>
+    <string name="selecciona_el_inventario">Seleccione el inventario</string>
 </resources>

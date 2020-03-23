@@ -91,7 +91,7 @@
                             android:textStyle="bold" />
 
                         <EditText
-                            android:id="@+id/editZona"
+                            android:id="@+id/editReconteoZona"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.7"

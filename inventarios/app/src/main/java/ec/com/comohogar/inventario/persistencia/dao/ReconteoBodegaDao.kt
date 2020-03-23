@@ -14,6 +14,9 @@ interface ReconteoBodegaDao {
     @Delete
     fun eliminarConteo(reconteoBodega: ReconteoBodega)
 
+    @Query("DELETE FROM ReconteoBodega")
+    fun eliminar()
+
     @Query("SELECT * FROM ReconteoBodega WHERE id == :id")
     fun getReconteoBodegaById(id: Int): List<ReconteoBodega>
 

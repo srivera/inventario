@@ -39,8 +39,8 @@ class ConteoViewModel : ViewModel() {
         this.cantidadAnterior.value = value
     }
 
-    fun guardarConteo() {
-        guardar()
+    fun guardarConteo(numeroConteo: Long?, idUsuario: Long?) {
+        guardar(numeroConteo, idUsuario)
         if (!saltoPorScaneo!! && !barra.value.toString().equals("")) {
             this.barraAnterior.value = barra.value.toString()
             this.cantidadAnterior.value = cantidad.value.toString()
@@ -56,7 +56,7 @@ class ConteoViewModel : ViewModel() {
         this.cantidad.value = ""
     }
 
-    private fun guardar() {
+    private fun guardar(numeroConteo: Long?, idUsuario: Long?) {
         var cant: String? = cantidad.value.toString()
         var barr: String? = barra.value.toString()
 
@@ -66,10 +66,10 @@ class ConteoViewModel : ViewModel() {
             cant = cantidadAnterior.value
         }
         Log.i("barra", barr + " / " + cant)
-        val call: Call<Long> = ApiClient.getClient.ingresarConteo(178,1144, zona.value!!, barr!!,
+
+        val call: Call<Long> = ApiClient.getClient.ingresarConteo(idUsuario, numeroConteo, zona.value!!, barr!!,
             cant!!.toInt()
         )
-       // val call: Call<Usuario> = ApiClient.getClient.ingresarConteoUsuario(178,1144,"1004-02-2","8711269927381", 10,70,1 )
         call.enqueue(object : Callback<Long> {
 
             override fun onResponse(call: Call<Long>?, response: Response<Long>?) {

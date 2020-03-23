@@ -10,8 +10,6 @@ data class Inventario(
 
         @SerializedName("binId")
         var binId: kotlin.Long,
-        @SerializedName("binFecha")
-        var binFecha: Date,
         @SerializedName("binTipoInventario")
         val binTipoInventario: Int,
         @SerializedName("binTipoMuestra")

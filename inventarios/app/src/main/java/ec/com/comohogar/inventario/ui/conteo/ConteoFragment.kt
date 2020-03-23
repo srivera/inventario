@@ -20,12 +20,14 @@ import ec.com.comohogar.inventario.persistencia.InventarioDatabase
 import ec.com.comohogar.inventario.persistencia.dao.ConteoDao
 import ec.com.comohogar.inventario.persistencia.entities.Conteo
 import android.os.AsyncTask
-
+import ec.com.comohogar.inventario.SesionAplicacion
 
 
 class ConteoFragment : Fragment(), View.OnKeyListener {
 
     private lateinit var conteoViewModel: ConteoViewModel
+
+    private var sesionAplicacion: SesionAplicacion? = null
 
     private var editZona: EditText? = null
     private var editBarra: EditText? = null
@@ -45,6 +47,7 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        sesionAplicacion = activity?.applicationContext as SesionAplicacion?
 
         val binding: FragmentConteoBinding
 
@@ -98,6 +101,7 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
             }
 
         }
+
         return root
     }
 
@@ -115,7 +119,7 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
              conteoViewModel.barraAnterior.value = conteoViewModel.barra.value
              conteoViewModel.cantidadAnterior.value = conteoViewModel.cantidad.value
              conteoViewModel.barra.value = codigoLeido
-             //conteoViewModel.cantidad.value = ""
+             conteoViewModel.cantidad.value = ""
              editBarra!!.setText(codigoLeido)
              editCantidad?.requestFocus()
              guardarConteo()
@@ -157,9 +161,6 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
             editCantidad?.error = null
         }
         if(guardar!!) {
-            //editBarra?.requestFocus()
-
-
             AsyncTask.execute {
                 // Insert Data
                 val conteo =  Conteo(barra = editBarra?.text.toString(),
@@ -171,7 +172,7 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
                 val conteos = conteoDao?.getConteos()
             }
 
-            conteoViewModel.guardarConteo()
+            conteoViewModel.guardarConteo(sesionAplicacion?.conteo?.cinId, sesionAplicacion?.empleado?.usuId)
         }
     }
 }
