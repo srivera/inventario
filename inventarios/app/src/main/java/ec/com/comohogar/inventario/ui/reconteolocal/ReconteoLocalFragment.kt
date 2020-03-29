@@ -158,7 +158,7 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
         }
         if (guardar!!) {
             // Insert Data
-            val conteo = Conteo(
+           /* val conteo = Conteo(
                 barra = editBarra?.text.toString(),
                 zona = editZona?.text.toString(),
                 cantidad = editCantidad?.text.toString().toInt()
@@ -166,7 +166,7 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
             db = InventarioDatabase.getInventarioDataBase(context = activity?.applicationContext!!)
             conteoDao = db?.conteoDao()
             val insertarConteo = conteoDao?.insertarConteo(conteo)
-            val conteos = conteoDao?.getConteos()
+            val conteos = conteoDao?.getConteos()*/
         }
 
         reconteoLocalViewModel.guardarConteo()

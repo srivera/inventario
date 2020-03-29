@@ -16,4 +16,7 @@ class ReconteoBodega (
     var usuIdAsignado: Int,
     var rcoUbicacion: String,
     var uinSecuencial: Int,
-    var rcoId: Long)
+    var rcoId: Long,
+    var estado: String,
+    var cantidad: Int,
+    var binId: Long)

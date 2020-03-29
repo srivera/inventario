@@ -19,31 +19,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5eab6262-55f4-447f-a6fc-ef67de0ac69d" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/navEditor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/navEditor.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/MainActivity.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/SesionAplicacion.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/SesionAplicacion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/SplashActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/SplashActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/adapter/LocalAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/adapter/LocalAdapter.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/modelo/Conteo.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/modelo/Conteo.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/modelo/Inventario.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/modelo/Inventario.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/persistencia/dao/ConteoDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/persistencia/dao/ConteoDao.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/persistencia/dao/ReconteoBodegaDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/persistencia/dao/ReconteoBodegaDao.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/persistencia/entities/Conteo.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/persistencia/entities/Conteo.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/persistencia/entities/ReconteoBodega.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/persistencia/entities/ReconteoBodega.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/conteo/ConteoFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/conteo/ConteoFragment.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/conteo/ConteoViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/conteo/ConteoViewModel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/login/LoginActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/login/LoginActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/reconteobodega/ReconteoBodegaFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/reconteobodega/ReconteoBodegaFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/reconteolocal/ReconteoLocalFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/reconteolocal/ReconteoLocalFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/reconteolocal/ReconteoLocalViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/reconteolocal/ReconteoLocalViewModel.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/util/Constantes.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/util/Constantes.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/webservice/APIService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/webservice/APIService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_login.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_login.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/drop_down_local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/drop_down_local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_conteo.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_conteo.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_reconteo_local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_reconteo_local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -83,60 +70,46 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_login.xml">
-          <provider editor-type-id="android-designer2" />
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/conteo/ConteoFragment.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="438">
-              <caret line="191" column="47" selection-start-line="191" selection-start-column="47" selection-end-line="191" selection-end-column="47" />
+            <state relative-caret-position="377">
+              <caret line="177" column="35" selection-start-line="177" selection-start-column="35" selection-end-line="177" selection-end-column="35" />
+              <folding>
+                <element signature="e#47#944#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/conteo/ConteoFragment.kt">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/MainActivity.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="461">
-              <caret line="174" column="91" selection-start-line="174" selection-start-column="75" selection-end-line="174" selection-end-column="91" />
+            <state relative-caret-position="-943">
+              <caret line="106" lean-forward="true" selection-start-line="106" selection-end-line="106" />
               <folding>
-                <element signature="e#47#893#0" expanded="true" />
+                <element signature="e#37#1737#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/scanner/ScanActivity.java">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/webservice/APIService.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="415">
-              <caret line="269" selection-start-line="269" selection-end-line="269" />
+            <state relative-caret-position="232">
+              <caret line="74" column="64" lean-forward="true" selection-start-line="71" selection-start-column="34" selection-end-line="74" selection-end-column="64" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/conteo/ConteoViewModel.kt">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/persistencia/dao/ConteoDao.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="208">
-              <caret line="42" selection-start-line="42" selection-end-line="42" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="242">
-              <caret line="28" column="28" selection-start-line="28" selection-start-column="28" selection-end-line="28" selection-end-column="28" />
-            </state>
-          </provider>
-          <provider editor-type-id="android-manifest" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/reconteobodega/ReconteoBodegaFragment.kt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1950">
-              <caret line="164" column="43" lean-forward="true" selection-start-line="164" selection-start-column="43" selection-end-line="164" selection-end-column="43" />
+            <state relative-caret-position="330">
+              <caret line="22" selection-start-line="22" selection-end-line="23" selection-end-column="42" />
+              <folding>
+                <element signature="e#54#140#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -144,8 +117,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/persistencia/dao/ReconteoBodegaDao.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="405">
-              <caret line="27" column="1" lean-forward="true" selection-start-line="27" selection-start-column="1" selection-end-line="27" selection-end-column="1" />
+            <state relative-caret-position="435">
+              <caret line="29" column="48" lean-forward="true" selection-start-line="29" selection-start-column="48" selection-end-line="29" selection-end-column="48" />
               <folding>
                 <element signature="e#54#148#0" expanded="true" />
               </folding>
@@ -153,11 +126,38 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/persistencia/entities/ReconteoBodega.kt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="75">
+              <caret line="6" column="22" lean-forward="true" selection-start-line="6" selection-start-column="22" selection-end-line="6" selection-end-column="22" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-29/android/os/Looper.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="382">
+              <caret line="167" column="58" lean-forward="true" selection-start-line="167" selection-start-column="58" selection-end-line="167" selection-end-column="58" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-29/android/os/AsyncTask.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="180">
+              <caret line="243" selection-start-line="243" selection-end-line="243" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/login/LoginActivity.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="243">
-              <caret line="149" column="9" lean-forward="true" selection-start-line="149" selection-start-column="9" selection-end-line="149" selection-end-column="9" />
+            <state relative-caret-position="180">
+              <caret line="68" selection-start-line="68" selection-end-line="68" />
               <folding>
                 <element signature="e#46#1182#0" expanded="true" />
               </folding>
@@ -166,22 +166,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/MainActivity.kt">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/inicial/InicialActivity.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="228">
-              <caret line="116" column="61" selection-start-line="116" selection-start-column="61" selection-end-line="116" selection-end-column="61" />
-              <folding>
-                <element signature="e#37#1304#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.room/room-common/2.2.0-rc01/924310c61a30c7a167a22f636331556bc654ec94/room-common-2.2.0-rc01-sources.jar!/androidx/room/Insert.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="88">
-              <caret line="80" column="18" selection-start-line="80" selection-start-column="18" selection-end-line="80" selection-end-column="18" />
+            <state relative-caret-position="450">
+              <caret line="38" selection-start-line="38" selection-end-line="38" />
             </state>
           </provider>
         </entry>
@@ -224,6 +212,7 @@
       <find>consultarNumeroConteo</find>
       <find>ena</find>
       <find>AsyncTaskCargarDatosReconteo</find>
+      <find>gson</find>
       <find>sesionAplicacion</find>
     </findStrings>
   </component>
@@ -239,21 +228,16 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/modelo/ConteoPocketHistorico.kt" />
-        <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/modelo/ReconteoUsuario.kt" />
         <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/modelo/Item.kt" />
         <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/modelo/EstructuraBodega.kt" />
         <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/login/LoginViewModel.kt" />
         <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/modelo/Empleado.kt" />
-        <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/reconteolocal/ReconteoLocalViewModel.kt" />
-        <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/reconteolocal/ReconteoLocalFragment.kt" />
         <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/reconteobodega/ReconteoLocalViewModel.kt" />
         <option value="$PROJECT_DIR$/app/src/main/res/navigation/mobile_navigation.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/menu/activity_main_drawer.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/menu/menu_conteo.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/menu/menu_reconteo_local.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/menu/menu_reconteo_bodega.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/persistencia/entities/ReconteoBodega.kt" />
         <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/modelo/AsignacionUsuario.kt" />
         <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/webservice/ApiClient.kt" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" />
@@ -262,16 +246,12 @@
         <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_reconteo_bodega.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/modelo/Inventario.kt" />
         <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/modelo/Conteo.kt" />
-        <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/SesionAplicacion.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/conteo/ConteoViewModel.kt" />
-        <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/webservice/APIService.kt" />
         <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/scanner/ScanActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_conteo.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_reconteo_local.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/InicialActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/colors.xml" />
         <option value="$PROJECT_DIR$/app/build.gradle" />
-        <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/util/Constantes.kt" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/styles.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/adapter/LocalAdapter.kt" />
         <option value="$PROJECT_DIR$/app/src/main/res/drawable/spinner_border.xml" />
@@ -283,13 +263,22 @@
         <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/adapter/ConteoAdapter.kt" />
         <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/adapter/InventarioAdapter.kt" />
         <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/SplashActivity.kt" />
-        <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/persistencia/dao/ReconteoBodegaDao.kt" />
         <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/reconteobodega/ReconteoBodegaFragment.kt" />
-        <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/MainActivity.kt" />
-        <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/conteo/ConteoFragment.kt" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_login.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/login/LoginActivity.kt" />
+        <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/util/Constantes.kt" />
+        <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/SesionAplicacion.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/conteo/ConteoFragment.kt" />
+        <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/persistencia/entities/Conteo.kt" />
+        <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/persistencia/dao/ConteoDao.kt" />
+        <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/reconteolocal/ReconteoLocalFragment.kt" />
+        <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/webservice/APIService.kt" />
+        <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/conteo/ConteoViewModel.kt" />
+        <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/reconteolocal/ReconteoLocalViewModel.kt" />
+        <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/persistencia/dao/ReconteoBodegaDao.kt" />
+        <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/persistencia/entities/ReconteoBodega.kt" />
+        <option value="$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/MainActivity.kt" />
       </list>
     </option>
   </component>
@@ -333,7 +322,23 @@
               <item name="app" type="feadf853:AndroidModuleNode" />
               <item name="java" type="edd41e36:AndroidSourceTypeNode" />
               <item name="inventario" type="cbb59c9e:AndroidPsiDirectoryNode" />
-              <item name="adapter" type="462c0819:PsiDirectoryNode" />
+              <item name="persistencia" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Inventario" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="inventario" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="persistencia" type="462c0819:PsiDirectoryNode" />
+              <item name="dao" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Inventario" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="inventario" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="persistencia" type="462c0819:PsiDirectoryNode" />
+              <item name="entities" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Inventario" type="1abcf292:AndroidViewProjectNode" />
@@ -356,14 +361,6 @@
               <item name="java" type="edd41e36:AndroidSourceTypeNode" />
               <item name="inventario" type="cbb59c9e:AndroidPsiDirectoryNode" />
               <item name="ui" type="462c0819:PsiDirectoryNode" />
-              <item name="inicial" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Inventario" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
-              <item name="inventario" type="cbb59c9e:AndroidPsiDirectoryNode" />
-              <item name="ui" type="462c0819:PsiDirectoryNode" />
               <item name="login" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -371,29 +368,14 @@
               <item name="app" type="feadf853:AndroidModuleNode" />
               <item name="java" type="edd41e36:AndroidSourceTypeNode" />
               <item name="inventario" type="cbb59c9e:AndroidPsiDirectoryNode" />
-              <item name="ui" type="462c0819:PsiDirectoryNode" />
-              <item name="reconteobodega" type="462c0819:PsiDirectoryNode" />
+              <item name="util" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Inventario" type="1abcf292:AndroidViewProjectNode" />
               <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="res" type="d4f16f75:AndroidResFolderNode" />
-            </path>
-            <path>
-              <item name="Inventario" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="res" type="d4f16f75:AndroidResFolderNode" />
-              <item name="drawable" type="ddeffd01:AndroidResFolderTypeNode" />
-            </path>
-            <path>
-              <item name="Inventario" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="res" type="d4f16f75:AndroidResFolderNode" />
-              <item name="layout" type="ddeffd01:AndroidResFolderTypeNode" />
-            </path>
-            <path>
-              <item name="Inventario" type="1abcf292:AndroidViewProjectNode" />
-              <item name="Gradle Scripts" type="ae0cef3a:AndroidBuildScriptsGroupNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="inventario" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="webservice" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -429,7 +411,7 @@
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.17" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="project.kotlinCompiler" />
+    <property name="settings.editor.selected.configurable" value="AndroidSdkUpdater" />
   </component>
   <component name="PsdUISettings">
     <option name="LAST_EDITED_BUILD_TYPE" value="release" />
@@ -561,9 +543,10 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1792" height="1120" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Captures" order="0" side_tool="true" weight="0.25" />
-      <window_info content_ui="combo" id="Project" order="1" sideWeight="0.49548194" visible="true" weight="0.24114285" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" sideWeight="0.49548194" visible="true" weight="0.24114285" />
       <window_info id="Structure" order="2" sideWeight="0.5045181" side_tool="true" weight="0.20457143" />
       <window_info id="Favorites" order="3" side_tool="true" />
       <window_info id="Build Variants" order="4" side_tool="true" />
@@ -572,13 +555,13 @@
       <window_info id="Resources Explorer" order="7" />
       <window_info id="Capture Tool" order="8" />
       <window_info anchor="bottom" id="Run" order="0" sideWeight="0.4982857" weight="0.32857144" />
-      <window_info active="true" anchor="bottom" id="Logcat" order="1" sideWeight="0.9137143" visible="true" weight="0.3257143" />
+      <window_info anchor="bottom" id="Logcat" order="1" sideWeight="0.9137143" weight="0.3257143" />
       <window_info anchor="bottom" id="TODO" order="2" weight="0.32857144" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.92228574" weight="0.35714287" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.92228574" visible="true" weight="0.43714285" />
       <window_info anchor="bottom" id="Terminal" order="4" weight="0.3295238" />
       <window_info anchor="bottom" id="Event Log" order="5" sideWeight="0.50285715" side_tool="true" weight="0.26" />
       <window_info anchor="bottom" id="Version Control" order="6" weight="0.3295238" />
-      <window_info anchor="bottom" id="Build" order="7" sideWeight="0.49714285" weight="0.14952381" />
+      <window_info anchor="bottom" id="Build" order="7" sideWeight="0.49714285" weight="0.41238096" />
       <window_info anchor="bottom" id="Find" order="8" sideWeight="0.4982857" weight="0.3295238" />
       <window_info anchor="bottom" id="Android Profiler" order="9" weight="0.32905984" />
       <window_info anchor="right" id="Device File Explorer" order="0" side_tool="true" />
@@ -628,7 +611,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/MainActivity.kt</url>
-          <line>72</line>
+          <line>98</line>
           <properties />
           <option name="timeStamp" value="141" />
         </line-breakpoint>
@@ -645,10 +628,40 @@
           <option name="timeStamp" value="146" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/MainActivity.kt</url>
+          <line>81</line>
+          <properties />
+          <option name="timeStamp" value="148" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/MainActivity.kt</url>
+          <line>97</line>
+          <properties />
+          <option name="timeStamp" value="149" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/login/LoginActivity.kt</url>
+          <line>169</line>
+          <properties />
+          <option name="timeStamp" value="152" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/conteo/ConteoViewModel.kt</url>
+          <line>80</line>
+          <properties />
+          <option name="timeStamp" value="153" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/conteo/ConteoViewModel.kt</url>
           <line>75</line>
           <properties />
-          <option name="timeStamp" value="147" />
+          <option name="timeStamp" value="154" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/MainActivity.kt</url>
+          <line>144</line>
+          <properties />
+          <option name="timeStamp" value="160" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/scanner/ScanActivityUtil.java</url>
@@ -673,6 +686,16 @@
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="evaluateExpression">
+      <expression>
+        <expression-string>apiResponse!!.equals(1L)</expression-string>
+        <language-id>kotlin</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>apiResponse!!.equals(1)</expression-string>
+        <language-id>kotlin</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
       <expression>
         <expression-string>response!!.body()</expression-string>
         <language-id>kotlin</language-id>
@@ -708,127 +731,9 @@
         <language-id>kotlin</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
-      <expression>
-        <expression-string>editUsuario.text.toString().toLong()</expression-string>
-        <language-id>kotlin</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>!empleado?.usuId?.equals(0L)!!</expression-string>
-        <language-id>kotlin</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/build/generated/source/kapt/debug/ec/com/comohogar/inventario/persistencia/dao/ReconteoBodegaDao_Impl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3315">
-          <caret line="235" selection-start-line="235" selection-end-line="235" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/reconteobodega/ReconteoBodegaViewModel.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="19" column="39" selection-start-line="19" selection-start-column="39" selection-end-line="19" selection-end-column="39" />
-          <folding>
-            <element signature="e#55#286#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/webservice/ApiClient.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" column="52" selection-start-line="11" selection-start-column="25" selection-end-line="11" selection-end-column="52" />
-          <folding>
-            <element signature="e#48#272#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/modelo/Inventario.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="11" column="31" selection-start-line="11" selection-start-column="31" selection-end-line="11" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/modelo/Conteo.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="8" column="32" selection-start-line="8" selection-start-column="32" selection-end-line="8" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/modelo/Empleado.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1">
-          <caret line="5" column="11" selection-start-line="5" selection-start-column="11" selection-end-line="5" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/SesionAplicacion.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="513">
-          <caret line="57" column="35" selection-start-line="57" selection-start-column="35" selection-end-line="57" selection-end-column="35" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1075#1076#0" expanded="true" />
-            <element signature="e#1108#1109#0" expanded="true" />
-            <element signature="e#1164#1165#0" expanded="true" />
-            <element signature="e#1208#1209#0" expanded="true" />
-            <element signature="e#1241#1242#0" expanded="true" />
-            <element signature="e#1270#1271#0" expanded="true" />
-            <element signature="e#1314#1315#0" expanded="true" />
-            <element signature="e#1350#1351#0" expanded="true" />
-            <element signature="e#1506#1507#0" expanded="true" />
-            <element signature="e#1556#1557#0" expanded="true" />
-            <element signature="e#1596#1597#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.symbol/emdk/7.0.0/94bb98359d51af7466b1cc3319adb05eb38de183/emdk-7.0.0.jar!/com/symbol/emdk/EMDKManager.class">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-29/android/app/ActivityThread.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="2663" selection-start-line="2663" selection-end-line="2663" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-29/android/os/Looper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="173">
-          <caret line="154" selection-start-line="154" selection-end-line="154" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/persistencia/InventarioDatabase.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="11" column="73" selection-start-line="11" selection-start-column="73" selection-end-line="11" selection-end-column="73" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/build/tmp/kapt3/stubs/debug/ec/com/comohogar/inventario/persistencia/InventarioDatabase.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" selection-start-line="6" selection-end-line="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_reconteo_bodega.xml">
-      <provider editor-type-id="android-designer2" />
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4725">
-          <caret line="315" column="59" selection-start-line="315" selection-start-column="59" selection-end-line="315" selection-end-column="59" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_reconteo_local.xml">
       <provider editor-type-id="android-designer2" />
       <provider selected="true" editor-type-id="text-editor">
@@ -867,13 +772,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="216">
           <caret line="2908" selection-start-line="2908" selection-end-line="2908" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/webservice/APIService.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="297">
-          <caret line="37" column="42" selection-start-line="37" selection-start-column="24" selection-end-line="37" selection-end-column="42" />
         </state>
       </provider>
     </entry>
@@ -959,33 +857,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/inicial/InicialActivity.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="21" selection-start-line="21" selection-end-line="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/util/Constantes.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="18" selection-start-line="18" selection-start-column="18" selection-end-line="18" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-29/android/app/Activity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="215">
-          <caret line="5487" column="16" selection-start-line="5487" selection-start-column="16" selection-end-line="5487" selection-end-column="16" />
-          <folding>
-            <element signature="e#209509#209510#0" expanded="true" />
-            <element signature="e#209563#209564#0" expanded="true" />
-            <element signature="e#235826#235827#0" expanded="true" />
-            <element signature="e#235874#235875#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/adapter/ConteoAdapter.kt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="420">
@@ -1023,35 +894,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="28" column="28" selection-start-line="28" selection-start-column="28" selection-end-line="28" selection-end-column="28" />
-        </state>
-      </provider>
-      <provider editor-type-id="android-manifest" />
-    </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.room/room-common/2.2.0-rc01/924310c61a30c7a167a22f636331556bc654ec94/room-common-2.2.0-rc01-sources.jar!/androidx/room/Insert.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="88">
           <caret line="80" column="18" selection-start-line="80" selection-start-column="18" selection-end-line="80" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/persistencia/dao/ReconteoBodegaDao.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="27" column="1" lean-forward="true" selection-start-line="27" selection-start-column="1" selection-end-line="27" selection-end-column="1" />
-          <folding>
-            <element signature="e#54#148#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/reconteobodega/ReconteoBodegaFragment.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1950">
-          <caret line="164" column="43" lean-forward="true" selection-start-line="164" selection-start-column="43" selection-end-line="164" selection-end-column="43" />
         </state>
       </provider>
     </entry>
@@ -1070,39 +916,212 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="22" selection-start-line="18" selection-start-column="22" selection-end-line="18" selection-end-column="22" />
+        </state>
+      </provider>
+      <provider editor-type-id="android-manifest" />
+    </entry>
+    <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-29/android/app/Activity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1254">
+          <caret line="6723" selection-start-line="6723" selection-end-line="6723" />
+          <folding>
+            <element signature="e#209509#209510#0" expanded="true" />
+            <element signature="e#209563#209564#0" expanded="true" />
+            <element signature="e#235826#235827#0" expanded="true" />
+            <element signature="e#235874#235875#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/util/Constantes.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="24" column="37" selection-start-line="24" selection-start-column="37" selection-end-line="24" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/modelo/AsignacionUsuario.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="11" selection-start-line="4" selection-start-column="11" selection-end-line="4" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/modelo/Conteo.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="6" column="11" selection-start-line="6" selection-start-column="11" selection-end-line="6" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/SesionAplicacion.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="698">
+          <caret line="73" column="28" selection-start-line="73" selection-start-column="28" selection-end-line="73" selection-end-column="28" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1471#1472#0" expanded="true" />
+            <element signature="e#1502#1503#0" expanded="true" />
+            <element signature="e#1773#1774#0" expanded="true" />
+            <element signature="e#1813#1814#0" expanded="true" />
+            <element signature="e#1847#1848#0" expanded="true" />
+            <element signature="e#1877#1878#0" expanded="true" />
+            <element signature="e#1905#1906#0" expanded="true" />
+            <element signature="e#1945#1946#0" expanded="true" />
+            <element signature="e#1979#1980#0" expanded="true" />
+            <element signature="e#2009#2010#0" expanded="true" />
+            <element signature="e#2037#2038#0" expanded="true" />
+            <element signature="e#2077#2078#0" expanded="true" />
+            <element signature="e#2111#2112#0" expanded="true" />
+            <element signature="e#2148#2149#0" expanded="true" />
+            <element signature="e#2180#2181#0" expanded="true" />
+            <element signature="e#2231#2232#0" expanded="true" />
+            <element signature="e#2273#2274#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/reconteobodega/ReconteoBodegaFragment.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="253">
+          <caret line="151" selection-start-line="151" selection-end-line="153" selection-end-column="82" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/persistencia/entities/Conteo.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="13" column="20" selection-start-line="13" selection-start-column="20" selection-end-line="13" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/reconteolocal/ReconteoLocalFragment.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="274">
+          <caret line="158" column="24" lean-forward="true" selection-start-line="158" selection-start-column="24" selection-end-line="158" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/webservice/ApiClient.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="11" column="25" selection-start-line="11" selection-start-column="25" selection-end-line="11" selection-end-column="52" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/conteo/ConteoViewModel.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="42" selection-start-line="42" selection-end-line="42" />
+        <state relative-caret-position="192">
+          <caret line="67" column="43" selection-start-line="67" selection-start-column="43" selection-end-line="67" selection-end-column="43" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/conteo/ConteoFragment.kt">
+    <entry file="file://$PROJECT_DIR$/app/build/tmp/kapt3/stubs/debug/ec/com/comohogar/inventario/persistencia/InventarioDatabase.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="461">
-          <caret line="174" column="91" selection-start-line="174" selection-start-column="75" selection-end-line="174" selection-end-column="91" />
-          <folding>
-            <element signature="e#47#893#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="90">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/MainActivity.kt">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/reconteolocal/ReconteoLocalViewModel.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret line="116" column="61" selection-start-line="116" selection-start-column="61" selection-end-line="116" selection-end-column="61" />
-          <folding>
-            <element signature="e#37#1304#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="237">
+          <caret line="69" column="26" selection-start-line="69" selection-start-column="26" selection-end-line="69" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/inicial/InicialActivity.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="38" selection-start-line="38" selection-end-line="38" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/login/LoginActivity.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="243">
-          <caret line="149" column="9" lean-forward="true" selection-start-line="149" selection-start-column="9" selection-end-line="149" selection-end-column="9" />
+        <state relative-caret-position="180">
+          <caret line="68" selection-start-line="68" selection-end-line="68" />
           <folding>
             <element signature="e#46#1182#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-29/android/os/AsyncTask.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="243" selection-start-line="243" selection-end-line="243" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-29/android/os/Looper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="382">
+          <caret line="167" column="58" lean-forward="true" selection-start-line="167" selection-start-column="58" selection-end-line="167" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/ui/conteo/ConteoFragment.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="377">
+          <caret line="177" column="35" selection-start-line="177" selection-start-column="35" selection-end-line="177" selection-end-column="35" />
+          <folding>
+            <element signature="e#47#944#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-29/android/app/ActivityThread.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="2663" selection-start-line="2663" selection-end-line="2663" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/persistencia/dao/ConteoDao.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="22" selection-start-line="22" selection-end-line="23" selection-end-column="42" />
+          <folding>
+            <element signature="e#54#140#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/webservice/APIService.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="232">
+          <caret line="74" column="64" lean-forward="true" selection-start-line="71" selection-start-column="34" selection-end-line="74" selection-end-column="64" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/persistencia/dao/ReconteoBodegaDao.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="29" column="48" lean-forward="true" selection-start-line="29" selection-start-column="48" selection-end-line="29" selection-end-column="48" />
+          <folding>
+            <element signature="e#54#148#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/persistencia/entities/ReconteoBodega.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="6" column="22" lean-forward="true" selection-start-line="6" selection-start-column="22" selection-end-line="6" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/ec/com/comohogar/inventario/MainActivity.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-943">
+          <caret line="106" lean-forward="true" selection-start-line="106" selection-end-line="106" />
+          <folding>
+            <element signature="e#37#1737#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -23,6 +23,14 @@ public class SesionAplicacion extends Application {
 
     private Empleado empleado;
 
+    private Long binId;
+
+    private Long cinId;
+
+    private Long usuId;
+
+    private Integer numConteo;
+
     public List<ReconteoBodega> getListaReconteoBodega() {
         return listaReconteoBodega;
     }
@@ -61,5 +69,37 @@ public class SesionAplicacion extends Application {
 
     public void setEmpleado(Empleado empleado) {
         this.empleado = empleado;
+    }
+
+    public Long getBinId() {
+        return binId;
+    }
+
+    public void setBinId(Long binId) {
+        this.binId = binId;
+    }
+
+    public Long getCinId() {
+        return cinId;
+    }
+
+    public void setCinId(Long cinId) {
+        this.cinId = cinId;
+    }
+
+    public Long getUsuId() {
+        return usuId;
+    }
+
+    public void setUsuId(Long usuId) {
+        this.usuId = usuId;
+    }
+
+    public Integer getNumConteo() {
+        return numConteo;
+    }
+
+    public void setNumConteo(Integer numConteo) {
+        this.numConteo = numConteo;
     }
 }

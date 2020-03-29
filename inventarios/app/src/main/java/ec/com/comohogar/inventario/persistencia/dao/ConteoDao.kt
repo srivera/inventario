@@ -19,4 +19,7 @@ interface ConteoDao {
 
     @Query("SELECT * FROM Conteo")
     fun getConteos(): List<Conteo>
+
+    @Query("SELECT * FROM Conteo WHERE estado == 'PEN'")
+    fun getConteoPendiente(): List<Conteo>
 }

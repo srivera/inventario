@@ -67,7 +67,7 @@ class ConteoViewModel : ViewModel() {
         }
         Log.i("barra", barr + " / " + cant)
 
-        val call: Call<Long> = ApiClient.getClient.ingresarConteo(idUsuario, numeroConteo, zona.value!!, barr!!,
+        /*val call: Call<Long> = ApiClient.getClient.ingresarConteo(idUsuario, numeroConteo, zona.value!!, barr!!,
             cant!!.toInt()
         )
         call.enqueue(object : Callback<Long> {
@@ -81,7 +81,7 @@ class ConteoViewModel : ViewModel() {
                 Log.i("error", "error")
             }
 
-        })
+        })*/
     }
 
 }

@@ -67,8 +67,7 @@ class ReconteoLocalViewModel : ViewModel() {
         }
         Log.i("barra", barr + " / " + cant)
         val call: Call<Long> = ApiClient.getClient.ingresarConteo(178,1144, zona.value!!, barr!!,
-            cant!!.toInt()
-        )
+            cant!!.toInt())
 
         call.enqueue(object : Callback<Long> {
 

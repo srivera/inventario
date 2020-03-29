@@ -21,6 +21,7 @@ import ec.com.comohogar.inventario.persistencia.dao.ConteoDao
 import ec.com.comohogar.inventario.persistencia.entities.Conteo
 import android.os.AsyncTask
 import ec.com.comohogar.inventario.SesionAplicacion
+import ec.com.comohogar.inventario.util.Constantes
 
 
 class ConteoFragment : Fragment(), View.OnKeyListener {
@@ -165,7 +166,9 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
                 // Insert Data
                 val conteo =  Conteo(barra = editBarra?.text.toString(),
                     zona = editZona?.text.toString(),
-                    cantidad = editCantidad?.text.toString().toInt())
+                    cantidad = editCantidad?.text.toString().toInt(), estado = Constantes.ESTADO_PENDIENTE,
+                    cinId = sesionAplicacion?.cinId, binId = sesionAplicacion?.binId,
+                    numConteo =  sesionAplicacion?.numConteo, usuId = sesionAplicacion?.usuId)
                 db = InventarioDatabase.getInventarioDataBase(context = activity?.applicationContext!!)
                 conteoDao = db?.conteoDao()
                 val insertarConteo = conteoDao?.insertarConteo(conteo)

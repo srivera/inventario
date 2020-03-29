@@ -56,6 +56,7 @@ interface APIService {
     @GET("erp-movil/inv/consultarZona/{codigo}")
     fun consultarZona(@Path(value="codigo") codigo: String): Call<EstructuraBodega>
 
+    //http://200.105.234.42:8080/erp-movil/inv/ingresarConteo/{idUsuario}/{numeroConteo}/{zona}/{barra}/{cantidad}
     @GET("erp-movil/inv/ingresarConteo/{idUsuario}/{numeroConteo}/{zona}/{barra}/{cantidad}")
     fun ingresarConteo(@Path(value="idUsuario") idUsuario: Long?,  @Path(value="numeroConteo")  numeroConteo: Long?,
                        @Path(value="zona")  zona: String, @Path(value="barra")  barra: String,

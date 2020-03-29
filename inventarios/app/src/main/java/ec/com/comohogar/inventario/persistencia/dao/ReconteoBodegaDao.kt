@@ -25,4 +25,7 @@ interface ReconteoBodegaDao {
 
     @Query("SELECT count(*) FROM ReconteoBodega")
     fun count(): Int
+
+    @Query("SELECT * FROM ReconteoBodega WHERE estado == 'PEN'")
+    fun getReconteoBodegaPendiente(): List<ReconteoBodega>
 }

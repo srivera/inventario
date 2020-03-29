@@ -18,6 +18,11 @@ class Constantes {
         //Tipo de inventario
         const val INVENTARIO_BODEGA = 2
         const val INVENTARIO_LOCAL = 1
+
+        //Estados de envío
+        const val ESTADO_PENDIENTE = "PEN"
+        const val ESTADO_ENVIADO = "ENV"
+        const val ESTADO_ERROR = "ERR"
     }
 
 }
