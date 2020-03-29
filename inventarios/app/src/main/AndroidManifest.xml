@@ -16,7 +16,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
 
-        <uses-library android:name="com.symbol.emdk"/>
+        <uses-library android:required="false" android:name="com.symbol.emdk"/>
 
         <activity android:name=".SplashActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"

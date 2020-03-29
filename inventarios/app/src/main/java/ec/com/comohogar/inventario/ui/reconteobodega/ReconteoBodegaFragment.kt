@@ -14,9 +14,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import ec.com.comohogar.inventario.R
 import android.content.Context
+import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.os.AsyncTask
 import android.view.KeyEvent
+import android.widget.CheckBox
+import androidx.appcompat.app.AlertDialog
 import com.google.gson.Gson
 import ec.com.comohogar.inventario.MainActivity
 import ec.com.comohogar.inventario.SesionAplicacion
@@ -47,7 +50,9 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
     private var editCantidad: EditText? = null
 
     private var buttonVacio: Button? = null
-    private var buttonSiguiente: Button? = null
+    private var buttonGuardar: Button? = null
+
+    private var checkBarra: CheckBox? = null
 
     private var db: InventarioDatabase? = null
     private var reconteoBodegaDao: ReconteoBodegaDao? = null
@@ -84,10 +89,11 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
         textPaginacion = root.findViewById(R.id.textPaginacion)
 
         editCodigoBarra = root.findViewById(R.id.editCodigoBarra)
-        editCantidad = root.findViewById(R.id.editCantidad)
+        editCantidad = root.findViewById(R.id.editCantidadReconteoBodega)
 
+        checkBarra = root.findViewById(R.id.checkBarra)
         buttonVacio = root.findViewById(R.id.buttonVacio)
-        buttonSiguiente = root.findViewById(R.id.buttonSiguiente)
+        buttonGuardar = root.findViewById(R.id.buttonSiguiente)
 
         editCantidad?.setOnKeyListener(this)
 
@@ -99,22 +105,42 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
             }
         }
 
+        checkBarra?.setOnClickListener(View.OnClickListener {
+            if (checkBarra?.isChecked!!) {
+                editCodigoBarra?.setEnabled(true)
+                buttonGuardar?.setEnabled(true)
+                reconteoBodegaViewModel.barra.value = ""
+            } else {
+                editCodigoBarra?.setEnabled(false)
+                buttonGuardar?.setEnabled(false)
+                var reconteoBodega: ReconteoBodega
+                reconteoBodega = sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!)!!
+                reconteoBodegaViewModel.barra.value = reconteoBodega.barra
+            }
+        })
+
+
         sesionAplicacion = activity?.applicationContext as SesionAplicacion?
 
         db = InventarioDatabase.getInventarioDataBase(context = activity?.applicationContext!!)
         reconteoBodegaDao = db?.reconteoBodegaDao()
         reconteoBodegaViewModel.indice.value = 0
+        reconteoBodegaViewModel.inventario.value = "Inventario: " + sesionAplicacion?.binId.toString()
+        reconteoBodegaViewModel.conteo.value = " Conteo: " + sesionAplicacion?.cinId.toString()
+        reconteoBodegaViewModel.numconteo.value = " Número: " + sesionAplicacion?.numConteo.toString()
+        reconteoBodegaViewModel.usuario.value = " Usuario: " + sesionAplicacion?.empleado?.empId.toString() + " " + sesionAplicacion?.empleado?.empNombreCompleto.toString()
 
        recuperarReconteo()
 
         return root
     }
 
-
     fun refrescarPantalla(codigoLeido: String) {
         Log.i("fragment", "fragment")
         if (editCantidad!!.hasFocus()) {
             guardarReconteoBodega()
+            reconteoBodegaViewModel.cantidad.value = ""
+
         }
     }
 
@@ -141,9 +167,17 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
             editCantidad?.error = null
         }
         if (guardar!!) {
-
+            AsyncTask.execute {
+                db = InventarioDatabase.getInventarioDataBase(context = activity?.applicationContext!!)
+                reconteoBodegaDao = db?.reconteoBodegaDao()
+                var reconteoBodega: ReconteoBodega
+                reconteoBodega = sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!)!!
+                reconteoBodega?.estado = Constantes.ESTADO_PENDIENTE
+                reconteoBodegaDao?.actualizarConteo(reconteoBodega)
+            }
         }
-        reconteoBodegaViewModel.guardarConteo()
+        moverSiguiente()
+
     }
 
     private fun recuperarReconteo() {
@@ -164,11 +198,26 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
                 AsyncTask.execute {
                     reconteoBodegaDao?.eliminar()
                     for(reconteo in listaReconteoBodega!!){
+                        reconteo.estado = Constantes.ESTADO_INSERTADO
                         reconteoBodegaDao?.insertarReconteoBodega(reconteo)
                         val i = reconteoBodegaDao?.count()
                         Log.i("total", i.toString())
                     }
-                    cargarDatosPantalla()
+                    if(!listaReconteoBodega.isEmpty()) {
+                        cargarDatosPantalla()
+                    }else{
+                        val dialogBuilder = AlertDialog.Builder(activity?.applicationContext!!)
+
+                        dialogBuilder.setMessage("No tiene pendientes de recontar.")
+                            .setCancelable(false)
+                            .setPositiveButton("OK", DialogInterface.OnClickListener {
+                                    dialog, id ->
+                            })
+
+                        val alert = dialogBuilder.create()
+                        alert.setTitle("Error")
+                        alert.show()
+                    }
                 }
             }
 

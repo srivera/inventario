@@ -159,7 +159,12 @@ class LoginActivity : AppCompatActivity(), View.OnKeyListener {
         prefsEditor.putString(Constantes.CONTEO, gson.toJson(listaConteo?.get(spinnerConteo?.selectedItemPosition!!)))
         prefsEditor.putString(Constantes.ES_CONTEO_RECONTEO, tipo)
         prefsEditor.commit()
-        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+        if(tipo.equals(Constantes.ES_CONTEO)){
+            MainActivity.open(this, true)
+        }else{
+            MainActivity.open(this, false)
+        }
+       // startActivity(Intent(this@LoginActivity, MainActivity::class.java))
     }
 
     private fun consultarUsuario() {
@@ -262,7 +267,7 @@ class LoginActivity : AppCompatActivity(), View.OnKeyListener {
                 val prefsEditor = inventarioPreferences.edit()
                 prefsEditor.putInt(Constantes.TIPO_INVENTARIO, tipoInventario)
                 prefsEditor.commit()
-                startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                //startActivity(Intent(this@LoginActivity, MainActivity::class.java))
             }
 
             override fun onFailure(call: Call<Int>, t: Throwable) {

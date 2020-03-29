@@ -1,7 +1,8 @@
 package ec.com.comohogar.inventario
 
+import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
-import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import androidx.navigation.findNavController
@@ -15,6 +16,7 @@ import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.widget.ProgressBar
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph
 import androidx.navigation.fragment.NavHostFragment
 import com.google.gson.Gson
 import ec.com.comohogar.inventario.modelo.AsignacionUsuario
@@ -29,7 +31,6 @@ import ec.com.comohogar.inventario.ui.reconteobodega.ReconteoBodegaFragment
 import ec.com.comohogar.inventario.ui.reconteolocal.ReconteoLocalFragment
 import ec.com.comohogar.inventario.webservice.ApiClient
 import retrofit2.Call
-import retrofit2.http.Path
 import java.util.*
 
 
@@ -43,6 +44,20 @@ class MainActivity : ScanActivity() {
 
     var tipo: String? = null
 
+    private lateinit var navGraph: NavGraph
+
+    private lateinit var navController: NavController
+
+    companion object {
+        private const val ES_CONTEO = "esConteo"
+        fun open(context: Context, esConteo: Boolean) {
+            context.startActivity(Intent(context, MainActivity::class.java).apply {
+                putExtra(ES_CONTEO, esConteo)
+            })
+        }
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -54,6 +69,9 @@ class MainActivity : ScanActivity() {
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
+        val navHostFragment = supportFragmentManager.fragments.first() as? NavHostFragment
+        val graphInflater = navHostFragment?.navController?.navInflater
+        navGraph = graphInflater?.inflate(R.navigation.mobile_navigation)!!
 
         val inventarioPreferences: SharedPreferences = getSharedPreferences(Constantes.PREF_NAME, 0)
         var tipoInventario = inventarioPreferences.getInt(Constantes.TIPO_INVENTARIO, 0)
@@ -77,10 +95,31 @@ class MainActivity : ScanActivity() {
         } else {
 
         }
+
+        val gson = Gson()
+        val json = inventarioPreferences.getString(Constantes.EMPLEADO, "");
+        val empleado = gson.fromJson(json, Empleado::class.java)
+        sesionAplicacion?.empleado = empleado
+
         cargarSesion(inventarioPreferences)
 
-        inicializarMenuFragment(tipoInventario, navView, drawerLayout, navController)
+       // inicializarMenuFragment(tipoInventario, navView, drawerLayout)
 
+        val destination = if (intent.getBooleanExtra(
+                ES_CONTEO,
+                false
+            )
+        ) R.id.nav_conteo else R.id.nav_reconteo_bodega
+        navGraph.startDestination = destination
+        navController.graph = navGraph
+
+
+        appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.nav_conteo,
+                R.id.nav_tools, R.id.nav_share, R.id.nav_send
+            ), drawerLayout
+        )
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
@@ -90,8 +129,7 @@ class MainActivity : ScanActivity() {
     private fun inicializarMenuFragment(
         tipoInventario: Int,
         navView: NavigationView,
-        drawerLayout: DrawerLayout,
-        navController: NavController
+        drawerLayout: DrawerLayout
     ) {
         val mFragmentManager = supportFragmentManager
 
@@ -109,7 +147,6 @@ class MainActivity : ScanActivity() {
                     0,
                     10000
                 )
-
                 navView.menu.clear()
                 navView.inflateMenu(R.menu.menu_reconteo_bodega)
                 appBarConfiguration = AppBarConfiguration(
@@ -121,6 +158,17 @@ class MainActivity : ScanActivity() {
                 val fragmentTransaction = mFragmentManager.beginTransaction()
                 fragmentTransaction.replace(R.id.nav_host_fragment, ReconteoBodegaFragment())
                     .commit()
+                //supportFragmentManager.fragments.removeAt(0)
+                //supportFragmentManager.fragments.add(0, ReconteoBodegaFragment())
+
+                val navHostFragment = supportFragmentManager.fragments.first() as? NavHostFragment
+                val graphInflater = navHostFragment?.navController?.navInflater
+                navGraph = graphInflater?.inflate(R.navigation.mobile_navigation)!!
+               // navController = navHostFragment.navController
+
+                navGraph.startDestination = R.id.nav_reconteo_bodega
+                navController.graph = navGraph
+
 
             } else if (tipoInventario.equals(Constantes.INVENTARIO_LOCAL)) {
                 navView.menu.clear()
@@ -161,6 +209,32 @@ class MainActivity : ScanActivity() {
 
     }
 
+    private fun procesarConteos() {
+        var db: InventarioDatabase? = InventarioDatabase.getInventarioDataBase(this@MainActivity)
+        var conteoDao = db?.conteoDao()
+        val conteos = conteoDao?.getConteoPendiente()
+        for (conteo in conteos!!) {
+            val call: Call<Long> = ApiClient.getClient.ingresarConteo(
+                conteo.usuId,
+                conteo.numConteo?.toLong(), conteo.zona, conteo.barra,
+                conteo.cantidad
+            )
+
+            try {
+                val response = call.execute()
+                val apiResponse = response.body()
+                if (apiResponse!!.equals(1L)) {
+                    conteo.estado = Constantes.ESTADO_ENVIADO
+                    conteoDao?.actualizarConteo(conteo)
+                }
+
+                System.out.println(apiResponse)
+            } catch (ex: Exception) {
+                ex.printStackTrace()
+            }
+        }
+    }
+
     private fun procesarReconteosBodega() {
         var db: InventarioDatabase? = InventarioDatabase.getInventarioDataBase(this@MainActivity)
         var reconteoBodegaDao = db?.reconteoBodegaDao()
@@ -172,7 +246,6 @@ class MainActivity : ScanActivity() {
                 reconteo.cantidad.toLong(),reconteo.binId,
                 reconteo.rcoId.toInt()
             )
-
             try {
                 val response = call.execute()
                 val apiResponse = response.body()
@@ -186,11 +259,6 @@ class MainActivity : ScanActivity() {
                 ex.printStackTrace()
             }
         }
-    }
-
-    val r: Runnable = Runnable {
-
-
     }
 
     private fun cargarSesion(inventarioPreferences: SharedPreferences) {
@@ -209,7 +277,6 @@ class MainActivity : ScanActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
         return true
     }
@@ -222,6 +289,7 @@ class MainActivity : ScanActivity() {
     override fun refrescarPantalla(codigoLeido: String) {
         Log.i("hijo", "hijo")
         val navHostFragment = supportFragmentManager.fragments.first() as? NavHostFragment
+
         if (navHostFragment != null) {
             val childFragments = navHostFragment.childFragmentManager.fragments
             val fragment = childFragments.get(0)

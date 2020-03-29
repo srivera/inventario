@@ -23,6 +23,7 @@ class Constantes {
         const val ESTADO_PENDIENTE = "PEN"
         const val ESTADO_ENVIADO = "ENV"
         const val ESTADO_ERROR = "ERR"
+        const val ESTADO_INSERTADO = "INS"
     }
 
 }

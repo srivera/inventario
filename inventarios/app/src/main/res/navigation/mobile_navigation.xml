@@ -6,6 +6,12 @@
     app:startDestination="@+id/nav_conteo">
 
     <fragment
+        android:id="@+id/nav_reconteo_bodega"
+        android:name="ec.com.comohogar.inventario.ui.reconteobodega.ReconteoBodegaFragment"
+        android:label="Reconteo Bodega"
+        tools:layout="@layout/fragment_reconteo_bodega" />
+
+    <fragment
         android:id="@+id/nav_conteo"
         android:name="ec.com.comohogar.inventario.ui.conteo.ConteoFragment"
         android:label="@string/menu_conteo"
@@ -17,11 +23,6 @@
         android:label="Reconteo Local"
         tools:layout="@layout/fragment_reconteo_local" />
 
-    <fragment
-        android:id="@+id/nav_reconteo_bodega"
-        android:name="ec.com.comohogar.inventario.ui.reconteobodega.ReconteoBodegaFragment"
-        android:label="Reconteo Bodega"
-        tools:layout="@layout/fragment_reconteo_bodega" />
 
     <fragment
         android:id="@+id/nav_tools"
