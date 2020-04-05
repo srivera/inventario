@@ -13,7 +13,7 @@
             android:icon="@drawable/ic_menu_gallery"
             android:title="@string/menu_pendiente" />
         <item
-            android:id="@+id/nav_enviados"
+            android:id="@+id/nav_enviado"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="@string/menu_enviados" />
         <item

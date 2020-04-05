@@ -1,16 +1,10 @@
 package ec.com.comohogar.inventario.ui.reconteolocal
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import ec.com.comohogar.inventario.webservice.ApiClient
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import ec.com.comohogar.inventario.ui.base.BaseViewModel
 
-class ReconteoLocalViewModel : ViewModel() {
+class ReconteoLocalViewModel : BaseViewModel() {
 
-    var zona = MutableLiveData<String>()
     var barra = MutableLiveData<String>()
     var cantidad = MutableLiveData<String>()
     var barraAnterior = MutableLiveData<String>()
@@ -18,29 +12,7 @@ class ReconteoLocalViewModel : ViewModel() {
 
     var saltoPorScaneo: Boolean? = false
 
-
-    fun setZona(value: String) {
-        this.zona.value = value
-    }
-
-    fun setBarra(value: String) {
-        this.barra.value = value
-    }
-
-    fun setCantidad(value: String) {
-        this.cantidad.value = value
-    }
-
-    fun setBarraAnterior(value: String) {
-        this.barraAnterior.value = value
-    }
-
-    fun setCantidadAnterior(value: String) {
-        this.cantidadAnterior.value = value
-    }
-
     fun guardarConteo() {
-        guardar()
         if (!saltoPorScaneo!! && !barra.value.toString().equals("")) {
             this.barraAnterior.value = barra.value.toString()
             this.cantidadAnterior.value = cantidad.value.toString()
@@ -54,33 +26,6 @@ class ReconteoLocalViewModel : ViewModel() {
             saltoPorScaneo = false
         }
         this.cantidad.value = ""
-    }
-
-    private fun guardar() {
-        var cant: String? = cantidad.value.toString()
-        var barr: String? = barra.value.toString()
-
-        if(saltoPorScaneo!!) {
-
-            barr = barraAnterior.value
-            cant = cantidadAnterior.value
-        }
-        Log.i("barra", barr + " / " + cant)
-        val call: Call<Long> = ApiClient.getClient.ingresarConteo(178,1144, zona.value!!, barr!!,
-            cant!!.toInt())
-
-        call.enqueue(object : Callback<Long> {
-
-            override fun onResponse(call: Call<Long>?, response: Response<Long>?) {
-                Log.i("respuesta", response!!.body()!!.toString())
-                limpiarFormulario()
-            }
-
-            override fun onFailure(call: Call<Long>, t: Throwable) {
-                Log.i("error", "error")
-            }
-
-        })
     }
 
 }

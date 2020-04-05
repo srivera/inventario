@@ -2,7 +2,6 @@ package ec.com.comohogar.inventario.modelo
 
 import com.google.gson.annotations.SerializedName
 
-
 data class Empleado(
 
         @SerializedName("vwCUEmplId")
@@ -42,6 +41,4 @@ data class Empleado(
         @SerializedName("lugId")
         val lugId: Int,
         @SerializedName("usuUtilizaPocket")
-        val usuUtilizaPocket: Int
-        )
-
+        val usuUtilizaPocket: Int)

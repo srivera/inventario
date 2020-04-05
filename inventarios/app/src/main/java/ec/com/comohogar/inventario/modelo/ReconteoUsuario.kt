@@ -1,26 +1,20 @@
 package ec.com.comohogar.inventario.modelo
 
-import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-
 
 data class ReconteoUsuario(
 
-
-        @SerializedName("lugId")
-        var lugId: kotlin.Long,
-        @SerializedName("forId")
-        var forId: kotlin.Long,
-        @SerializedName("forNombre")
-        val forNombre: String,
-        @SerializedName("lugCodigo")
-        val lugCodigo: String,
-        @SerializedName("lugNombre")
-        val lugNombre: String,
-        @SerializedName("lugTipo")
-        var lugTipo: kotlin.Long,
-        @SerializedName("lugDireccion")
-        val lugDireccion: String,
-        @SerializedName("lugCodigoSri")
-        val lugCodigoSri: String)
-
+        @SerializedName("pendiente")
+        var pendiente: kotlin.String,
+        @SerializedName("codigoItem")
+        var codigoItem: kotlin.String,
+        @SerializedName("descripcionItem")
+        val descripcionItem: String,
+        @SerializedName("barra")
+        val barra: String,
+        @SerializedName("stock")
+        val stock: Int,
+        @SerializedName("cinId")
+        var cinId: kotlin.Long,
+        @SerializedName("itmId")
+        val itmId: Long)

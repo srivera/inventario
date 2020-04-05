@@ -8,7 +8,6 @@
     <fragment
         android:id="@+id/nav_reconteo_bodega"
         android:name="ec.com.comohogar.inventario.ui.reconteobodega.ReconteoBodegaFragment"
-        android:label="Reconteo Bodega"
         tools:layout="@layout/fragment_reconteo_bodega" />
 
     <fragment
@@ -23,22 +22,27 @@
         android:label="Reconteo Local"
         tools:layout="@layout/fragment_reconteo_local" />
 
+    <fragment
+        android:id="@+id/nav_pendiente"
+        android:name="ec.com.comohogar.inventario.ui.pendiente.ConsultaPendienteFragment"
+        android:label="@string/menu_pendiente"
+        tools:layout="@layout/fragment_pendiente" />
 
     <fragment
-        android:id="@+id/nav_tools"
-        android:name="ec.com.comohogar.inventario.ui.tools.ToolsFragment"
-        android:label="@string/menu_tools"
-        tools:layout="@layout/fragment_tools" />
+        android:id="@+id/nav_enviado"
+        android:name="ec.com.comohogar.inventario.ui.enviado.ConsultaEnviadoFragment"
+        android:label="@string/menu_enviados"
+        tools:layout="@layout/fragment_enviado" />
 
     <fragment
-        android:id="@+id/nav_share"
-        android:name="ec.com.comohogar.inventario.ui.share.ShareFragment"
-        android:label="@string/menu_share"
-        tools:layout="@layout/fragment_share" />
+        android:id="@+id/nav_error"
+        android:name="ec.com.comohogar.inventario.ui.error.ConsultaErrorFragment"
+        android:label="@string/menu_error"
+        tools:layout="@layout/fragment_error" />
 
     <fragment
-        android:id="@+id/nav_send"
-        android:name="ec.com.comohogar.inventario.ui.send.SendFragment"
-        android:label="@string/menu_send"
-        tools:layout="@layout/fragment_send" />
+        android:id="@+id/nav_salir"
+        android:name="ec.com.comohogar.inventario.ui.salida.SalirFragment"
+        android:label="@string/menu_salir"
+        tools:layout="@layout/fragment_salir" />
 </navigation>

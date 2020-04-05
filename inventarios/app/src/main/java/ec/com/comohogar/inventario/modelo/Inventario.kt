@@ -1,12 +1,8 @@
 package ec.com.comohogar.inventario.modelo
 
-import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import java.util.*
-
 
 data class Inventario(
-
 
         @SerializedName("binId")
         var binId: kotlin.Long,
@@ -22,4 +18,3 @@ data class Inventario(
         val binStatusWf: Int,
         @SerializedName("usuId")
         val usuId: Long)
-

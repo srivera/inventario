@@ -1,8 +1,6 @@
 package ec.com.comohogar.inventario.ui.login
 
-import android.content.Context
 import android.content.DialogInterface
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -20,7 +18,6 @@ import com.google.gson.Gson
 import ec.com.comohogar.inventario.R
 import ec.com.comohogar.inventario.util.Constantes
 import android.provider.Settings.Secure
-import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import ec.com.comohogar.inventario.MainActivity
@@ -58,14 +55,14 @@ class LoginActivity : AppCompatActivity(), View.OnKeyListener {
 
         var textTitulo = findViewById<TextView>(R.id.titulo)
         val editUsuario = findViewById<EditText>(R.id.editUsuario)
-        spinnerLocal = findViewById<Spinner>(R.id.spinnerLocal)
-        spinnerInventario = findViewById<Spinner>(R.id.spinnerInventario)
-        spinnerConteo = findViewById<Spinner>(R.id.spinnerConteo)
         var btnSiguiente = findViewById<Button>(R.id.btnSiguiente)
         var btnAnterior = findViewById<Button>(R.id.btnAnterior)
         var textInventario = findViewById<TextView>(R.id.textInventario)
         var textConteo = findViewById<TextView>(R.id.textConteo)
 
+        spinnerLocal = findViewById<Spinner>(R.id.spinnerLocal)
+        spinnerInventario = findViewById<Spinner>(R.id.spinnerInventario)
+        spinnerConteo = findViewById<Spinner>(R.id.spinnerConteo)
         tipo = intent.getStringExtra(Constantes.ES_CONTEO_RECONTEO)
 
         if(tipo.equals(Constantes.ES_CONTEO)){
@@ -159,12 +156,13 @@ class LoginActivity : AppCompatActivity(), View.OnKeyListener {
         prefsEditor.putString(Constantes.CONTEO, gson.toJson(listaConteo?.get(spinnerConteo?.selectedItemPosition!!)))
         prefsEditor.putString(Constantes.ES_CONTEO_RECONTEO, tipo)
         prefsEditor.commit()
+        sesionAplicacion?.tipo = tipo
+
         if(tipo.equals(Constantes.ES_CONTEO)){
             MainActivity.open(this, true)
         }else{
             MainActivity.open(this, false)
         }
-       // startActivity(Intent(this@LoginActivity, MainActivity::class.java))
     }
 
     private fun consultarUsuario() {
@@ -267,7 +265,7 @@ class LoginActivity : AppCompatActivity(), View.OnKeyListener {
                 val prefsEditor = inventarioPreferences.edit()
                 prefsEditor.putInt(Constantes.TIPO_INVENTARIO, tipoInventario)
                 prefsEditor.commit()
-                //startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                sesionAplicacion?.tipoInventario = tipoInventario
             }
 
             override fun onFailure(call: Call<Int>, t: Throwable) {

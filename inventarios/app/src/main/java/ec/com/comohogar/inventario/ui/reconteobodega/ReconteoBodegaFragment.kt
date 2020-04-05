@@ -66,19 +66,13 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
     ): View? {
 
         val binding: FragmentReconteoBodegaBinding
-
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_reconteo_bodega, container, false
         )
-
         binding.setLifecycleOwner(this)
-
         reconteoBodegaViewModel = ViewModelProviders.of(this).get(ReconteoBodegaViewModel::class.java)
-
         binding.uiController = this
-
         binding.reconteoBodegaViewModel = reconteoBodegaViewModel
-
         val root = binding.getRoot()
 
         textZonaActual = root.findViewById(R.id.textZonaActual)
@@ -130,17 +124,15 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
         reconteoBodegaViewModel.numconteo.value = " Número: " + sesionAplicacion?.numConteo.toString()
         reconteoBodegaViewModel.usuario.value = " Usuario: " + sesionAplicacion?.empleado?.empId.toString() + " " + sesionAplicacion?.empleado?.empNombreCompleto.toString()
 
-       recuperarReconteo()
+        recuperarReconteo()
 
         return root
     }
 
     fun refrescarPantalla(codigoLeido: String) {
-        Log.i("fragment", "fragment")
         if (editCantidad!!.hasFocus()) {
             guardarReconteoBodega()
             reconteoBodegaViewModel.cantidad.value = ""
-
         }
     }
 
@@ -152,7 +144,6 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
         if (keyCode == KeyEvent.KEYCODE_ENTER && event?.action == KeyEvent.ACTION_UP) {
             if (v?.id == R.id.editCantidad) {
                 guardarReconteoBodega()
-
             }
         }
         return false
@@ -166,6 +157,14 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
         } else {
             editCantidad?.error = null
         }
+        if(checkBarra?.isChecked!!){
+            var reconteoBodega: ReconteoBodega
+            reconteoBodega = sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!)!!
+            if(!reconteoBodegaViewModel.barra.value.equals(reconteoBodega.barra)){
+                editCodigoBarra?.error = "El código no corresponde"
+                guardar = false
+            }
+        }
         if (guardar!!) {
             AsyncTask.execute {
                 db = InventarioDatabase.getInventarioDataBase(context = activity?.applicationContext!!)
@@ -175,13 +174,11 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
                 reconteoBodega?.estado = Constantes.ESTADO_PENDIENTE
                 reconteoBodegaDao?.actualizarConteo(reconteoBodega)
             }
+            moverSiguiente()
         }
-        moverSiguiente()
-
     }
 
     private fun recuperarReconteo() {
-
         val inventarioPreferences: SharedPreferences = activity!!.getSharedPreferences(Constantes.PREF_NAME, 0)
         val gson =  Gson()
         val json = inventarioPreferences.getString(Constantes.ASIGNACION_USUARIO, "");
@@ -243,7 +240,7 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
         if(sesionAplicacion?.listaReconteoBodega?.size!! >= (reconteoBodegaViewModel.indice.value?.plus(1)!!)){
             reconteoBodegaViewModel.zonaSiguiente.value = sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!.plus(1))?.rcoUbicacion
         }
-        textPaginacion?.text = "Reg. " + reconteoBodegaViewModel.indice.value.toString() + "/" + reconteoBodegaViewModel.total.value.toString()
+        reconteoBodegaViewModel.paginacion.value = "Reg. " + (reconteoBodegaViewModel.indice.value.toString() + 1) + "/" + reconteoBodegaViewModel.total.value.toString()
     }
 
 
@@ -253,7 +250,6 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
 
         override fun onPreExecute() {
             super.onPreExecute()
-            activity?.progressBar?.visibility = View.VISIBLE
         }
 
         override fun doInBackground(vararg p0: String?): Int? {
@@ -263,14 +259,12 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
             db = InventarioDatabase.getInventarioDataBase(context = activity?.applicationContext!!)
             reconteoBodegaDao = db?.reconteoBodegaDao()
             sesionAplicacion?.listaReconteoBodega = reconteoBodegaDao?.getReconteosBodega()
-
             return reconteoBodegaDao?.count()
         }
 
         override fun onPostExecute(result: Int?) {
             super.onPostExecute(result)
             reconteoBodegaViewModel.total.value = result
-            activity?.progressBar?.visibility = View.INVISIBLE
             reconteoBodegaViewModel.zonaActual.value = sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!)?.rcoUbicacion
             reconteoBodegaViewModel.descripcion.value = sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!)?.descripcionItem
             reconteoBodegaViewModel.barra.value = sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!)?.barra
@@ -279,6 +273,7 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
             if(sesionAplicacion?.listaReconteoBodega?.size!! >= (reconteoBodegaViewModel.indice.value?.plus(1)!!)){
                 reconteoBodegaViewModel.zonaSiguiente.value = sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!.plus(1))?.rcoUbicacion
             }
+            reconteoBodegaViewModel.paginacion.value = "Reg. " + (reconteoBodegaViewModel.indice.value.toString() + 1) + "/" + reconteoBodegaViewModel.total.value.toString()
         }
     }
 }

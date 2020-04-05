@@ -10,10 +10,13 @@ import ec.com.comohogar.inventario.modelo.Empleado;
 import ec.com.comohogar.inventario.modelo.Inventario;
 import ec.com.comohogar.inventario.modelo.Lugar;
 import ec.com.comohogar.inventario.persistencia.entities.ReconteoBodega;
+import ec.com.comohogar.inventario.persistencia.entities.ReconteoLocal;
 
 public class SesionAplicacion extends Application {
 
     private List<ReconteoBodega> listaReconteoBodega = new ArrayList<>();
+
+    private List<ReconteoLocal> listaReconteoLocal= new ArrayList<>();
 
     private List<Lugar> listaLugares = new ArrayList<>();
 
@@ -30,6 +33,12 @@ public class SesionAplicacion extends Application {
     private Long usuId;
 
     private Integer numConteo;
+
+    private Integer tipoInventario;
+
+    private String tipo;
+
+    private Boolean primeraVez = true;
 
     public List<ReconteoBodega> getListaReconteoBodega() {
         return listaReconteoBodega;
@@ -101,5 +110,37 @@ public class SesionAplicacion extends Application {
 
     public void setNumConteo(Integer numConteo) {
         this.numConteo = numConteo;
+    }
+
+    public Integer getTipoInventario() {
+        return tipoInventario;
+    }
+
+    public void setTipoInventario(Integer tipoInventario) {
+        this.tipoInventario = tipoInventario;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public List<ReconteoLocal> getListaReconteoLocal() {
+        return listaReconteoLocal;
+    }
+
+    public void setListaReconteoLocal(List<ReconteoLocal> listaReconteoLocal) {
+        this.listaReconteoLocal = listaReconteoLocal;
+    }
+
+    public Boolean getPrimeraVez() {
+        return primeraVez;
+    }
+
+    public void setPrimeraVez(Boolean primeraVez) {
+        this.primeraVez = primeraVez;
     }
 }

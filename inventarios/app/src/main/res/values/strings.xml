@@ -7,12 +7,6 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Configuración</string>
 
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
-    <string name="menu_tools">Tools</string>
-    <string name="menu_share">Share</string>
-    <string name="menu_send">Send</string>
-
     <string name="menu_conteo">Conteo</string>
     <string name="menu_pendiente">Consulta pendientes</string>
     <string name="menu_enviados">Consulta enviados</string>
@@ -25,7 +19,7 @@
     <string name="barraAnterior">Barra anterior</string>
     <string name="cantidadAnterior">Cantidad anterior</string>
     <string name="buttonGuardar">Guardar</string>
-    <string name="title_activity_login">Ingresar</string>
+    <string name="title_activity_login">Inventario</string>
     <string name="empleado">Número de empleado</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Ingresar</string>
@@ -34,6 +28,7 @@
     <string name="inventarios_comohogar">Inventarios COMOHOGAR</string>
     <string name="reconteo_bodega">Reconteo Bodega</string>
     <string name="reconteo_local">Reconteo Local</string>
+    <string name="resumen">Resumen</string>
     <string name="siguiente">Siguiente:</string>
     <string name="actual">Actual:</string>
     <string name="item">Item:</string>

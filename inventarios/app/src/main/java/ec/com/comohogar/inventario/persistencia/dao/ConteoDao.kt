@@ -22,4 +22,13 @@ interface ConteoDao {
 
     @Query("SELECT * FROM Conteo WHERE estado == 'PEN'")
     fun getConteoPendiente(): List<Conteo>
+
+    @Query("SELECT count(*) FROM Conteo")
+    fun count(): Int
+
+    @Query("SELECT count(*) FROM Conteo WHERE estado = 'PEN'")
+    fun countPendiente(): Int
+
+    @Query("SELECT count(*) FROM Conteo WHERE estado = 'ENV'")
+    fun countEnviado(): Int
 }

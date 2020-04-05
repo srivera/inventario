@@ -14,8 +14,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
-import android.widget.ProgressBar
-import androidx.navigation.NavController
+import android.widget.TextView
 import androidx.navigation.NavGraph
 import androidx.navigation.fragment.NavHostFragment
 import com.google.gson.Gson
@@ -26,6 +25,8 @@ import ec.com.comohogar.inventario.modelo.Inventario
 import ec.com.comohogar.inventario.persistencia.InventarioDatabase
 import ec.com.comohogar.inventario.scanner.ScanActivity
 import ec.com.comohogar.inventario.ui.conteo.ConteoFragment
+import ec.com.comohogar.inventario.ui.enviado.ConsultaEnviadoFragment
+import ec.com.comohogar.inventario.ui.pendiente.ConsultaPendienteFragment
 import ec.com.comohogar.inventario.util.Constantes
 import ec.com.comohogar.inventario.ui.reconteobodega.ReconteoBodegaFragment
 import ec.com.comohogar.inventario.ui.reconteolocal.ReconteoLocalFragment
@@ -33,20 +34,15 @@ import ec.com.comohogar.inventario.webservice.ApiClient
 import retrofit2.Call
 import java.util.*
 
-
 class MainActivity : ScanActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     private var sesionAplicacion: SesionAplicacion? = null
 
-    var progressBar: ProgressBar? = null
-
     var tipo: String? = null
 
     private lateinit var navGraph: NavGraph
-
-    private lateinit var navController: NavController
 
     companion object {
         private const val ES_CONTEO = "esConteo"
@@ -56,7 +52,6 @@ class MainActivity : ScanActivity() {
             })
         }
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,10 +68,17 @@ class MainActivity : ScanActivity() {
         val graphInflater = navHostFragment?.navController?.navInflater
         navGraph = graphInflater?.inflate(R.navigation.mobile_navigation)!!
 
+        var header = navView.getHeaderView(0)
+        var textInventario = header?.findViewById<TextView>(R.id.textInventario);
+        var textUsuario = header?.findViewById<TextView>(R.id.textUsuario);
+        var textNombre= header?.findViewById<TextView>(R.id.textNombre);
+
         val inventarioPreferences: SharedPreferences = getSharedPreferences(Constantes.PREF_NAME, 0)
-        var tipoInventario = inventarioPreferences.getInt(Constantes.TIPO_INVENTARIO, 0)
-        tipo = inventarioPreferences.getString(Constantes.ES_CONTEO_RECONTEO, "")
-        if (tipo.equals(Constantes.ES_RECONTEO)) {
+        var tipoInventario = sesionAplicacion?.tipoInventario
+        cargarSesion(inventarioPreferences)
+
+        tipo = sesionAplicacion?.tipo
+        if (sesionAplicacion?.tipo.equals(Constantes.ES_RECONTEO)) {
             val gson = Gson()
             val json = inventarioPreferences.getString(Constantes.ASIGNACION_USUARIO, "");
             val asignacionUsuario = gson.fromJson(json, AsignacionUsuario::class.java)
@@ -84,7 +86,7 @@ class MainActivity : ScanActivity() {
             sesionAplicacion?.cinId = asignacionUsuario.cinId
             sesionAplicacion?.usuId = asignacionUsuario.usuId
             sesionAplicacion?.numConteo = asignacionUsuario.numeroConteo.toInt()
-        } else if (tipo.equals(Constantes.ES_CONTEO)) {
+        } else if (sesionAplicacion?.tipo.equals(Constantes.ES_CONTEO)) {
             val gson = Gson()
             val json = inventarioPreferences.getString(Constantes.CONTEO, "");
             val conteo = gson.fromJson(json, Conteo::class.java)
@@ -92,34 +94,21 @@ class MainActivity : ScanActivity() {
             sesionAplicacion?.cinId = conteo.cinId
             sesionAplicacion?.usuId = conteo.usuId
             sesionAplicacion?.numConteo = conteo.cinNumConteo.toInt()
-        } else {
-
         }
-
-        val gson = Gson()
-        val json = inventarioPreferences.getString(Constantes.EMPLEADO, "");
-        val empleado = gson.fromJson(json, Empleado::class.java)
-        sesionAplicacion?.empleado = empleado
-
-        cargarSesion(inventarioPreferences)
-
-       // inicializarMenuFragment(tipoInventario, navView, drawerLayout)
+//        textInventario?.text = "Inventario: " + sesionAplicacion?.binId + ", Conteo: " + sesionAplicacion?.cinId + ", Número: " + sesionAplicacion?.numConteo
+//        textUsuario?.text = "Id: " + sesionAplicacion?.usuId.toString() + ", Empleado No.: " + sesionAplicacion?.empleado?.empId.toString()
+//        textNombre?.text = "Nombre: "  + sesionAplicacion?.empleado?.empNombreCompleto.toString()
 
         val destination = if (intent.getBooleanExtra(
                 ES_CONTEO,
                 false
             )
-        ) R.id.nav_conteo else R.id.nav_reconteo_bodega
+        ) R.id.nav_conteo else if (tipoInventario!!.equals(Constantes.INVENTARIO_BODEGA)) R.id.nav_reconteo_bodega else R.id.nav_reconteo_local
+
         navGraph.startDestination = destination
         navController.graph = navGraph
 
-
-        appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.nav_conteo,
-                R.id.nav_tools, R.id.nav_share, R.id.nav_send
-            ), drawerLayout
-        )
+        inicializarMenuFragment(sesionAplicacion?.tipoInventario, navView, drawerLayout)
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
@@ -127,22 +116,18 @@ class MainActivity : ScanActivity() {
     }
 
     private fun inicializarMenuFragment(
-        tipoInventario: Int,
+        tipoInventario: Int?,
         navView: NavigationView,
         drawerLayout: DrawerLayout
     ) {
-        val mFragmentManager = supportFragmentManager
-
         if (tipo.equals(Constantes.ES_RECONTEO)) {
-            if (tipoInventario.equals(Constantes.INVENTARIO_BODEGA)) {
+            if (tipoInventario!!.equals(Constantes.INVENTARIO_BODEGA)) {
                 val t = Timer()
                 t.scheduleAtFixedRate(
                     object : TimerTask() {
-
                         override fun run() {
                             procesarReconteosBodega()
                         }
-
                     },
                     0,
                     10000
@@ -152,61 +137,50 @@ class MainActivity : ScanActivity() {
                 appBarConfiguration = AppBarConfiguration(
                     setOf(
                         R.id.nav_reconteo_bodega,
-                        R.id.nav_tools, R.id.nav_share, R.id.nav_send
+                        R.id.nav_pendiente, R.id.nav_enviado, R.id.nav_error, R.id.nav_salir
                     ), drawerLayout
                 )
-                val fragmentTransaction = mFragmentManager.beginTransaction()
-                fragmentTransaction.replace(R.id.nav_host_fragment, ReconteoBodegaFragment())
-                    .commit()
-                //supportFragmentManager.fragments.removeAt(0)
-                //supportFragmentManager.fragments.add(0, ReconteoBodegaFragment())
-
-                val navHostFragment = supportFragmentManager.fragments.first() as? NavHostFragment
-                val graphInflater = navHostFragment?.navController?.navInflater
-                navGraph = graphInflater?.inflate(R.navigation.mobile_navigation)!!
-               // navController = navHostFragment.navController
-
-                navGraph.startDestination = R.id.nav_reconteo_bodega
-                navController.graph = navGraph
-
 
             } else if (tipoInventario.equals(Constantes.INVENTARIO_LOCAL)) {
+                val t = Timer()
+                t.scheduleAtFixedRate(
+                    object : TimerTask() {
+                        override fun run() {
+                            procesarReconteosLocal()
+                        }
+                    },
+                    0,
+                    10000
+                )
                 navView.menu.clear()
                 navView.inflateMenu(R.menu.menu_reconteo_local)
                 appBarConfiguration = AppBarConfiguration(
                     setOf(
                         R.id.nav_reconteo_local,
-                        R.id.nav_tools, R.id.nav_share, R.id.nav_send
+                        R.id.nav_pendiente, R.id.nav_enviado, R.id.nav_error, R.id.nav_salir
                     ), drawerLayout
                 )
-                val fragmentTransaction = mFragmentManager.beginTransaction()
-                fragmentTransaction.replace(R.id.nav_host_fragment, ReconteoLocalFragment())
-                    .commit()
             }
         } else {
-
             val t = Timer()
             t.scheduleAtFixedRate(
                 object : TimerTask() {
-
                     override fun run() {
                         procesarConteos()
                     }
-
                 },
                 0,
                 10000
             )
-
+            navView.menu.clear()
+            navView.inflateMenu(R.menu.menu_conteo)
             appBarConfiguration = AppBarConfiguration(
                 setOf(
                     R.id.nav_conteo,
-                    R.id.nav_tools, R.id.nav_share, R.id.nav_send
+                    R.id.nav_pendiente, R.id.nav_enviado, R.id.nav_error, R.id.nav_salir
                 ), drawerLayout
             )
         }
-
-
     }
 
     private fun procesarConteos() {
@@ -219,7 +193,6 @@ class MainActivity : ScanActivity() {
                 conteo.numConteo?.toLong(), conteo.zona, conteo.barra,
                 conteo.cantidad
             )
-
             try {
                 val response = call.execute()
                 val apiResponse = response.body()
@@ -227,8 +200,6 @@ class MainActivity : ScanActivity() {
                     conteo.estado = Constantes.ESTADO_ENVIADO
                     conteoDao?.actualizarConteo(conteo)
                 }
-
-                System.out.println(apiResponse)
             } catch (ex: Exception) {
                 ex.printStackTrace()
             }
@@ -243,7 +214,7 @@ class MainActivity : ScanActivity() {
             val call: Call<Long> = ApiClient.getClient.insertarConteoUsuarioRuta(
                 reconteo.usuIdAsignado.toLong(), reconteo.cinId,
                 reconteo.rcoUbicacion, reconteo.barra,
-                reconteo.cantidad.toLong(),reconteo.binId,
+                reconteo.cantidad.toLong(), reconteo.binId,
                 reconteo.rcoId.toInt()
             )
             try {
@@ -253,8 +224,29 @@ class MainActivity : ScanActivity() {
                     reconteo.estado = Constantes.ESTADO_ENVIADO
                     reconteoBodegaDao?.actualizarConteo(reconteo)
                 }
+            } catch (ex: Exception) {
+                ex.printStackTrace()
+            }
+        }
+    }
 
-                System.out.println(apiResponse)
+    private fun procesarReconteosLocal() {
+        var db: InventarioDatabase? = InventarioDatabase.getInventarioDataBase(this@MainActivity)
+        var reconteoLocalDao = db?.reconteoLocalDao()
+        val reconteos = reconteoLocalDao?.getReconteoLocalPendiente()
+        for (reconteo in reconteos!!) {
+            val call: Call<Long> = ApiClient.getClient.ingresarConteo(
+               sesionAplicacion?.usuId, reconteo.cinId,
+                "-", reconteo.barra,
+                reconteo.cantidad
+            )
+            try {
+                val response = call.execute()
+                val apiResponse = response.body()
+                if (apiResponse!!.equals(1L)) {
+                    reconteo.estado = Constantes.ESTADO_ENVIADO
+                    reconteoLocalDao?.actualizarConteo(reconteo)
+                }
             } catch (ex: Exception) {
                 ex.printStackTrace()
             }
@@ -297,21 +289,28 @@ class MainActivity : ScanActivity() {
                 fragment.refrescarPantalla(codigoLeido)
             } else if (fragment is ReconteoBodegaFragment) {
                 fragment.refrescarPantalla(codigoLeido)
+            } else if (fragment is ReconteoLocalFragment) {
+                fragment.refrescarPantalla(codigoLeido)
+            } else if (fragment is ConsultaEnviadoFragment) {
+                fragment.refrescarPantalla(codigoLeido)
+            } else if (fragment is ConsultaPendienteFragment) {
+                fragment.refrescarPantalla(codigoLeido)
             }
         }
     }
 
     override fun refrescarEstado(estado: String) {
-        Log.i("hijo", "hijo")
         val navHostFragment = supportFragmentManager.fragments.first() as? NavHostFragment
         if (navHostFragment != null) {
             val childFragments = navHostFragment.childFragmentManager.fragments
             val fragment = childFragments.get(0)
             if (fragment is ConteoFragment) {
                 fragment.refrescarEstado(estado)
+            }else if (fragment is ReconteoBodegaFragment) {
+                fragment.refrescarEstado(estado)
+            } else if (fragment is ReconteoLocalFragment) {
+                fragment.refrescarEstado(estado)
             }
         }
     }
-
-
 }

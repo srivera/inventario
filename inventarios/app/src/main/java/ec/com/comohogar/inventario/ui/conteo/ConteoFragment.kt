@@ -103,6 +103,11 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
 
         }
 
+        conteoViewModel.inventario.value = "Inventario: " + sesionAplicacion?.binId.toString()
+        conteoViewModel.conteo.value = " Conteo: " + sesionAplicacion?.cinId.toString()
+        conteoViewModel.numconteo.value = " Número: " + sesionAplicacion?.numConteo.toString()
+        conteoViewModel.usuario.value = " Usuario: " + sesionAplicacion?.empleado?.empId.toString() + " " + sesionAplicacion?.empleado?.empNombreCompleto.toString()
+
         return root
     }
 

@@ -1,11 +1,8 @@
 package ec.com.comohogar.inventario.modelo
 
-import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-
 data class EstructuraBodega(
-
 
         @SerializedName("lugId")
         var lugId: kotlin.Long,
@@ -23,4 +20,3 @@ data class EstructuraBodega(
         val lugDireccion: String,
         @SerializedName("lugCodigoSri")
         val lugCodigoSri: String)
-

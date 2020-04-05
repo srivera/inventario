@@ -1,12 +1,8 @@
 package ec.com.comohogar.inventario.modelo
 
-import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-
 data class Lugar(
-
-
         @SerializedName("lugId")
         var lugId: kotlin.Long,
         @SerializedName("forId")
@@ -23,4 +19,3 @@ data class Lugar(
         val lugDireccion: String,
         @SerializedName("lugCodigoSri")
         val lugCodigoSri: String)
-

@@ -9,13 +9,24 @@ import java.util.concurrent.TimeUnit
 
 object ApiClient {
 
+
     var BASE_URL:String="http://200.105.234.42:8080/"
     val getClient: APIService
+
+        get() {
+
+            return getRetrofit.create(APIService::class.java)
+
+        }
+
+
+    val getRetrofit: Retrofit
+
         get() {
 
             val gson = GsonBuilder()
-                    .setLenient()
-                    .create()
+                .setLenient()
+                .create()
             val interceptor = HttpLoggingInterceptor()
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
             val client = OkHttpClient.Builder().addInterceptor(interceptor)
@@ -23,12 +34,12 @@ object ApiClient {
                 .readTimeout(60, TimeUnit.SECONDS).build()
 
             val retrofit = Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .client(client)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .build()
+                .baseUrl(BASE_URL)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build()
 
-            return retrofit.create(APIService::class.java)
+            return retrofit
 
         }
 

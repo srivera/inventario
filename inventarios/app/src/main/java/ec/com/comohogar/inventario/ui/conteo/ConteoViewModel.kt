@@ -2,13 +2,9 @@ package ec.com.comohogar.inventario.ui.conteo
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import ec.com.comohogar.inventario.webservice.ApiClient
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import ec.com.comohogar.inventario.ui.base.BaseViewModel
 
-class ConteoViewModel : ViewModel() {
+class ConteoViewModel  : BaseViewModel() {
 
     var zona = MutableLiveData<String>()
     var barra = MutableLiveData<String>()
@@ -66,22 +62,6 @@ class ConteoViewModel : ViewModel() {
             cant = cantidadAnterior.value
         }
         Log.i("barra", barr + " / " + cant)
-
-        /*val call: Call<Long> = ApiClient.getClient.ingresarConteo(idUsuario, numeroConteo, zona.value!!, barr!!,
-            cant!!.toInt()
-        )
-        call.enqueue(object : Callback<Long> {
-
-            override fun onResponse(call: Call<Long>?, response: Response<Long>?) {
-                Log.i("respuesta", response!!.body()!!.toString())
-                limpiarFormulario()
-            }
-
-            override fun onFailure(call: Call<Long>, t: Throwable) {
-                Log.i("error", "error")
-            }
-
-        })*/
     }
 
 }
