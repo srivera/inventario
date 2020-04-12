@@ -20,6 +20,8 @@ import com.symbol.emdk.barcode.StatusData;
 
 import java.util.List;
 
+import ec.com.comohogar.inventario.validacion.ValidacionBarra;
+
 public abstract class ScanActivity extends AppCompatActivity implements
         EMDKManager.EMDKListener, Scanner.DataListener, Scanner.StatusListener,
         BarcodeManager.ScannerConnectionListener {
@@ -267,8 +269,20 @@ public abstract class ScanActivity extends AppCompatActivity implements
      * scanner reads
      */
     protected void onQRCodeReaded(String data) {
-        Toast.makeText(ScanActivity.this, data, Toast.LENGTH_SHORT).show();
-        refrescarPantalla(data);
+        if(data.length() == 12) {
+            data ="0" + data;
+        }else if(data.contains("-") && data.startsWith("00")){
+            data = data.substring(2, data.length());
+        }
+        if(data.length() == 13) {
+            if (ValidacionBarra.Companion.validarEAN13Barra(data)) {
+                refrescarPantalla(data);
+            } else {
+                refrescarPantalla("Formato incorrecto");
+            }
+        }else{
+            refrescarPantalla(data);
+        }
     }
 
     public void refrescarPantalla(String codigoLeido) {

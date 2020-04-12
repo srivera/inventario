@@ -1,7 +1,6 @@
 package ec.com.comohogar.inventario.ui.conteo
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +21,9 @@ import ec.com.comohogar.inventario.persistencia.entities.Conteo
 import android.os.AsyncTask
 import ec.com.comohogar.inventario.SesionAplicacion
 import ec.com.comohogar.inventario.util.Constantes
+import ec.com.comohogar.inventario.validacion.ValidacionBarra
+import ec.com.comohogar.inventario.validacion.ValidacionCantidad
+import ec.com.comohogar.inventario.validacion.ValidacionZona
 
 
 class ConteoFragment : Fragment(), View.OnKeyListener {
@@ -36,7 +38,6 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
 
     private var textBarraAnterior: TextView? = null
     private var textCantidadAnterior: TextView? = null
-    private var textEstado: TextView? = null
 
     private var buttonGuardar: Button? = null
 
@@ -51,20 +52,13 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
         sesionAplicacion = activity?.applicationContext as SesionAplicacion?
 
         val binding: FragmentConteoBinding
-
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_conteo, container, false
         )
-
         binding.setLifecycleOwner(this)
-
         conteoViewModel = ViewModelProviders.of(this).get(ConteoViewModel::class.java)
-
         binding.uiController = this
-
-
         binding.conteoViewModel = conteoViewModel
-
         val root = binding.getRoot()
 
         editZona = root.findViewById(R.id.editZona)
@@ -73,7 +67,6 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
 
         textBarraAnterior = root.findViewById(R.id.textBarraAnterior)
         textCantidadAnterior = root.findViewById(R.id.textCantidadAnterior)
-        textEstado = root.findViewById(R.id.textEstado)
 
         buttonGuardar = root.findViewById(R.id.buttonGuardar)
 
@@ -106,81 +99,140 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
         conteoViewModel.inventario.value = "Inventario: " + sesionAplicacion?.binId.toString()
         conteoViewModel.conteo.value = " Conteo: " + sesionAplicacion?.cinId.toString()
         conteoViewModel.numconteo.value = " Número: " + sesionAplicacion?.numConteo.toString()
-        conteoViewModel.usuario.value = " Usuario: " + sesionAplicacion?.empleado?.empId.toString() + " " + sesionAplicacion?.empleado?.empNombreCompleto.toString()
+        conteoViewModel.usuario.value = " Usuario: " + sesionAplicacion?.empleado?.empCodigo.toString() + " " + sesionAplicacion?.empleado?.empNombreCompleto.toString()
 
         return root
     }
 
 
      fun refrescarPantalla(codigoLeido: String) {
-        Log.i("fragment", "fragment")
          if(editZona!!.hasFocus()) {
-             editZona!!.setText(codigoLeido)
-             editBarra?.requestFocus()
+             if(!ValidacionZona.validarZona(codigoLeido, sesionAplicacion!!)){
+                 editZona?.error = "Formato incorrecto"
+                 return
+             }else{
+                 editZona?.error = null
+                 editZona!!.setText(codigoLeido)
+                 editBarra?.requestFocus()
+             }
          } else if(editBarra!!.hasFocus()) {
-             editBarra!!.setText(codigoLeido)
-             editCantidad?.requestFocus()
+             if(codigoLeido.contains(" ") || !ValidacionBarra.validarFormatoBarra(codigoLeido) || !ValidacionBarra.validarEAN13Barra(codigoLeido) ){
+                 editBarra?.error =  "Formato incorrecto"
+             }else {
+                 editBarra?.error = null
+                 editBarra!!.setText(codigoLeido)
+                 editCantidad?.requestFocus()
+             }
          } else if(editCantidad!!.hasFocus()) {
-             conteoViewModel.saltoPorScaneo = true
-             conteoViewModel.barraAnterior.value = conteoViewModel.barra.value
-             conteoViewModel.cantidadAnterior.value = conteoViewModel.cantidad.value
-             conteoViewModel.barra.value = codigoLeido
-             conteoViewModel.cantidad.value = ""
-             editBarra!!.setText(codigoLeido)
-             editCantidad?.requestFocus()
-             guardarConteo()
+             if(conteoViewModel.cantidad.value.isNullOrBlank()) {
+                 editCantidad?.error = "Ingrese la cantidad"
+                 editCantidad?.requestFocus()
+             }else if(ValidacionCantidad.validarCantidad(conteoViewModel.cantidad.value!!.toInt())){
+                 editCantidad?.error =  "Cantidad fuera de rango"
+                 editCantidad?.requestFocus()
+             }else {
+                 editCantidad?.error =  null
+                 if (codigoLeido.contains(" ") || !ValidacionBarra.validarFormatoBarra(codigoLeido) || !ValidacionBarra.validarEAN13Barra(codigoLeido)) {
+                     editBarra?.error = "Formato incorrecto"
+                     conteoViewModel.cantidad.value = ""
+                     conteoViewModel.barra.value = ""
+                     editBarra?.requestFocus()
+                 } else {
+                     conteoViewModel.saltoPorScaneo = true
+                     conteoViewModel.barraAnterior.value = conteoViewModel.barra.value
+                     conteoViewModel.cantidadAnterior.value = conteoViewModel.cantidad.value
+                     conteoViewModel.barra.value = codigoLeido
+                     conteoViewModel.cantidad.value = ""
+                     editBarra!!.setText(codigoLeido)
+                     editBarra?.error = null
+                     editCantidad?.requestFocus()
+                     guardarConteo()
+                 }
+             }
+
          }
      }
 
     fun refrescarEstado(estado: String) {
-        textEstado?.setText(estado)
     }
 
     override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_ENTER && event?.action == KeyEvent.ACTION_UP){
             if(v?.id == R.id.editCantidad){
                 guardarConteo()
-
             }
         }
         return false
     }
 
     fun guardarConteo() {
+        if(conteoViewModel?.saltoPorScaneo!!){
+            conteoViewModel?.saltoPorScaneo = false
+            insertarConteo()
+        }else{
+            var guardar: Boolean? = validarCampos()
+            if(guardar!!) {
+                conteoViewModel?.barraAnterior.value = conteoViewModel?.barra.value.toString()
+                conteoViewModel?.cantidadAnterior.value =
+                    conteoViewModel?.cantidad.value.toString()
+                conteoViewModel.barra.value = ""
+                conteoViewModel.cantidad.value = ""
+                editBarra?.requestFocus()
+                insertarConteo()
+            }
+        }
+    }
+
+    private fun insertarConteo() {
+        AsyncTask.execute {
+            val conteo = Conteo(
+                barra = conteoViewModel.barraAnterior.value.toString(),
+                zona = editZona?.text.toString(),
+                cantidad = conteoViewModel.cantidadAnterior.value.toString().toInt(),
+                estado = Constantes.ESTADO_PENDIENTE,
+                cinId = sesionAplicacion?.cinId,
+                binId = sesionAplicacion?.binId,
+                numConteo = sesionAplicacion?.numConteo,
+                usuId = sesionAplicacion?.usuId
+            )
+            db = InventarioDatabase.getInventarioDataBase(context = activity?.applicationContext!!)
+            conteoDao = db?.conteoDao()
+            conteoDao?.insertarConteo(conteo)
+        }
+    }
+
+
+    private fun validarCampos(): Boolean? {
         var guardar: Boolean? = true
         if (editZona?.text.isNullOrBlank()) {
             editZona?.error = "Ingrese la zona"
             guardar = false
+        } else if(!ValidacionZona.validarZona(editZona?.text.toString(), sesionAplicacion!!)){
+            editZona?.error = "Formato incorrecto"
+            guardar = false
         }else{
             editZona?.error = null
         }
+
         if (editBarra?.text.isNullOrBlank()) {
             editBarra?.error = "Ingrese la barra"
             guardar = false
-        }else{
+        }else if(editBarra?.text.toString().contains(" ") || !ValidacionBarra.validarFormatoBarra(editBarra?.text.toString()) || !ValidacionBarra.validarEAN13Barra(editBarra?.text.toString()) ){
+            editBarra?.error =  "Formato incorrecto"
+            guardar = false
+        } else {
             editBarra?.error = null
         }
         if (editCantidad?.text.isNullOrBlank()) {
             editCantidad?.error = "Ingrese la cantidad"
             guardar = false
-        }else{
+        }else if(ValidacionCantidad.validarCantidad(conteoViewModel.cantidad.value!!.toInt())){
+            editCantidad?.error =  "Cantidad fuera de rango"
+            editCantidad?.requestFocus()
+            guardar = false
+        } else {
             editCantidad?.error = null
         }
-        if(guardar!!) {
-            AsyncTask.execute {
-                // Insert Data
-                val conteo =  Conteo(barra = editBarra?.text.toString(),
-                    zona = editZona?.text.toString(),
-                    cantidad = editCantidad?.text.toString().toInt(), estado = Constantes.ESTADO_PENDIENTE,
-                    cinId = sesionAplicacion?.cinId, binId = sesionAplicacion?.binId,
-                    numConteo =  sesionAplicacion?.numConteo, usuId = sesionAplicacion?.usuId)
-                db = InventarioDatabase.getInventarioDataBase(context = activity?.applicationContext!!)
-                conteoDao = db?.conteoDao()
-                val insertarConteo = conteoDao?.insertarConteo(conteo)
-                val conteos = conteoDao?.getConteos()
-            }
-
-            conteoViewModel.guardarConteo(sesionAplicacion?.conteo?.cinId, sesionAplicacion?.empleado?.usuId)
-        }
+        return guardar
     }
 }

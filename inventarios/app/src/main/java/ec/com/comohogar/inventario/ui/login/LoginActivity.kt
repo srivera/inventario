@@ -4,7 +4,6 @@ import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
-import android.view.KeyEvent
 import android.view.View
 import android.widget.*
 
@@ -27,7 +26,9 @@ import ec.com.comohogar.inventario.adapter.InventarioAdapter
 import ec.com.comohogar.inventario.databinding.ActivityLoginBinding
 import ec.com.comohogar.inventario.modelo.*
 
-class LoginActivity : AppCompatActivity(), View.OnKeyListener {
+
+class LoginActivity : AppCompatActivity() {
+
 
     private var spinnerLocal: Spinner? = null
 
@@ -42,6 +43,8 @@ class LoginActivity : AppCompatActivity(), View.OnKeyListener {
     private var listaConteo: List<Conteo>? = null
 
     private var tipo: String? = null
+
+    private var binId: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,8 +83,6 @@ class LoginActivity : AppCompatActivity(), View.OnKeyListener {
             textConteo?.visibility = View.INVISIBLE
         }
 
-        editUsuario?.setOnKeyListener(this)
-        spinnerLocal?.requestFocus()
 
         btnSiguiente.setOnClickListener {
             if (!editUsuario?.text.isNullOrBlank()) {
@@ -96,21 +97,6 @@ class LoginActivity : AppCompatActivity(), View.OnKeyListener {
             finish()
         }
 
-
-        val call: Call<List<Lugar>> = ApiClient.getClient.consultarLocales()
-        call.enqueue(object : Callback<List<Lugar>> {
-
-            override fun onResponse(call: Call<List<Lugar>>?, response: Response<List<Lugar>>?) {
-                Log.i("respuesta", response!!.body()!!.toString())
-                spinnerLocal?.adapter = LocalAdapter(applicationContext!!, response.body())
-                sesionAplicacion?.listaLugares = response.body()
-            }
-
-            override fun onFailure(call: Call<List<Lugar>>, t: Throwable) {
-                Log.i("error", "error")
-            }
-
-        })
 
         spinnerLocal?.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
@@ -138,31 +124,64 @@ class LoginActivity : AppCompatActivity(), View.OnKeyListener {
                 // write code to perform some action
             }
         }
+
+        consultarLocales()
     }
 
+    private fun consultarLocales() {
+        val call: Call<List<Lugar>> = ApiClient.getClient.consultarLocales()
+        call.enqueue(object : Callback<List<Lugar>> {
 
-    override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_ENTER && event?.action == KeyEvent.ACTION_UP){
-            consultarUsuario()
-        }
-        return false
+            override fun onResponse(call: Call<List<Lugar>>?, response: Response<List<Lugar>>?) {
+                Log.i("respuesta", response!!.body()!!.toString())
+                spinnerLocal?.adapter = LocalAdapter(applicationContext!!, response.body())
+                sesionAplicacion?.listaLugares = response.body()
+            }
+
+            override fun onFailure(call: Call<List<Lugar>>, t: Throwable) {
+                Log.i("error", "error")
+                val dialogBuilder = AlertDialog.Builder(this@LoginActivity)
+
+                dialogBuilder.setMessage("Verifique su conexión a la red wifi")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, id ->
+                        consultarLocales()
+                    })
+
+                val alert = dialogBuilder.create()
+                alert.setTitle("Error")
+                alert.show()
+            }
+
+        })
     }
+
 
     fun ingresar() {
         val inventarioPreferences: SharedPreferences = getSharedPreferences(Constantes.PREF_NAME, 0)
-        val prefsEditor = inventarioPreferences.edit()
         val gson = Gson()
+        val json = inventarioPreferences.getString(Constantes.EMPLEADO, "");
+        val empleado = gson.fromJson(json, Empleado::class.java)
+        val prefsEditor = inventarioPreferences.edit()
+        prefsEditor.putString(Constantes.LOCAL, gson.toJson(sesionAplicacion?.listaLugares?.get(spinnerLocal?.selectedItemPosition!!)))
         prefsEditor.putString(Constantes.INVENTARIO, gson.toJson(listaInventario?.get(spinnerInventario?.selectedItemPosition!!)))
         prefsEditor.putString(Constantes.CONTEO, gson.toJson(listaConteo?.get(spinnerConteo?.selectedItemPosition!!)))
         prefsEditor.putString(Constantes.ES_CONTEO_RECONTEO, tipo)
         prefsEditor.commit()
         sesionAplicacion?.tipo = tipo
 
-        if(tipo.equals(Constantes.ES_CONTEO)){
-            MainActivity.open(this, true)
+        if(empleado?.usuId == null || empleado?.empCodigo.isNullOrBlank()){
+            consultarUsuario()
         }else{
-            MainActivity.open(this, false)
+            if(tipo.equals(Constantes.ES_CONTEO)){
+                binId = listaConteo?.get(spinnerConteo?.selectedItemPosition!!)?.binId?.toInt()
+                verificarTipoInventario(binId)
+                MainActivity.open(this, true)
+            }else{
+                MainActivity.open(this, false)
+            }
         }
+
     }
 
     private fun consultarUsuario() {
@@ -183,6 +202,8 @@ class LoginActivity : AppCompatActivity(), View.OnKeyListener {
                     btnSiguiente.setEnabled(true)
                     if(tipo.equals(Constantes.ES_RECONTEO)) {
                         verificarReconteo()
+                    }else{
+                        verificarTipoInventario(binId)
                     }
                 }else{
                     val dialogBuilder = AlertDialog.Builder(this@LoginActivity)
@@ -191,6 +212,8 @@ class LoginActivity : AppCompatActivity(), View.OnKeyListener {
                         .setCancelable(false)
                         .setPositiveButton("OK", DialogInterface.OnClickListener {
                                 dialog, id ->
+                            val inventarioPreferences: SharedPreferences = getSharedPreferences(Constantes.PREF_NAME, 0)
+                            inventarioPreferences.edit().clear().commit()
                         })
 
                     val alert = dialogBuilder.create()
@@ -202,7 +225,6 @@ class LoginActivity : AppCompatActivity(), View.OnKeyListener {
             override fun onFailure(call: Call<Empleado>, t: Throwable) {
                 Log.i("error", "error")
             }
-
         })
     }
 
@@ -237,6 +259,8 @@ class LoginActivity : AppCompatActivity(), View.OnKeyListener {
                             .setCancelable(false)
                             .setPositiveButton("OK", DialogInterface.OnClickListener {
                                     dialog, id ->
+                                val inventarioPreferences: SharedPreferences = getSharedPreferences(Constantes.PREF_NAME, 0)
+                                inventarioPreferences.edit().clear().commit()
                             })
 
                         val alert = dialogBuilder.create()
@@ -248,6 +272,19 @@ class LoginActivity : AppCompatActivity(), View.OnKeyListener {
 
             override fun onFailure(call: Call<List<AsignacionUsuario>>, t: Throwable) {
                 Log.i("error", "error")
+                val dialogBuilder = AlertDialog.Builder(this@LoginActivity)
+
+                dialogBuilder.setMessage("No tiene asignados reconteos, verifique.")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", DialogInterface.OnClickListener {
+                            dialog, id ->
+                        val inventarioPreferences: SharedPreferences = getSharedPreferences(Constantes.PREF_NAME, 0)
+                        inventarioPreferences.edit().clear().commit()
+                    })
+
+                val alert = dialogBuilder.create()
+                alert.setTitle("Error")
+                alert.show()
             }
 
         })
@@ -266,6 +303,12 @@ class LoginActivity : AppCompatActivity(), View.OnKeyListener {
                 prefsEditor.putInt(Constantes.TIPO_INVENTARIO, tipoInventario)
                 prefsEditor.commit()
                 sesionAplicacion?.tipoInventario = tipoInventario
+
+                if(tipo.equals(Constantes.ES_RECONTEO)){
+                    MainActivity.open(this@LoginActivity, false)
+                }else{
+                    MainActivity.open(this@LoginActivity, true)
+                }
             }
 
             override fun onFailure(call: Call<Int>, t: Throwable) {
@@ -314,6 +357,7 @@ class LoginActivity : AppCompatActivity(), View.OnKeyListener {
                 val json = gson.toJson(response.body()?.get(0))
                 prefsEditor.putString(Constantes.CONTEO, json)
                 prefsEditor.commit()
+                binId = response.body()?.get(0)?.binId?.toInt()
             }
 
             override fun onFailure(call: Call<List<Conteo>> , t: Throwable) {

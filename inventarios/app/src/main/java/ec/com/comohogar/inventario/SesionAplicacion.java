@@ -38,6 +38,8 @@ public class SesionAplicacion extends Application {
 
     private String tipo;
 
+    private String nombreLocal;
+
     private Boolean primeraVez = true;
 
     public List<ReconteoBodega> getListaReconteoBodega() {
@@ -142,5 +144,13 @@ public class SesionAplicacion extends Application {
 
     public void setPrimeraVez(Boolean primeraVez) {
         this.primeraVez = primeraVez;
+    }
+
+    public String getNombreLocal() {
+        return nombreLocal;
+    }
+
+    public void setNombreLocal(String nombreLocal) {
+        this.nombreLocal = nombreLocal;
     }
 }

@@ -9,6 +9,10 @@
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/reconteo_bodega" />
         <item
+            android:id="@+id/nav_conteo"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Correcciones" />
+        <item
             android:id="@+id/nav_pendiente"
             android:icon="@drawable/ic_menu_gallery"
             android:title="@string/menu_pendiente" />

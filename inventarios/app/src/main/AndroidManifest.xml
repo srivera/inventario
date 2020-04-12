@@ -56,6 +56,16 @@
             android:noHistory="false">
 
         </activity>
+
+        <activity
+            android:name=".scanner.ScanActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:noHistory="false">
+
+        </activity>
     </application>
 
 </manifest>

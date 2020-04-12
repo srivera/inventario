@@ -60,10 +60,22 @@ class ConsultaEnviadoFragment : Fragment() {
         buttonBuscar = root.findViewById(R.id.buttonGuardar)
         listview = root.findViewById(R.id.listview)
 
+        editZona?.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus) {
+                consultaEnviadoViewModel.zona.value = ""
+            }
+        }
+
+        editBarra?.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus) {
+                consultaEnviadoViewModel.barra.value = ""
+            }
+        }
+
         consultaEnviadoViewModel.inventario.value = "Inventario: " + sesionAplicacion?.binId.toString()
         consultaEnviadoViewModel.conteo.value = " Conteo: " + sesionAplicacion?.cinId.toString()
         consultaEnviadoViewModel.numconteo.value = " Número: " + sesionAplicacion?.numConteo.toString()
-        consultaEnviadoViewModel.usuario.value = " Usuario: " + sesionAplicacion?.empleado?.empId.toString() + " " + sesionAplicacion?.empleado?.empNombreCompleto.toString()
+        consultaEnviadoViewModel.usuario.value = " Usuario: " + sesionAplicacion?.empleado?.empCodigo.toString() + " " + sesionAplicacion?.empleado?.empNombreCompleto.toString()
 
         recuperarReconteo()
 

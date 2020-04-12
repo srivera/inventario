@@ -58,7 +58,7 @@ class ConsultaErrorFragment : Fragment() {
         consultaErrorViewModel.inventario.value = "Inventario: " + sesionAplicacion?.binId.toString()
         consultaErrorViewModel.conteo.value = " Conteo: " + sesionAplicacion?.cinId.toString()
         consultaErrorViewModel.numconteo.value = " Número: " + sesionAplicacion?.numConteo.toString()
-        consultaErrorViewModel.usuario.value = " Usuario: " + sesionAplicacion?.empleado?.empId.toString() + " " + sesionAplicacion?.empleado?.empNombreCompleto.toString()
+        consultaErrorViewModel.usuario.value = " Usuario: " + sesionAplicacion?.empleado?.empCodigo.toString() + " " + sesionAplicacion?.empleado?.empNombreCompleto.toString()
 
         recuperarReconteo()
         return root
@@ -76,7 +76,7 @@ class ConsultaErrorFragment : Fragment() {
         override fun doInBackground(vararg p0: String?): Int? {
             sesionAplicacion = activity?.applicationContext as SesionAplicacion?
             val call: Call<List<ConteoPocketError>> = ApiClient.getClient.consultarErrores(
-                sesionAplicacion?.usuId!!, sesionAplicacion?.cinId!!)
+                sesionAplicacion?.usuId!!, sesionAplicacion?.binId!!, sesionAplicacion?.numConteo!!.toLong())
             try {
                 val response = call.execute()
                 val listaConteoHistorico = response.body()

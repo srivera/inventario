@@ -12,20 +12,4 @@ class ReconteoLocalViewModel : BaseViewModel() {
 
     var saltoPorScaneo: Boolean? = false
 
-    fun guardarConteo() {
-        if (!saltoPorScaneo!! && !barra.value.toString().equals("")) {
-            this.barraAnterior.value = barra.value.toString()
-            this.cantidadAnterior.value = cantidad.value.toString()
-        }
-    }
-
-    fun limpiarFormulario() {
-        if(!saltoPorScaneo!!) {
-            this.barra.value = ""
-        }else{
-            saltoPorScaneo = false
-        }
-        this.cantidad.value = ""
-    }
-
 }

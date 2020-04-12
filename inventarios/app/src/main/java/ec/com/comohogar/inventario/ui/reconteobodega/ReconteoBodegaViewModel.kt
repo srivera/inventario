@@ -13,8 +13,13 @@ class ReconteoBodegaViewModel : BaseViewModel() {
     var descripcion = MutableLiveData<String>()
     var cantidad = MutableLiveData<String>()
     var paginacion = MutableLiveData<String>()
+    var cantidadAnterior = MutableLiveData<String>()
 
+    var indiceAnterior = MutableLiveData<Int>()
     var indice = MutableLiveData<Int>()
+
     var total = MutableLiveData<Int>()
+
+    var saltoPorScaneo: Boolean? = false
 
 }

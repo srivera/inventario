@@ -4,6 +4,7 @@ import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.os.AsyncTask
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +23,10 @@ import ec.com.comohogar.inventario.persistencia.dao.ConteoDao
 import ec.com.comohogar.inventario.persistencia.dao.ReconteoBodegaDao
 import ec.com.comohogar.inventario.persistencia.dao.ReconteoLocalDao
 import ec.com.comohogar.inventario.util.Constantes
+import ec.com.comohogar.inventario.webservice.ApiClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class SalirFragment : Fragment() {
 
@@ -74,7 +79,7 @@ class SalirFragment : Fragment() {
         salirViewModel.inventario.value = "Inventario: " + sesionAplicacion?.binId.toString()
         salirViewModel.conteo.value = " Conteo: " + sesionAplicacion?.cinId.toString()
         salirViewModel.numconteo.value = " Número: " + sesionAplicacion?.numConteo.toString()
-        salirViewModel.usuario.value = " Usuario: " + sesionAplicacion?.empleado?.empId.toString() + " " + sesionAplicacion?.empleado?.empNombreCompleto.toString()
+        salirViewModel.usuario.value = " Usuario: " + sesionAplicacion?.empleado?.empCodigo.toString() + " " + sesionAplicacion?.empleado?.empNombreCompleto.toString()
 
         cargarDatosPantalla()
 
@@ -82,14 +87,54 @@ class SalirFragment : Fragment() {
     }
 
     fun salir() {
-        val inventarioPreferences: SharedPreferences = activity!!.getSharedPreferences(Constantes.PREF_NAME, 0)
-        inventarioPreferences.edit().clear().commit()
-        activity!!.finish()
+        val dialogBuilder = AlertDialog.Builder(activity!!)
+        dialogBuilder.setMessage("Está seguro que desea salir del inventario?")
+            .setCancelable(false)
+            .setPositiveButton("Si", DialogInterface.OnClickListener { dialog, id ->
+                if(sesionAplicacion?.tipo.equals(Constantes.ES_RECONTEO)) {
+                    cerrarReconteo()
+                }else if(sesionAplicacion?.tipo.equals(Constantes.ES_CONTEO)) {
+                    AsyncTaskEliminarDatos(this@SalirFragment.activity as MainActivity?).execute()
+                }
+            }).setNegativeButton("No", DialogInterface.OnClickListener { dialog, id ->
+                dialog.cancel()
+            })
+
+        val alert = dialogBuilder.create()
+        alert.setTitle("Confirmación")
+        alert.show()
     }
 
-   private fun cargarDatosPantalla() {
-        AsyncTaskCargarDatosReconteo(this.activity as MainActivity?, this).execute()
+    private fun cerrarReconteo() {
+        val call: Call<Long> = ApiClient.getClient.cerrarUsuarioConteo(
+            sesionAplicacion?.usuId!!,
+            sesionAplicacion?.binId!!
+        )
+        call.enqueue(object : Callback<Long> {
 
+            override fun onResponse(call: Call<Long>?, response: Response<Long>?) {
+                Log.i("respuesta", response!!.body()!!.toString())
+                AsyncTaskEliminarDatos(this@SalirFragment.activity as MainActivity?).execute()
+            }
+
+            override fun onFailure(call: Call<Long>, t: Throwable) {
+                Log.i("error", "error")
+                val dialogBuilder = AlertDialog.Builder(activity!!)
+                dialogBuilder.setMessage("Debe conectarse a la red wifi para salir del inventario")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, id ->
+                    })
+
+                val alert = dialogBuilder.create()
+                alert.setTitle("Información")
+                alert.show()
+            }
+
+        })
+    }
+
+    private fun cargarDatosPantalla() {
+        AsyncTaskCargarDatosReconteo(this.activity as MainActivity?, this).execute()
     }
 
     class AsyncTaskCargarDatosReconteo(private var activity: MainActivity?, var salirFragment: SalirFragment) : AsyncTask<String, String, Int>() {
@@ -102,12 +147,11 @@ class SalirFragment : Fragment() {
         override fun doInBackground(vararg p0: String?): Int? {
             sesionAplicacion = activity?.applicationContext as SesionAplicacion?
             var db: InventarioDatabase? = InventarioDatabase.getInventarioDataBase(context = activity?.applicationContext!!)
-
+            var conteoDao = db?.conteoDao()
             if(sesionAplicacion?.tipo.equals(Constantes.ES_RECONTEO)) {
                 if (sesionAplicacion?.tipoInventario!!.equals(Constantes.INVENTARIO_BODEGA)) {
                     //Bodega
                     var reconteoBodegaDao = db?.reconteoBodegaDao()
-                    var conteoDao = db?.conteoDao()
                     total = reconteoBodegaDao?.count()
                     totalEnviado = reconteoBodegaDao?.countEnviado()?.plus(conteoDao?.countEnviado()!!)
                     totalPendiente = reconteoBodegaDao?.countPendiente()?.plus(conteoDao?.countPendiente()!!)
@@ -115,12 +159,11 @@ class SalirFragment : Fragment() {
                     //Local
                     var reconteoLocalDao = db?.reconteoLocalDao()
                     total = reconteoLocalDao?.count()
-                    totalEnviado = reconteoLocalDao?.countEnviado()
-                    totalPendiente = reconteoLocalDao?.countPendiente()
+                    totalEnviado = conteoDao?.countEnviado()
+                    totalPendiente = conteoDao?.countPendiente()
                 }
             }else if(sesionAplicacion?.tipo.equals(Constantes.ES_CONTEO)) {
                 //Conteo
-                var conteoDao = db?.conteoDao()
                 total = conteoDao?.count()
                 totalEnviado = conteoDao?.countEnviado()
                 totalPendiente = conteoDao?.countPendiente()
@@ -148,5 +191,35 @@ class SalirFragment : Fragment() {
         }
     }
 
+    class AsyncTaskEliminarDatos(private var activity: MainActivity?) : AsyncTask<String, String, Int>() {
+
+        var sesionAplicacion: SesionAplicacion? = null
+
+        override fun doInBackground(vararg p0: String?): Int? {
+            sesionAplicacion = activity?.applicationContext as SesionAplicacion?
+            var db: InventarioDatabase? = InventarioDatabase.getInventarioDataBase(context = activity?.applicationContext!!)
+            var conteoDao = db?.conteoDao()
+            conteoDao?.eliminar()
+            if(sesionAplicacion?.tipo.equals(Constantes.ES_RECONTEO)) {
+                if (sesionAplicacion?.tipoInventario!!.equals(Constantes.INVENTARIO_BODEGA)) {
+                    //Bodega
+                    var reconteoBodegaDao = db?.reconteoBodegaDao()
+                    reconteoBodegaDao?.eliminarTodo()
+                } else {
+                    //Local
+                    var reconteoLocalDao = db?.reconteoLocalDao()
+                    reconteoLocalDao?.eliminar()
+                }
+            }
+            return 0
+        }
+
+        override fun onPostExecute(result: Int?) {
+            super.onPostExecute(result)
+            val inventarioPreferences: SharedPreferences = activity!!.getSharedPreferences(Constantes.PREF_NAME, 0)
+            inventarioPreferences.edit().clear().commit()
+            activity!!.finish()
+        }
+    }
 
 }

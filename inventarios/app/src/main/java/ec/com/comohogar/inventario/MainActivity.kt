@@ -18,10 +18,7 @@ import android.widget.TextView
 import androidx.navigation.NavGraph
 import androidx.navigation.fragment.NavHostFragment
 import com.google.gson.Gson
-import ec.com.comohogar.inventario.modelo.AsignacionUsuario
-import ec.com.comohogar.inventario.modelo.Conteo
-import ec.com.comohogar.inventario.modelo.Empleado
-import ec.com.comohogar.inventario.modelo.Inventario
+import ec.com.comohogar.inventario.modelo.*
 import ec.com.comohogar.inventario.persistencia.InventarioDatabase
 import ec.com.comohogar.inventario.scanner.ScanActivity
 import ec.com.comohogar.inventario.ui.conteo.ConteoFragment
@@ -47,7 +44,9 @@ class MainActivity : ScanActivity() {
     companion object {
         private const val ES_CONTEO = "esConteo"
         fun open(context: Context, esConteo: Boolean) {
-            context.startActivity(Intent(context, MainActivity::class.java).apply {
+            var intent = Intent(context, MainActivity::class.java)
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            context.startActivity(intent.apply {
                 putExtra(ES_CONTEO, esConteo)
             })
         }
@@ -69,15 +68,14 @@ class MainActivity : ScanActivity() {
         navGraph = graphInflater?.inflate(R.navigation.mobile_navigation)!!
 
         var header = navView.getHeaderView(0)
-        var textInventario = header?.findViewById<TextView>(R.id.textInventario);
-        var textUsuario = header?.findViewById<TextView>(R.id.textUsuario);
-        var textNombre= header?.findViewById<TextView>(R.id.textNombre);
+        var textLocal = header?.findViewById<TextView>(R.id.textLocal);
 
         val inventarioPreferences: SharedPreferences = getSharedPreferences(Constantes.PREF_NAME, 0)
         var tipoInventario = sesionAplicacion?.tipoInventario
         cargarSesion(inventarioPreferences)
 
         tipo = sesionAplicacion?.tipo
+
         if (sesionAplicacion?.tipo.equals(Constantes.ES_RECONTEO)) {
             val gson = Gson()
             val json = inventarioPreferences.getString(Constantes.ASIGNACION_USUARIO, "");
@@ -95,9 +93,8 @@ class MainActivity : ScanActivity() {
             sesionAplicacion?.usuId = conteo.usuId
             sesionAplicacion?.numConteo = conteo.cinNumConteo.toInt()
         }
-//        textInventario?.text = "Inventario: " + sesionAplicacion?.binId + ", Conteo: " + sesionAplicacion?.cinId + ", Número: " + sesionAplicacion?.numConteo
-//        textUsuario?.text = "Id: " + sesionAplicacion?.usuId.toString() + ", Empleado No.: " + sesionAplicacion?.empleado?.empId.toString()
-//        textNombre?.text = "Nombre: "  + sesionAplicacion?.empleado?.empNombreCompleto.toString()
+
+        textLocal?.text = sesionAplicacion?.nombreLocal
 
         val destination = if (intent.getBooleanExtra(
                 ES_CONTEO,
@@ -132,11 +129,20 @@ class MainActivity : ScanActivity() {
                     0,
                     10000
                 )
+                t.scheduleAtFixedRate(
+                    object : TimerTask() {
+                        override fun run() {
+                            procesarConteos()
+                        }
+                    },
+                    0,
+                    10000
+                )
                 navView.menu.clear()
                 navView.inflateMenu(R.menu.menu_reconteo_bodega)
                 appBarConfiguration = AppBarConfiguration(
                     setOf(
-                        R.id.nav_reconteo_bodega,
+                        R.id.nav_reconteo_bodega, R.id.nav_conteo,
                         R.id.nav_pendiente, R.id.nav_enviado, R.id.nav_error, R.id.nav_salir
                     ), drawerLayout
                 )
@@ -146,7 +152,7 @@ class MainActivity : ScanActivity() {
                 t.scheduleAtFixedRate(
                     object : TimerTask() {
                         override fun run() {
-                            procesarReconteosLocal()
+                            procesarConteos()
                         }
                     },
                     0,
@@ -190,7 +196,7 @@ class MainActivity : ScanActivity() {
         for (conteo in conteos!!) {
             val call: Call<Long> = ApiClient.getClient.ingresarConteo(
                 conteo.usuId,
-                conteo.numConteo?.toLong(), conteo.zona, conteo.barra,
+                conteo.cinId, conteo.zona, conteo.barra,
                 conteo.cantidad
             )
             try {
@@ -266,6 +272,10 @@ class MainActivity : ScanActivity() {
         json = inventarioPreferences.getString(Constantes.INVENTARIO, "");
         val inventario = gson.fromJson(json, Inventario::class.java)
         sesionAplicacion?.inventario = inventario
+
+        json = inventarioPreferences.getString(Constantes.LOCAL, "");
+        val local = gson.fromJson(json, Lugar::class.java)
+        sesionAplicacion?.nombreLocal = local?.lugNombre
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

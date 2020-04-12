@@ -15,13 +15,19 @@ interface ReconteoBodegaDao {
     fun eliminarConteo(reconteoBodega: ReconteoBodega)
 
     @Query("DELETE FROM ReconteoBodega where estado = 'INS'")
-    fun eliminar()
+    fun eliminarInsertado()
+
+    @Query("DELETE FROM ReconteoBodega")
+    fun eliminarTodo()
 
     @Query("SELECT * FROM ReconteoBodega WHERE id == :id")
     fun getReconteoBodegaById(id: Int): List<ReconteoBodega>
 
     @Query("SELECT * FROM ReconteoBodega")
     fun getReconteosBodega(): List<ReconteoBodega>
+
+    @Query("SELECT * FROM ReconteoBodega WHERE estado = 'INS'")
+    fun getReconteosBodegaInsertado(): List<ReconteoBodega>
 
     @Query("SELECT count(*) FROM ReconteoBodega")
     fun count(): Int
@@ -31,6 +37,9 @@ interface ReconteoBodegaDao {
 
     @Query("SELECT count(*) FROM ReconteoBodega WHERE estado = 'ENV'")
     fun countEnviado(): Int
+
+    @Query("SELECT count(*) FROM ReconteoBodega WHERE estado = 'INS'")
+    fun countInsertado(): Int
 
     @Query("SELECT * FROM ReconteoBodega WHERE estado == 'PEN'")
     fun getReconteoBodegaPendiente(): List<ReconteoBodega>

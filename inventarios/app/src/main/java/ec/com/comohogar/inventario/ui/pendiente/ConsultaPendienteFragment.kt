@@ -21,6 +21,7 @@ import ec.com.comohogar.inventario.databinding.FragmentPendienteBinding
 import ec.com.comohogar.inventario.modelo.ConteoPendiente
 import ec.com.comohogar.inventario.persistencia.InventarioDatabase
 import ec.com.comohogar.inventario.persistencia.dao.ReconteoLocalDao
+import ec.com.comohogar.inventario.persistencia.entities.Conteo
 import ec.com.comohogar.inventario.persistencia.entities.ReconteoLocal
 import ec.com.comohogar.inventario.util.Constantes
 import ec.com.comohogar.inventario.util.ProgressDialog
@@ -69,7 +70,19 @@ class ConsultaPendienteFragment : Fragment() {
         consultaPendienteViewModel.inventario.value = "Inventario: " + sesionAplicacion?.binId.toString()
         consultaPendienteViewModel.conteo.value = " Conteo: " + sesionAplicacion?.cinId.toString()
         consultaPendienteViewModel.numconteo.value = " Número: " + sesionAplicacion?.numConteo.toString()
-        consultaPendienteViewModel.usuario.value = " Usuario: " + sesionAplicacion?.empleado?.empId.toString() + " " + sesionAplicacion?.empleado?.empNombreCompleto.toString()
+        consultaPendienteViewModel.usuario.value = " Usuario: " + sesionAplicacion?.empleado?.empCodigo.toString() + " " + sesionAplicacion?.empleado?.empNombreCompleto.toString()
+
+        editZona?.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus) {
+                consultaPendienteViewModel.zona.value = ""
+            }
+        }
+
+        editBarra?.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus) {
+                consultaPendienteViewModel.barra.value = ""
+            }
+        }
 
         cargarDatosPantalla()
         return root
@@ -82,6 +95,7 @@ class ConsultaPendienteFragment : Fragment() {
             cargarDatosPantalla()
         } else if (editZona!!.hasFocus()) {
             editZona!!.setText(codigoLeido)
+            cargarDatosPantalla()
         }
     }
 
@@ -96,23 +110,25 @@ class ConsultaPendienteFragment : Fragment() {
                                     var barra: String?, var zona: String?) : AsyncTask<String, String, Int>() {
         var sesionAplicacion: SesionAplicacion? = null
         var conteoPendiente: MutableList<ConteoPendiente>? = null
-        var reconteos: List<ReconteoLocal>? = null
+
 
         override fun doInBackground(vararg p0: String?): Int? {
             sesionAplicacion = activity?.applicationContext as SesionAplicacion
             var db = InventarioDatabase.getInventarioDataBase(context = activity?.applicationContext!!)
             conteoPendiente = mutableListOf()
+            var conteoDao = db?.conteoDao()
             if(sesionAplicacion?.tipo.equals(Constantes.ES_RECONTEO)) {
                 if (sesionAplicacion?.tipoInventario!!.equals(Constantes.INVENTARIO_BODEGA)) {
                     //Bodega
                 } else {
                    //Local
+                    var reconteos: List<Conteo>? = null
                     var reconteoLocalDao = db?.reconteoLocalDao()
                     reconteos  = mutableListOf()
                     if(barra.isNullOrBlank()) {
-                        reconteos = reconteoLocalDao?.getReconteoLocalPendiente()
+                        reconteos = conteoDao?.getConteoPendiente()
                     }else {
-                        reconteos = reconteoLocalDao?.getReconteoLocalPendienteByBarra(barra)
+                        reconteos = conteoDao?.getConteoPendienteByBarra(barra)
                     }
                     for (reconteo in reconteos!!) {
                         conteoPendiente!!.add(ConteoPendiente(reconteo.barra, "", reconteo.cantidad))
@@ -120,6 +136,21 @@ class ConsultaPendienteFragment : Fragment() {
                 }
             }else if(sesionAplicacion?.tipo.equals(Constantes.ES_CONTEO)) {
                //Conteo
+
+                var conteos: List<Conteo>? = null
+                conteos  = mutableListOf()
+                if(barra.isNullOrBlank() && zona.isNullOrBlank() ) {
+                    conteos = conteoDao?.getConteoPendiente()
+                }else if(!barra.isNullOrBlank()){
+                    conteos = conteoDao?.getConteoPendienteByBarra(barra)
+                }else if(!zona.isNullOrBlank()){
+                    conteos = conteoDao?.getConteoPendienteByZona(zona)
+                }else{
+                    conteos = conteoDao?.getConteoPendienteByBarraAndZona(barra, zona)
+                }
+                for (conteo in conteos!!) {
+                    conteoPendiente!!.add(ConteoPendiente(conteo.barra, conteo.zona, conteo.cantidad))
+                }
             }
             return 0
         }

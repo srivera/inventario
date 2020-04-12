@@ -21,10 +21,15 @@ import com.google.gson.Gson
 import ec.com.comohogar.inventario.MainActivity
 import ec.com.comohogar.inventario.adapter.ReconteoLocalAdapter
 import ec.com.comohogar.inventario.modelo.AsignacionUsuario
+import ec.com.comohogar.inventario.persistencia.dao.ConteoDao
 import ec.com.comohogar.inventario.persistencia.dao.ReconteoLocalDao
+import ec.com.comohogar.inventario.persistencia.entities.Conteo
 import ec.com.comohogar.inventario.persistencia.entities.ReconteoLocal
 import ec.com.comohogar.inventario.util.Constantes
 import ec.com.comohogar.inventario.util.ProgressDialog
+import ec.com.comohogar.inventario.validacion.ValidacionBarra
+import ec.com.comohogar.inventario.validacion.ValidacionCantidad
+import ec.com.comohogar.inventario.validacion.ValidacionZona
 import ec.com.comohogar.inventario.webservice.ApiClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -37,7 +42,6 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
 
     private var editBarra: EditText? = null
     private var editCantidad: EditText? = null
-    private var textEstado: TextView? = null
     private var buttonGuardar: ImageButton? = null
     var listview: ListView? = null
 
@@ -70,7 +74,6 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
 
         editBarra = root.findViewById(R.id.editBarra)
         editCantidad = root.findViewById(R.id.editCantidad)
-        textEstado = root.findViewById(R.id.textEstado)
         buttonGuardar = root.findViewById(R.id.buttonGuardar)
         editCantidad?.setOnKeyListener(this)
         listview = root.findViewById(R.id.listview)
@@ -95,7 +98,7 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
         reconteoLocalViewModel.inventario.value = "Inventario: " + sesionAplicacion?.binId.toString()
         reconteoLocalViewModel.conteo.value = " Conteo: " + sesionAplicacion?.cinId.toString()
         reconteoLocalViewModel.numconteo.value = " Número: " + sesionAplicacion?.numConteo.toString()
-        reconteoLocalViewModel.usuario.value = " Usuario: " + sesionAplicacion?.empleado?.empId.toString() + " " + sesionAplicacion?.empleado?.empNombreCompleto.toString()
+        reconteoLocalViewModel.usuario.value = " Usuario: " + sesionAplicacion?.empleado?.empCodigo.toString() + " " + sesionAplicacion?.empleado?.empNombreCompleto.toString()
 
         if(sesionAplicacion?.primeraVez!!) {
             recuperarReconteo()
@@ -108,59 +111,117 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
         return root
     }
 
+
     fun refrescarPantalla(codigoLeido: String) {
         if (editBarra!!.hasFocus()) {
-            editBarra!!.setText(codigoLeido)
-            editCantidad?.requestFocus()
+            var existe = verificarExisteCodigo(codigoLeido)
+            if(existe) {
+                if(codigoLeido.contains(" ") || !ValidacionBarra.validarFormatoBarra(codigoLeido) || !ValidacionBarra.validarEAN13Barra(codigoLeido) ){
+                    editBarra?.error =  "Formato incorrecto"
+                }else {
+                    editBarra?.error = null
+                    editBarra!!.setText(codigoLeido)
+                    editCantidad?.requestFocus()
+                }
+            }else{
+                val dialogBuilder = AlertDialog.Builder(activity!!)
+                dialogBuilder.setMessage("El ítem escaneado no está en el reconteo. Verifique.")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, id ->
+                    })
+
+                val alert = dialogBuilder.create()
+                alert.setTitle("Error")
+                alert.show()
+            }
         } else if (editCantidad!!.hasFocus()) {
-            reconteoLocalViewModel.saltoPorScaneo = true
-            reconteoLocalViewModel.barra.value = codigoLeido
-            reconteoLocalViewModel.cantidad.value = ""
-            editBarra!!.setText(codigoLeido)
-            editCantidad?.requestFocus()
-            guardarConteo(codigoLeido)
+            if(editCantidad?.text.toString().isNullOrBlank()) {
+                reconteoLocalViewModel?.saltoPorScaneo = false
+                editCantidad?.error = "Ingrese la cantidad"
+                editCantidad?.requestFocus()
+            }else if(ValidacionCantidad.validarCantidad(reconteoLocalViewModel.cantidad.value!!.toInt())){
+                reconteoLocalViewModel?.saltoPorScaneo = false
+                editCantidad?.error =  "Cantidad fuera de rango"
+                editCantidad?.requestFocus()
+            }else{
+                reconteoLocalViewModel?.saltoPorScaneo = true
+                reconteoLocalViewModel.barraAnterior.value = reconteoLocalViewModel.barra.value
+                reconteoLocalViewModel.cantidadAnterior.value = reconteoLocalViewModel.cantidad.value
+                guardarConteo()
+                var existe = verificarExisteCodigo(codigoLeido)
+                if (existe) {
+                    if(codigoLeido.contains(" ") || !ValidacionBarra.validarFormatoBarra(codigoLeido) || !ValidacionBarra.validarEAN13Barra(codigoLeido) ){
+                        editBarra?.error =  "Formato incorrecto"
+                    }else {
+                        reconteoLocalViewModel.barra.value = codigoLeido
+                        editCantidad?.requestFocus()
+                    }
+                } else {
+                    editBarra?.error =  "El ítem escaneado no está en el reconteo. Verifique."
+                    reconteoLocalViewModel.barra.value = ""
+                    editBarra?.requestFocus()
+                }
+                editCantidad?.error = null
+
+            }
         }
+        reconteoLocalViewModel.cantidad.value = ""
+    }
+
+    private fun verificarExisteCodigo(codigoLeido: String): Boolean {
+        var existe = false
+        var reconteoLocal = sesionAplicacion?.listaReconteoLocal!!.filter { it.barra.equals(codigoLeido) }
+        if (reconteoLocal?.isEmpty()) {
+            reconteoLocal = sesionAplicacion?.listaReconteoLocal!!.filter { it.codigoItem.equals(codigoLeido) }
+            if (!reconteoLocal?.isEmpty()) {
+                existe = true
+            }
+        } else {
+            existe = true
+        }
+        return existe
     }
 
     fun refrescarEstado(estado: String) {
-        textEstado?.setText(estado)
     }
 
     override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_ENTER && event?.action == KeyEvent.ACTION_UP) {
             if (v?.id == R.id.editCantidad) {
-                //guardarConteo()
-
+                guardarConteo()
             }
         }
         return false
     }
-
-    fun guardarConteo(codigoBarra: String) {
-        var guardar: Boolean? = true
-        if (editBarra?.text.isNullOrBlank()) {
-            editBarra?.error = "Ingrese la barra"
-            guardar = false
-        } else {
-            editBarra?.error = null
+    fun guardarConteo() {
+        if(reconteoLocalViewModel?.saltoPorScaneo!!){
+            reconteoLocalViewModel?.saltoPorScaneo = false
+            insertarConteo()
+        }else{
+            var guardar: Boolean? = validarCampos()
+            if(guardar!!) {
+                reconteoLocalViewModel?.barraAnterior.value = reconteoLocalViewModel?.barra.value.toString()
+                reconteoLocalViewModel?.cantidadAnterior.value = reconteoLocalViewModel?.cantidad.value.toString()
+                reconteoLocalViewModel.barra.value = ""
+                reconteoLocalViewModel.cantidad.value = ""
+                editBarra?.requestFocus()
+                insertarConteo()
+            }
         }
-        if (editCantidad?.text.isNullOrBlank()) {
-            editCantidad?.error = "Ingrese la cantidad"
-            guardar = false
-        } else {
-            editCantidad?.error = null
-        }
-        if (guardar!!) {
-            AsyncTaskGuardarDatosReconteo(this.activity as MainActivity?, this,  editCantidad?.text.toString().toInt()).execute()
-        }
-
-        reconteoLocalViewModel.guardarConteo()
     }
 
-    fun guardarConteo() {
+    private fun insertarConteo() {
+        AsyncTaskGuardarDatosReconteo(this.activity as MainActivity?, this, editCantidad?.text.toString().toInt()).execute()
+    }
+
+
+    private fun validarCampos(): Boolean? {
         var guardar: Boolean? = true
         if (editBarra?.text.isNullOrBlank()) {
             editBarra?.error = "Ingrese la barra"
+            guardar = false
+        }else if(editBarra?.text.toString().contains(" ") || !ValidacionBarra.validarFormatoBarra(editBarra?.text.toString()) || !ValidacionBarra.validarEAN13Barra(editBarra?.text.toString()) ){
+            editBarra?.error =  "Formato incorrecto"
             guardar = false
         } else {
             editBarra?.error = null
@@ -168,13 +229,14 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
         if (editCantidad?.text.isNullOrBlank()) {
             editCantidad?.error = "Ingrese la cantidad"
             guardar = false
+        }else if(ValidacionCantidad.validarCantidad(reconteoLocalViewModel.cantidad.value!!.toInt())){
+            editCantidad?.error =  "Cantidad fuera de rango"
+            editCantidad?.requestFocus()
+            guardar = false
         } else {
             editCantidad?.error = null
         }
-        if (guardar!!) {
-            AsyncTaskGuardarDatosReconteo(this.activity as MainActivity?, this, editCantidad?.text.toString().toInt()).execute()
-        }
-        reconteoLocalViewModel.guardarConteo()
+        return guardar
     }
 
     private fun recuperarReconteo() {
@@ -204,7 +266,6 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
                         if(filtered == null || filtered.isEmpty()) {
                             reconteo.estado = Constantes.ESTADO_INSERTADO
                             reconteoLocalDao?.insertarReconteoLocal(reconteo)
-                            val i = reconteoLocalDao?.count()
                         }
                     }
                     if(!listaReconteoLocal.isEmpty()) {
@@ -269,15 +330,24 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
             sesionAplicacion = activity?.applicationContext as SesionAplicacion?
             var db: InventarioDatabase? = null
             var reconteoLocalDao: ReconteoLocalDao? = null
+            var conteoDao: ConteoDao? = null
             db = InventarioDatabase.getInventarioDataBase(context = activity?.applicationContext!!)
             reconteoLocalDao = db?.reconteoLocalDao()
-            val reconteoLocal = sesionAplicacion?.listaReconteoLocal!!.filter { it.barra.equals(reconteoLocalFragmet?.editBarra?.text.toString()) }
+            conteoDao =  db?.conteoDao()
+            val reconteoLocal = sesionAplicacion?.listaReconteoLocal!!.filter { it.barra.equals(reconteoLocalFragmet?.reconteoLocalViewModel?.barraAnterior?.value!!) }
             if(!reconteoLocal?.isEmpty()) {
-                reconteoLocal?.get(0).cantidad= this!!.cantidad!!
                 reconteoLocal?.get(0).estado= Constantes.ESTADO_PENDIENTE
                 reconteoLocalDao?.actualizarConteo(reconteoLocal?.get(0))
+
+                val conteo =  Conteo(barra = reconteoLocalFragmet?.reconteoLocalViewModel?.barraAnterior?.value!!,
+                    zona = "-",
+                    cantidad = reconteoLocalFragmet?.reconteoLocalViewModel?.cantidadAnterior?.value!!.toInt(),
+                    estado = Constantes.ESTADO_PENDIENTE,
+                    cinId = reconteoLocal?.get(0).cinId, binId = sesionAplicacion?.binId,
+                    numConteo =  sesionAplicacion?.numConteo, usuId = sesionAplicacion?.usuId)
+                conteoDao?.insertarConteo(conteo)
             }
-            return reconteoLocalDao?.count()
+            return 0
         }
 
         override fun onPostExecute(result: Int?) {

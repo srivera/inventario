@@ -30,8 +30,8 @@ interface APIService {
     @GET("erp-movil/inv/consultarConteo/{idConteo}/{idUsuario}/{barras}")
     fun consultarConteo(@Path(value="idConteo") idConteo: Long,  @Path(value="idUsuario")  idUsuario: Long, @Path(value="barras")  barras: String): Call<Int>
 
-    @GET("erp-movil/inv/consultarErrores/{idUsuario}")
-    fun consultarErrores(@Path(value="idUsuario") idUsuario: Long,  @Query(value="idConteo")  idConteo: Long): Call<List<ConteoPocketError>>
+    @GET("erp-movil/inv/consultarErrores/{idUsuario}/{idInventario}")
+    fun consultarErrores(@Path(value="idUsuario") idUsuario: Long,  @Path(value="idInventario") idInventario: Long, @Query(value="numeroConteo")  idConteo: Long): Call<List<ConteoPocketError>>
 
     @GET("erp-movil/inv/consultarHistorico/{idUsuario}/{idConteo}/{idInventario}")
     fun consultarHistorico(@Path(value="idUsuario") idUsuario: Long, @Path(value="idConteo")  idConteo: Int,
@@ -54,7 +54,6 @@ interface APIService {
     @GET("erp-movil/inv/consultarZona/{codigo}")
     fun consultarZona(@Path(value="codigo") codigo: String): Call<EstructuraBodega>
 
-    //http://200.105.234.42:8080/erp-movil/inv/ingresarConteo/{idUsuario}/{numeroConteo}/{zona}/{barra}/{cantidad}
     @GET("erp-movil/inv/ingresarConteo/{idUsuario}/{numeroConteo}/{zona}/{barra}/{cantidad}")
     fun ingresarConteo(@Path(value="idUsuario") idUsuario: Long?,  @Path(value="numeroConteo")  numeroConteo: Long?,
                        @Path(value="zona")  zona: String, @Path(value="barra")  barra: String,
