@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProviders
 import ec.com.comohogar.inventario.MainActivity
 import ec.com.comohogar.inventario.R
 import ec.com.comohogar.inventario.SesionAplicacion
-import ec.com.comohogar.inventario.adapter.ConteoPendienteAdapter
+import ec.com.comohogar.inventario.adapter.ConteoErrorAdapter
 import ec.com.comohogar.inventario.databinding.FragmentErrorBinding
 import ec.com.comohogar.inventario.modelo.ConteoPendiente
 import ec.com.comohogar.inventario.modelo.ConteoPocketError
@@ -52,13 +52,13 @@ class ConsultaErrorFragment : Fragment() {
 
         listview = root.findViewById(R.id.listview)
 
-        dialog = ProgressDialog.setProgressDialog(this!!.activity!!, "Recuperando ítems...")
+        dialog = ProgressDialog.setProgressDialog(this!!.activity!!, getString(R.string.recuperar_items))
         dialog?.show()
 
-        consultaErrorViewModel.inventario.value = "Inventario: " + sesionAplicacion?.binId.toString()
-        consultaErrorViewModel.conteo.value = " Conteo: " + sesionAplicacion?.cinId.toString()
-        consultaErrorViewModel.numconteo.value = " Número: " + sesionAplicacion?.numConteo.toString()
-        consultaErrorViewModel.usuario.value = " Usuario: " + sesionAplicacion?.empleado?.empCodigo.toString() + " " + sesionAplicacion?.empleado?.empNombreCompleto.toString()
+        consultaErrorViewModel.inventario.value = getString(R.string.etiqueta_inventario) + sesionAplicacion?.binId.toString()
+        consultaErrorViewModel.conteo.value = getString(R.string.etiqueta_conteo) + sesionAplicacion?.cinId.toString()
+        consultaErrorViewModel.numconteo.value = getString(R.string.etiqueta_numero)+ sesionAplicacion?.numConteo.toString()
+        consultaErrorViewModel.usuario.value = getString(R.string.etiqueta_usuario) + sesionAplicacion?.empleado?.empCodigo.toString() + " " + sesionAplicacion?.empleado?.empNombreCompleto.toString()
 
         recuperarReconteo()
         return root
@@ -82,7 +82,7 @@ class ConsultaErrorFragment : Fragment() {
                 val listaConteoHistorico = response.body()
                 conteoEnviado = mutableListOf()
                 for (conteo in listaConteoHistorico!!) {
-                    conteoEnviado!!.add(ConteoPendiente(conteo.pocBarra, conteo.pocZona, conteo.pocCantidad))
+                    conteoEnviado!!.add(ConteoPendiente(conteo.pocBarra, conteo.pocZona, conteo.pocCantidad, conteo.pocObservacion))
                 }
             } catch (ex: Exception) {
                 ex.printStackTrace()
@@ -95,20 +95,20 @@ class ConsultaErrorFragment : Fragment() {
             consultaErrorFragment?.dialog?.cancel()
             if(conteoEnviado == null) {
                 conteoEnviado = mutableListOf()
-                var conteoPendienteAdapter = ConteoPendienteAdapter(activity?.applicationContext!!, conteoEnviado)
+                var conteoPendienteAdapter = ConteoErrorAdapter(activity?.applicationContext!!, conteoEnviado)
                 consultaErrorFragment?.listview?.adapter  = conteoPendienteAdapter
                 val dialogBuilder = AlertDialog.Builder(activity!!)
-                dialogBuilder.setMessage("No existen ítems.")
+                dialogBuilder.setMessage(activity?.getString(R.string.no_items))
                     .setCancelable(false)
                     .setPositiveButton("OK", DialogInterface.OnClickListener {
                             dialog, id ->
                     })
 
                 val alert = dialogBuilder.create()
-                alert.setTitle("Información")
+                alert.setTitle(activity?.getString(R.string.informacion))
                 alert.show()
             }else if(!conteoEnviado?.isEmpty()!!) {
-                var conteoPendienteAdapter = ConteoPendienteAdapter(activity?.applicationContext!!, conteoEnviado)
+                var conteoPendienteAdapter = ConteoErrorAdapter(activity?.applicationContext!!, conteoEnviado)
                 consultaErrorFragment?.listview?.adapter  = conteoPendienteAdapter
 
             }

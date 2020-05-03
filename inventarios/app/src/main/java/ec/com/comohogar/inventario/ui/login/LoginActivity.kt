@@ -19,13 +19,13 @@ import ec.com.comohogar.inventario.util.Constantes
 import android.provider.Settings.Secure
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import ec.com.comohogar.inventario.BuildConfig
 import ec.com.comohogar.inventario.MainActivity
 import ec.com.comohogar.inventario.SesionAplicacion
 import ec.com.comohogar.inventario.adapter.ConteoAdapter
 import ec.com.comohogar.inventario.adapter.InventarioAdapter
 import ec.com.comohogar.inventario.databinding.ActivityLoginBinding
 import ec.com.comohogar.inventario.modelo.*
-
 
 class LoginActivity : AppCompatActivity() {
 
@@ -62,6 +62,9 @@ class LoginActivity : AppCompatActivity() {
         var btnAnterior = findViewById<Button>(R.id.btnAnterior)
         var textInventario = findViewById<TextView>(R.id.textInventario)
         var textConteo = findViewById<TextView>(R.id.textConteo)
+        var textVersion = findViewById<TextView>(R.id.versionName)
+
+        textVersion.setText("Versión: " +  BuildConfig.VERSION_NAME)
 
         spinnerLocal = findViewById<Spinner>(R.id.spinnerLocal)
         spinnerInventario = findViewById<Spinner>(R.id.spinnerInventario)
@@ -69,34 +72,31 @@ class LoginActivity : AppCompatActivity() {
         tipo = intent.getStringExtra(Constantes.ES_CONTEO_RECONTEO)
 
         if(tipo.equals(Constantes.ES_CONTEO)){
-            textTitulo.setText("Conteo")
+            textTitulo.setText(getString(R.string.menu_conteo))
             spinnerInventario?.visibility = View.VISIBLE
             spinnerConteo?.visibility = View.VISIBLE
             textInventario?.visibility = View.VISIBLE
             textConteo?.visibility = View.VISIBLE
 
         }else{
-            textTitulo.setText("Reconteo")
+            textTitulo.setText(getString(R.string.menu_reconteo))
             spinnerInventario?.visibility = View.INVISIBLE
             spinnerConteo?.visibility = View.INVISIBLE
             textInventario?.visibility = View.INVISIBLE
             textConteo?.visibility = View.INVISIBLE
         }
 
-
         btnSiguiente.setOnClickListener {
             if (!editUsuario?.text.isNullOrBlank()) {
                 ingresar()
             }else{
-                editUsuario.error = "Ingrese su usuario"
+                editUsuario.error = getString(R.string.ingrese_usuario)
             }
-
         }
 
         btnAnterior.setOnClickListener {
             finish()
         }
-
 
         spinnerLocal?.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
@@ -108,10 +108,8 @@ class LoginActivity : AppCompatActivity() {
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
-                // write code to perform some action
             }
         }
-
 
         spinnerInventario?.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
@@ -121,7 +119,6 @@ class LoginActivity : AppCompatActivity() {
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
-                // write code to perform some action
             }
         }
 
@@ -142,7 +139,7 @@ class LoginActivity : AppCompatActivity() {
                 Log.i("error", "error")
                 val dialogBuilder = AlertDialog.Builder(this@LoginActivity)
 
-                dialogBuilder.setMessage("Verifique su conexión a la red wifi")
+                dialogBuilder.setMessage(getString(R.string.error_wifi))
                     .setCancelable(false)
                     .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, id ->
                         consultarLocales()
@@ -208,7 +205,7 @@ class LoginActivity : AppCompatActivity() {
                 }else{
                     val dialogBuilder = AlertDialog.Builder(this@LoginActivity)
 
-                    dialogBuilder.setMessage("El usuario no existe")
+                    dialogBuilder.setMessage(getString(R.string.usuario_no_existe))
                         .setCancelable(false)
                         .setPositiveButton("OK", DialogInterface.OnClickListener {
                                 dialog, id ->
@@ -230,7 +227,6 @@ class LoginActivity : AppCompatActivity() {
 
 
     private fun verificarReconteo() {
-
         val deviceUniqueId = Secure.getString(getContentResolver(), Secure.ANDROID_ID)
 
         val call: Call<List<AsignacionUsuario>> = ApiClient.getClient.consultarAsignacionUsuario(editUsuario.text.toString().toLong(), deviceUniqueId.toString())
@@ -247,6 +243,7 @@ class LoginActivity : AppCompatActivity() {
                     val json = gson.toJson(asignacionUsuario)
                     prefsEditor.putString(Constantes.ASIGNACION_USUARIO, json)
                     prefsEditor.commit()
+                    consultarLocalInventario(asignacionUsuario?.binId?.toInt())
                     verificarTipoInventario(asignacionUsuario?.binId?.toInt())
 
                 }else{
@@ -255,7 +252,7 @@ class LoginActivity : AppCompatActivity() {
                     }else{
                         val dialogBuilder = AlertDialog.Builder(this@LoginActivity)
 
-                        dialogBuilder.setMessage("No tiene asignados reconteos, verifique.")
+                        dialogBuilder.setMessage(getString(R.string.no_reconteos))
                             .setCancelable(false)
                             .setPositiveButton("OK", DialogInterface.OnClickListener {
                                     dialog, id ->
@@ -274,7 +271,7 @@ class LoginActivity : AppCompatActivity() {
                 Log.i("error", "error")
                 val dialogBuilder = AlertDialog.Builder(this@LoginActivity)
 
-                dialogBuilder.setMessage("No tiene asignados reconteos, verifique.")
+                dialogBuilder.setMessage(getString(R.string.no_reconteos))
                     .setCancelable(false)
                     .setPositiveButton("OK", DialogInterface.OnClickListener {
                             dialog, id ->
@@ -286,7 +283,6 @@ class LoginActivity : AppCompatActivity() {
                 alert.setTitle("Error")
                 alert.show()
             }
-
         })
     }
 
@@ -336,7 +332,6 @@ class LoginActivity : AppCompatActivity() {
             override fun onFailure(call: Call<List<Inventario>> , t: Throwable) {
                 Log.i("error", "error")
             }
-
         })
     }
 
@@ -362,6 +357,40 @@ class LoginActivity : AppCompatActivity() {
 
             override fun onFailure(call: Call<List<Conteo>> , t: Throwable) {
                 Log.i("error", "error")
+            }
+
+        })
+    }
+
+    private fun consultarLocalInventario(idInventario: Int?) {
+        val call: Call<Lugar> = ApiClient.getClient.consultarLugarPorInventario(idInventario?.toLong()!!)
+        call.enqueue(object : Callback<Lugar> {
+
+            override fun onResponse(call: Call<Lugar>?, response: Response<Lugar>?) {
+                Log.i("respuesta", response!!.body()!!.toString())
+                val local = response.body()
+                val gson = Gson()
+                val json = gson.toJson(local)
+
+                val inventarioPreferences: SharedPreferences = getSharedPreferences(Constantes.PREF_NAME, 0)
+                val prefsEditor = inventarioPreferences.edit()
+                prefsEditor.putString(Constantes.LOCAL, json)
+                prefsEditor.commit()
+            }
+
+            override fun onFailure(call: Call<Lugar>, t: Throwable) {
+                Log.i("error", "error")
+                val dialogBuilder = AlertDialog.Builder(this@LoginActivity)
+
+                dialogBuilder.setMessage(getString(R.string.error_wifi))
+                    .setCancelable(false)
+                    .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, id ->
+                        consultarLocales()
+                    })
+
+                val alert = dialogBuilder.create()
+                alert.setTitle("Error")
+                alert.show()
             }
 
         })

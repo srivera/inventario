@@ -76,10 +76,10 @@ class SalirFragment : Fragment() {
 
         db = InventarioDatabase.getInventarioDataBase(context = activity?.applicationContext!!)
         reconteoBodegaDao = db?.reconteoBodegaDao()
-        salirViewModel.inventario.value = "Inventario: " + sesionAplicacion?.binId.toString()
-        salirViewModel.conteo.value = " Conteo: " + sesionAplicacion?.cinId.toString()
-        salirViewModel.numconteo.value = " Número: " + sesionAplicacion?.numConteo.toString()
-        salirViewModel.usuario.value = " Usuario: " + sesionAplicacion?.empleado?.empCodigo.toString() + " " + sesionAplicacion?.empleado?.empNombreCompleto.toString()
+        salirViewModel.inventario.value = getString(R.string.etiqueta_inventario) + sesionAplicacion?.binId.toString()
+        salirViewModel.conteo.value = getString(R.string.etiqueta_conteo) + sesionAplicacion?.cinId.toString()
+        salirViewModel.numconteo.value = getString(R.string.etiqueta_numero)+ sesionAplicacion?.numConteo.toString()
+        salirViewModel.usuario.value = getString(R.string.etiqueta_usuario) + sesionAplicacion?.empleado?.empCodigo.toString() + " " + sesionAplicacion?.empleado?.empNombreCompleto.toString()
 
         cargarDatosPantalla()
 
@@ -88,7 +88,7 @@ class SalirFragment : Fragment() {
 
     fun salir() {
         val dialogBuilder = AlertDialog.Builder(activity!!)
-        dialogBuilder.setMessage("Está seguro que desea salir del inventario?")
+        dialogBuilder.setMessage(getString(R.string.salir_inventario))
             .setCancelable(false)
             .setPositiveButton("Si", DialogInterface.OnClickListener { dialog, id ->
                 if(sesionAplicacion?.tipo.equals(Constantes.ES_RECONTEO)) {
@@ -101,7 +101,7 @@ class SalirFragment : Fragment() {
             })
 
         val alert = dialogBuilder.create()
-        alert.setTitle("Confirmación")
+        alert.setTitle(getString(R.string.confirmacion))
         alert.show()
     }
 
@@ -120,13 +120,13 @@ class SalirFragment : Fragment() {
             override fun onFailure(call: Call<Long>, t: Throwable) {
                 Log.i("error", "error")
                 val dialogBuilder = AlertDialog.Builder(activity!!)
-                dialogBuilder.setMessage("Debe conectarse a la red wifi para salir del inventario")
+                dialogBuilder.setMessage(getString(R.string.error_wifi_salir))
                     .setCancelable(false)
                     .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, id ->
                     })
 
                 val alert = dialogBuilder.create()
-                alert.setTitle("Información")
+                alert.setTitle(activity?.getString(R.string.informacion))
                 alert.show()
             }
 
@@ -179,13 +179,13 @@ class SalirFragment : Fragment() {
             if(totalPendiente?.compareTo(0)!! > 0){
                 salirFragment?.buttonSalir?.setEnabled(false)
                 val dialogBuilder = AlertDialog.Builder(activity!!)
-                dialogBuilder.setMessage("Existen ítems pendientes de enviar. Revise el wifi de su dispositivo para enviar los ítems y vuelva a intentar salir")
+                dialogBuilder.setMessage(activity?.getString(R.string.pendientes_al_salir))
                     .setCancelable(false)
                     .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, id ->
                     })
 
                 val alert = dialogBuilder.create()
-                alert.setTitle("Información")
+                alert.setTitle(activity?.getString(R.string.informacion))
                 alert.show()
             }
         }

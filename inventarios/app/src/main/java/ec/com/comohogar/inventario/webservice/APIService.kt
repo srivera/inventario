@@ -54,10 +54,10 @@ interface APIService {
     @GET("erp-movil/inv/consultarZona/{codigo}")
     fun consultarZona(@Path(value="codigo") codigo: String): Call<EstructuraBodega>
 
-    @GET("erp-movil/inv/ingresarConteo/{idUsuario}/{numeroConteo}/{zona}/{barra}/{cantidad}")
+    @GET("erp-movil/inv/ingresarConteo/{idUsuario}/{numeroConteo}/{barra}/{cantidad}")
     fun ingresarConteo(@Path(value="idUsuario") idUsuario: Long?,  @Path(value="numeroConteo")  numeroConteo: Long?,
-                       @Path(value="zona")  zona: String, @Path(value="barra")  barra: String,
-                       @Path(value="cantidad")  cantidad: Int): Call<Long>
+                       @Path(value="barra")  barra: String, @Path(value="cantidad")  cantidad: Int,
+                       @Query(value="zona")  zona: String): Call<Long>
 
     @GET("erp-movil/inv/ingresarConteoUsuario/{idUsuario}/{idConteo}/{zona}/{barra}/{cantidad}/{idInventario}/{numeroConteo}")
     fun ingresarConteoUsuario(@Path(value="idUsuario") idUsuario: Long, @Path(value="idConteo")  idConteo: Long,
@@ -86,5 +86,8 @@ interface APIService {
     @GET("erp-movil/inv/consultarRutaUsuario/{idInventario}/{numConteo}/{idUsuario}")
     fun consultarRutaUsuario(@Path(value="idInventario")  idInventario: Long, @Path(value="numConteo")  numConteo: Long,
                              @Path(value="idUsuario") idUsuario: Long): Call<List<ReconteoBodega>>
+
+    @GET("erp-movil/inv/consultarLugarPorInventario/{idInventario}")
+    fun consultarLugarPorInventario(@Path(value="idInventario")  idInventario: Long): Call<Lugar>
 
 }

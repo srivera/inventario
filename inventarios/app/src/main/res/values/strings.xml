@@ -8,6 +8,7 @@
     <string name="action_settings">Configuración</string>
 
     <string name="menu_conteo">Conteo</string>
+    <string name="menu_reconteo">Reconteo</string>
     <string name="menu_pendiente">Consulta pendientes</string>
     <string name="menu_enviados">Consulta enviados</string>
     <string name="menu_error">Consulta errores</string>
@@ -42,4 +43,30 @@
     <string name="ingresa_tu_n_mero_de_empleado">Ingrese su número de empleado</string>
     <string name="selecciona_el_conteo">Seleccione el conteo</string>
     <string name="selecciona_el_inventario">Seleccione el inventario</string>
+    <string name="formato_incorrecto">Formato incorrecto</string>
+    <string name="ingrese_cantidad">Ingrese la cantidad</string>
+    <string name="error_rango">Cantidad fuera de rango</string>
+    <string name="ingrese_zona">Ingrese la zona</string>
+    <string name="ingrese_barra">Ingrese la barra</string>
+    <string name="etiqueta_inventario"> Inventario: </string>
+    <string name="etiqueta_conteo"> Conteo: </string>
+    <string name="etiqueta_numero"> Número: </string>
+    <string name="etiqueta_usuario"> Usuario: </string>
+    <string name="recuperar_items">Recuperando ítems...</string>
+    <string name="no_items">No existen ítems.</string>
+    <string name="informacion">Información</string>
+    <string name="ingrese_usuario">Ingrese su usuario</string>
+    <string name="error_wifi">Verifique su conexión a la red wifi</string>
+    <string name="usuario_no_existe">El usuario no existe</string>
+    <string name="no_reconteos">No tiene asignados reconteos, verifique.</string>
+    <string name="codigo_no_corresponde">El código no corresponde</string>
+    <string name="item_escaneado_error">El ítem escaneado no es el actual. Verifique.</string>
+    <string name="error_debe_escanear">Debe escanear el ítem o digitar el código</string>
+    <string name="no_reconteo_pendiente">No tiene pendientes de recontar.</string>
+    <string name="termino_reconteo">Ha terminado de realizar el reconteo</string>
+    <string name="item_no_conteo">El ítem escaneado no está en el reconteo. Verifique.</string>
+    <string name="salir_inventario">Está seguro que desea salir del inventario?</string>
+    <string name="confirmacion">Confirmación</string>
+    <string name="error_wifi_salir">Debe conectarse a la red wifi para salir del inventario</string>
+    <string name="pendientes_al_salir">Existen ítems pendientes de enviar. Revise el wifi de su dispositivo para enviar los ítems y vuelva a intentar salir</string>
 </resources>

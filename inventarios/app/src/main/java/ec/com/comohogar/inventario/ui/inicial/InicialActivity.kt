@@ -9,6 +9,7 @@ import ec.com.comohogar.inventario.SesionAplicacion
 import ec.com.comohogar.inventario.ui.login.LoginActivity
 import ec.com.comohogar.inventario.util.Constantes
 import java.util.ArrayList
+import ec.com.comohogar.inventario.BuildConfig
 
 
 class InicialActivity  : AppCompatActivity() {
@@ -24,8 +25,10 @@ class InicialActivity  : AppCompatActivity() {
         var btnSiguiente = findViewById<Button>(R.id.btnSiguiente)
         var textTitulo = findViewById<TextView>(R.id.titulo)
         val listView = findViewById(android.R.id.list) as ListView
+        var textVersion = findViewById<TextView>(R.id.versionName)
 
         textTitulo.setText(Constantes.TITULO_INICIAL)
+        textVersion.setText("Versión: " +  BuildConfig.VERSION_NAME)
 
         val opciones: MutableList<String> = ArrayList<String>()
         opciones?.add("Conteo")

@@ -2,7 +2,6 @@ package ec.com.comohogar.inventario.scanner;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +19,7 @@ import com.symbol.emdk.barcode.StatusData;
 
 import java.util.List;
 
+import ec.com.comohogar.inventario.R;
 import ec.com.comohogar.inventario.validacion.ValidacionBarra;
 
 public abstract class ScanActivity extends AppCompatActivity implements
@@ -278,7 +278,7 @@ public abstract class ScanActivity extends AppCompatActivity implements
             if (ValidacionBarra.Companion.validarEAN13Barra(data)) {
                 refrescarPantalla(data);
             } else {
-                refrescarPantalla("Formato incorrecto");
+                refrescarPantalla(getString(R.string.formato_incorrecto));
             }
         }else{
             refrescarPantalla(data);

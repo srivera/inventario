@@ -21,7 +21,6 @@ import android.view.KeyEvent
 import android.widget.CheckBox
 import androidx.appcompat.app.AlertDialog
 import com.google.gson.Gson
-import ec.com.comohogar.inventario.MainActivity
 import ec.com.comohogar.inventario.SesionAplicacion
 import ec.com.comohogar.inventario.databinding.FragmentReconteoBodegaBinding
 import ec.com.comohogar.inventario.modelo.AsignacionUsuario
@@ -120,10 +119,10 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
         db = InventarioDatabase.getInventarioDataBase(context = activity?.applicationContext!!)
         reconteoBodegaDao = db?.reconteoBodegaDao()
         reconteoBodegaViewModel.indice.value = 0
-        reconteoBodegaViewModel.inventario.value = "Inventario: " + sesionAplicacion?.binId.toString()
-        reconteoBodegaViewModel.conteo.value = " Conteo: " + sesionAplicacion?.cinId.toString()
-        reconteoBodegaViewModel.numconteo.value = " Número: " + sesionAplicacion?.numConteo.toString()
-        reconteoBodegaViewModel.usuario.value = " Usuario: " + sesionAplicacion?.empleado?.empCodigo.toString() + " " + sesionAplicacion?.empleado?.empNombreCompleto.toString()
+        reconteoBodegaViewModel.inventario.value = getString(R.string.etiqueta_inventario) + sesionAplicacion?.binId.toString()
+        reconteoBodegaViewModel.conteo.value = getString(R.string.etiqueta_conteo) + sesionAplicacion?.cinId.toString()
+        reconteoBodegaViewModel.numconteo.value = getString(R.string.etiqueta_numero)+ sesionAplicacion?.numConteo.toString()
+        reconteoBodegaViewModel.usuario.value = getString(R.string.etiqueta_usuario) + sesionAplicacion?.empleado?.empCodigo.toString() + " " + sesionAplicacion?.empleado?.empNombreCompleto.toString()
 
         if(sesionAplicacion?.primeraVez!!) {
             recuperarReconteo()
@@ -138,17 +137,17 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
     fun refrescarPantalla(codigoLeido: String) {
         if (editCantidad!!.hasFocus()) {
             if(reconteoBodegaViewModel.cantidad.value.isNullOrBlank()) {
-                editCantidad?.error = "Ingrese la cantidad"
+                editCantidad?.error = getString(R.string.ingrese_cantidad)
                 editCantidad?.requestFocus()
             }else if(ValidacionCantidad.validarCantidad(reconteoBodegaViewModel.cantidad.value!!.toInt())) {
-                editCantidad?.error = "Cantidad fuera de rango"
+                editCantidad?.error = getString(R.string.error_rango)
                 editCantidad?.requestFocus()
             }else {
                 editCantidad?.error = null
 
                 if (codigoLeido.contains(" ") || !ValidacionBarra.validarFormatoBarra(codigoLeido) || !ValidacionBarra.validarEAN13Barra(codigoLeido)) {
                     val dialogBuilder = AlertDialog.Builder(activity!!)
-                    dialogBuilder.setMessage("Formato incorrecto")
+                    dialogBuilder.setMessage(getString(R.string.formato_incorrecto))
                         .setCancelable(false)
                         .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, id ->
                         })
@@ -170,7 +169,7 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
                     } else {
                         reconteoBodegaViewModel?.saltoPorScaneo = false
                         val dialogBuilder = AlertDialog.Builder(activity!!)
-                        dialogBuilder.setMessage("El ítem escaneado no es el actual. Verifique.")
+                        dialogBuilder.setMessage(getString(R.string.item_escaneado_error))
                             .setCancelable(false)
                             .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, id ->
                             })
@@ -199,7 +198,7 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
     fun guardarReconteoBodega() {
         if(!reconteoBodegaViewModel?.saltoPorScaneo!! && !checkBarra?.isChecked!! ){
             val dialogBuilder = AlertDialog.Builder(activity!!)
-            dialogBuilder.setMessage("Debe escanear el ítem o digitar el código")
+            dialogBuilder.setMessage(getString(R.string.error_debe_escanear))
                 .setCancelable(false)
                 .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, id ->
                 })
@@ -254,10 +253,10 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
     private fun validarCampos(): Boolean? {
         var guardar: Boolean? = true
         if (editCantidad?.text.isNullOrBlank()) {
-            editCantidad?.error = "Ingrese la cantidad"
+            editCantidad?.error = getString(R.string.ingrese_cantidad)
             guardar = false
         }else if(ValidacionCantidad.validarCantidad(reconteoBodegaViewModel.cantidad.value!!.toInt())){
-            editCantidad?.error =  "Cantidad fuera de rango"
+            editCantidad?.error =  getString(R.string.error_rango)
             editCantidad?.requestFocus()
             guardar = false
         } else {
@@ -268,10 +267,10 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
             reconteoBodega =
                 sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!)!!
             if (!reconteoBodegaViewModel.barra.value.equals(reconteoBodega.barra)) {
-                editCodigoBarra?.error = "El código no corresponde"
+                editCodigoBarra?.error = getString(R.string.codigo_no_corresponde)
                 guardar = false
             }else if(!ValidacionBarra.validarFormatoBarra(reconteoBodegaViewModel.barra.value.toString()) || !ValidacionBarra.validarEAN13Barra(reconteoBodegaViewModel.barra.value.toString()) ){
-                editCodigoBarra?.error =  "Formato incorrecto"
+                editCodigoBarra?.error =  getString(R.string.formato_incorrecto)
                 guardar = false
             }else{
                 editCodigoBarra?.error = null
@@ -308,14 +307,14 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
 
                         this@ReconteoBodegaFragment.activity?.runOnUiThread(java.lang.Runnable {
                             val dialogBuilder = AlertDialog.Builder(this@ReconteoBodegaFragment.activity!!)
-                            dialogBuilder.setMessage("No tiene pendientes de recontar.")
+                            dialogBuilder.setMessage(getString(R.string.no_reconteo_pendiente))
                                 .setCancelable(false)
                                 .setPositiveButton("OK", DialogInterface.OnClickListener {
                                         dialog, id ->
                                 })
 
                             val alert = dialogBuilder.create()
-                            alert.setTitle("Error")
+                            alert.setTitle(activity?.getString(R.string.informacion))
                             alert.show()
                             buttonGuardar?.isEnabled = false
                             buttonVacio?.isEnabled = false
@@ -381,13 +380,13 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
             editCantidad?.isEnabled = false
 
             val dialogBuilder = AlertDialog.Builder(activity!!)
-            dialogBuilder.setMessage("Ha terminado de realizar el reconteo")
+            dialogBuilder.setMessage(getString(R.string.termino_reconteo))
                 .setCancelable(false)
                 .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, id ->
                 })
 
             val alert = dialogBuilder.create()
-            alert.setTitle("Información")
+            alert.setTitle(activity?.getString(R.string.informacion))
             alert.show()
         }
     }
@@ -450,13 +449,13 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
                 reconteoBodegaFragment?.editCantidad?.isEnabled = false
 
                 val dialogBuilder = AlertDialog.Builder(reconteoBodegaFragment?.activity!!)
-                dialogBuilder.setMessage("Ha terminado de realizar el reconteo")
+                dialogBuilder.setMessage(reconteoBodegaFragment?.getString(R.string.termino_reconteo))
                     .setCancelable(false)
                     .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, id ->
                     })
 
                 val alert = dialogBuilder.create()
-                alert.setTitle("Información")
+                alert.setTitle(reconteoBodegaFragment?.getString(R.string.informacion))
                 alert.show()
             }
         }

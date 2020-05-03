@@ -7,11 +7,10 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import ec.com.comohogar.inventario.R
-import ec.com.comohogar.inventario.modelo.Lugar
+import ec.com.comohogar.inventario.modelo.ConteoPendiente
 
 
-class LocalAdapter(val context: Context, var listItemsTxt: List<Lugar>?) : BaseAdapter() {
-
+class ConteoErrorAdapter(val context: Context, var listItemsTxt: List<ConteoPendiente>?) : BaseAdapter() {
 
     val mInflater: LayoutInflater = LayoutInflater.from(context)
 
@@ -19,7 +18,7 @@ class LocalAdapter(val context: Context, var listItemsTxt: List<Lugar>?) : BaseA
         val view: View
         val vh: ItemRowHolder
         if (convertView == null) {
-            view = mInflater.inflate(R.layout.drop_down_local, parent, false)
+            view = mInflater.inflate(R.layout.item_conteo_error, parent, false)
             vh = ItemRowHolder(view)
             view?.tag = vh
         } else {
@@ -28,10 +27,14 @@ class LocalAdapter(val context: Context, var listItemsTxt: List<Lugar>?) : BaseA
         }
 
         val params = view.layoutParams
-        params.height = 60
+        params.height = 70
         view.layoutParams = params
 
-        vh.label.text = "   " + listItemsTxt?.get(position)?.lugNombre
+        vh.zona?.text = listItemsTxt?.get(position)?.zona.toString()
+        vh.barra?.text = listItemsTxt?.get(position)?.barra.toString()
+        vh.cantidad?.text = listItemsTxt?.get(position)?.cantidad.toString()
+        vh.error?.text = listItemsTxt?.get(position)?.error.toString()
+
         return view
     }
 
@@ -42,9 +45,7 @@ class LocalAdapter(val context: Context, var listItemsTxt: List<Lugar>?) : BaseA
     }
 
     override fun getItemId(position: Int): Long {
-
         return 0
-
     }
 
     override fun getCount(): Int {
@@ -53,10 +54,16 @@ class LocalAdapter(val context: Context, var listItemsTxt: List<Lugar>?) : BaseA
 
     private class ItemRowHolder(row: View?) {
 
-        val label: TextView
+        var zona: TextView? = null
+        var barra: TextView? = null
+        var cantidad: TextView? = null
+        var error: TextView? = null
 
         init {
-            this.label = row?.findViewById(R.id.txtDescripcion) as TextView
+            this.zona = row?.findViewById(R.id.txtZona) as TextView
+            this.cantidad = row?.findViewById(R.id.txtCantidad) as TextView
+            this.barra = row?.findViewById(R.id.txtBarra) as TextView
+            this.error = row?.findViewById(R.id.txtError) as TextView
         }
     }
 }

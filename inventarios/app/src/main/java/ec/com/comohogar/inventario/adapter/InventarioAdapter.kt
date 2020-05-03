@@ -27,8 +27,6 @@ class InventarioAdapter(val context: Context, var listItemsTxt: List<Inventario>
             vh = view.tag as ItemRowHolder
         }
 
-        // setting adapter item height programatically.
-
         val params = view.layoutParams
         params.height = 60
         view.layoutParams = params

@@ -6,27 +6,27 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_reconteo_bodega"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/shelf"
             android:title="@string/reconteo_bodega" />
         <item
             android:id="@+id/nav_conteo"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/bug"
             android:title="Correcciones" />
         <item
             android:id="@+id/nav_pendiente"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/clock"
             android:title="@string/menu_pendiente" />
         <item
             android:id="@+id/nav_enviado"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/send"
             android:title="@string/menu_enviados" />
         <item
             android:id="@+id/nav_error"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/error"
             android:title="@string/menu_error" />
         <item
             android:id="@+id/nav_salir"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/logout"
             android:title="@string/menu_salir" />
     </group>
 

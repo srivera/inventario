@@ -72,10 +72,10 @@ class ConsultaEnviadoFragment : Fragment() {
             }
         }
 
-        consultaEnviadoViewModel.inventario.value = "Inventario: " + sesionAplicacion?.binId.toString()
-        consultaEnviadoViewModel.conteo.value = " Conteo: " + sesionAplicacion?.cinId.toString()
-        consultaEnviadoViewModel.numconteo.value = " Número: " + sesionAplicacion?.numConteo.toString()
-        consultaEnviadoViewModel.usuario.value = " Usuario: " + sesionAplicacion?.empleado?.empCodigo.toString() + " " + sesionAplicacion?.empleado?.empNombreCompleto.toString()
+        consultaEnviadoViewModel.inventario.value = getString(R.string.etiqueta_inventario) + sesionAplicacion?.binId.toString()
+        consultaEnviadoViewModel.conteo.value = getString(R.string.etiqueta_conteo) + sesionAplicacion?.cinId.toString()
+        consultaEnviadoViewModel.numconteo.value = getString(R.string.etiqueta_numero)+ sesionAplicacion?.numConteo.toString()
+        consultaEnviadoViewModel.usuario.value = getString(R.string.etiqueta_usuario) + sesionAplicacion?.empleado?.empCodigo.toString() + " " + sesionAplicacion?.empleado?.empNombreCompleto.toString()
 
         recuperarReconteo()
 
@@ -94,7 +94,7 @@ class ConsultaEnviadoFragment : Fragment() {
     }
 
     fun recuperarReconteo() {
-        dialog = ProgressDialog.setProgressDialog(this!!.activity!!, "Recuperando ítems...")
+        dialog = ProgressDialog.setProgressDialog(this!!.activity!!, getString(R.string.recuperar_items))
         dialog?.show()
         AsyncTaskConsultarHistorico(this.activity as MainActivity?, this, editBarra?.text.toString(), editZona?.text.toString()).execute()
     }
@@ -117,7 +117,7 @@ class ConsultaEnviadoFragment : Fragment() {
                 conteoEnviado = mutableListOf()
 
                 for (conteo in listaConteoHistorico!!) {
-                    conteoEnviado!!.add(ConteoPendiente(conteo.barra, conteo.zona, conteo.cantidad))
+                    conteoEnviado!!.add(ConteoPendiente(conteo.barra, conteo.zona, conteo.cantidad, ""))
                 }
             } catch (ex: Exception) {
                 ex.printStackTrace()
@@ -135,14 +135,14 @@ class ConsultaEnviadoFragment : Fragment() {
                 consultaEnviadoFragment?.listview?.adapter = conteoPendienteAdapter
 
                 val dialogBuilder = AlertDialog.Builder(activity!!)
-                dialogBuilder.setMessage("No existen ítems.")
+                dialogBuilder.setMessage(activity?.getString(R.string.no_items))
                     .setCancelable(false)
                     .setPositiveButton("OK", DialogInterface.OnClickListener {
                             dialog, id ->
                     })
 
                 val alert = dialogBuilder.create()
-                alert.setTitle("Información")
+                alert.setTitle(activity?.getString(R.string.informacion))
                 alert.show()
             }else if(!conteoEnviado?.isEmpty()!!) {
                 var conteoPendienteAdapter =

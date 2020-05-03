@@ -9,4 +9,6 @@ data class ConteoPendiente(
         @SerializedName("zona")
         var zona: kotlin.String,
         @SerializedName("cantidad")
-        val cantidad: Int)
+        val cantidad: Int,
+        @SerializedName("error")
+        var error: kotlin.String)

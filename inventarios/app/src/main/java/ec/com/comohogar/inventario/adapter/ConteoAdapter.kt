@@ -27,8 +27,6 @@ class ConteoAdapter(val context: Context, var listItemsTxt: List<Conteo>?) : Bas
             vh = view.tag as ItemRowHolder
         }
 
-        // setting adapter item height programatically.
-
         val params = view.layoutParams
         params.height = 60
         view.layoutParams = params

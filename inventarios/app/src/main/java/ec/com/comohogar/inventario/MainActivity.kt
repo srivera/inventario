@@ -69,6 +69,8 @@ class MainActivity : ScanActivity() {
 
         var header = navView.getHeaderView(0)
         var textLocal = header?.findViewById<TextView>(R.id.textLocal);
+        var textVersion = header?.findViewById<TextView>(R.id.textVersion);
+        textVersion?.text = "Versión: " + BuildConfig.VERSION_NAME
 
         val inventarioPreferences: SharedPreferences = getSharedPreferences(Constantes.PREF_NAME, 0)
         var tipoInventario = sesionAplicacion?.tipoInventario
@@ -196,8 +198,8 @@ class MainActivity : ScanActivity() {
         for (conteo in conteos!!) {
             val call: Call<Long> = ApiClient.getClient.ingresarConteo(
                 conteo.usuId,
-                conteo.cinId, conteo.zona, conteo.barra,
-                conteo.cantidad
+                conteo.cinId,  conteo.barra,
+                conteo.cantidad, conteo.zona
             )
             try {
                 val response = call.execute()
@@ -243,8 +245,9 @@ class MainActivity : ScanActivity() {
         for (reconteo in reconteos!!) {
             val call: Call<Long> = ApiClient.getClient.ingresarConteo(
                sesionAplicacion?.usuId, reconteo.cinId,
-                "-", reconteo.barra,
-                reconteo.cantidad
+                reconteo.barra,
+                reconteo.cantidad,
+                ""
             )
             try {
                 val response = call.execute()

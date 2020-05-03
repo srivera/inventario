@@ -96,10 +96,10 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
 
         }
 
-        conteoViewModel.inventario.value = "Inventario: " + sesionAplicacion?.binId.toString()
-        conteoViewModel.conteo.value = " Conteo: " + sesionAplicacion?.cinId.toString()
-        conteoViewModel.numconteo.value = " Número: " + sesionAplicacion?.numConteo.toString()
-        conteoViewModel.usuario.value = " Usuario: " + sesionAplicacion?.empleado?.empCodigo.toString() + " " + sesionAplicacion?.empleado?.empNombreCompleto.toString()
+        conteoViewModel.inventario.value = getString(R.string.etiqueta_inventario) + sesionAplicacion?.binId.toString()
+        conteoViewModel.conteo.value = getString(R.string.etiqueta_conteo) + sesionAplicacion?.cinId.toString()
+        conteoViewModel.numconteo.value = getString(R.string.etiqueta_numero) + sesionAplicacion?.numConteo.toString()
+        conteoViewModel.usuario.value = getString(R.string.etiqueta_usuario) + sesionAplicacion?.empleado?.empCodigo.toString() + " " + sesionAplicacion?.empleado?.empNombreCompleto.toString()
 
         return root
     }
@@ -108,7 +108,7 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
      fun refrescarPantalla(codigoLeido: String) {
          if(editZona!!.hasFocus()) {
              if(!ValidacionZona.validarZona(codigoLeido, sesionAplicacion!!)){
-                 editZona?.error = "Formato incorrecto"
+                 editZona?.error = getString(R.string.formato_incorrecto)
                  return
              }else{
                  editZona?.error = null
@@ -117,7 +117,7 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
              }
          } else if(editBarra!!.hasFocus()) {
              if(codigoLeido.contains(" ") || !ValidacionBarra.validarFormatoBarra(codigoLeido) || !ValidacionBarra.validarEAN13Barra(codigoLeido) ){
-                 editBarra?.error =  "Formato incorrecto"
+                 editBarra?.error =  getString(R.string.formato_incorrecto)
              }else {
                  editBarra?.error = null
                  editBarra!!.setText(codigoLeido)
@@ -125,15 +125,15 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
              }
          } else if(editCantidad!!.hasFocus()) {
              if(conteoViewModel.cantidad.value.isNullOrBlank()) {
-                 editCantidad?.error = "Ingrese la cantidad"
+                 editCantidad?.error = getString(R.string.ingrese_cantidad)
                  editCantidad?.requestFocus()
              }else if(ValidacionCantidad.validarCantidad(conteoViewModel.cantidad.value!!.toInt())){
-                 editCantidad?.error =  "Cantidad fuera de rango"
+                 editCantidad?.error =  getString(R.string.error_rango)
                  editCantidad?.requestFocus()
              }else {
                  editCantidad?.error =  null
                  if (codigoLeido.contains(" ") || !ValidacionBarra.validarFormatoBarra(codigoLeido) || !ValidacionBarra.validarEAN13Barra(codigoLeido)) {
-                     editBarra?.error = "Formato incorrecto"
+                     editBarra?.error = getString(R.string.formato_incorrecto)
                      conteoViewModel.cantidad.value = ""
                      conteoViewModel.barra.value = ""
                      editBarra?.requestFocus()
@@ -205,29 +205,29 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
     private fun validarCampos(): Boolean? {
         var guardar: Boolean? = true
         if (editZona?.text.isNullOrBlank()) {
-            editZona?.error = "Ingrese la zona"
+            editZona?.error = getString(R.string.ingrese_zona)
             guardar = false
         } else if(!ValidacionZona.validarZona(editZona?.text.toString(), sesionAplicacion!!)){
-            editZona?.error = "Formato incorrecto"
+            editZona?.error = getString(R.string.formato_incorrecto)
             guardar = false
         }else{
             editZona?.error = null
         }
 
         if (editBarra?.text.isNullOrBlank()) {
-            editBarra?.error = "Ingrese la barra"
+            editBarra?.error = getString(R.string.ingrese_barra)
             guardar = false
         }else if(editBarra?.text.toString().contains(" ") || !ValidacionBarra.validarFormatoBarra(editBarra?.text.toString()) || !ValidacionBarra.validarEAN13Barra(editBarra?.text.toString()) ){
-            editBarra?.error =  "Formato incorrecto"
+            editBarra?.error =  getString(R.string.formato_incorrecto)
             guardar = false
         } else {
             editBarra?.error = null
         }
         if (editCantidad?.text.isNullOrBlank()) {
-            editCantidad?.error = "Ingrese la cantidad"
+            editCantidad?.error = getString(R.string.ingrese_cantidad)
             guardar = false
         }else if(ValidacionCantidad.validarCantidad(conteoViewModel.cantidad.value!!.toInt())){
-            editCantidad?.error =  "Cantidad fuera de rango"
+            editCantidad?.error =  getString(R.string.error_rango)
             editCantidad?.requestFocus()
             guardar = false
         } else {

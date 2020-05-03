@@ -22,7 +22,6 @@ import ec.com.comohogar.inventario.modelo.ConteoPendiente
 import ec.com.comohogar.inventario.persistencia.InventarioDatabase
 import ec.com.comohogar.inventario.persistencia.dao.ReconteoLocalDao
 import ec.com.comohogar.inventario.persistencia.entities.Conteo
-import ec.com.comohogar.inventario.persistencia.entities.ReconteoLocal
 import ec.com.comohogar.inventario.util.Constantes
 import ec.com.comohogar.inventario.util.ProgressDialog
 
@@ -67,10 +66,10 @@ class ConsultaPendienteFragment : Fragment() {
         buttonBuscar = root.findViewById(R.id.buttonGuardar)
         listview = root.findViewById(R.id.listview)
 
-        consultaPendienteViewModel.inventario.value = "Inventario: " + sesionAplicacion?.binId.toString()
-        consultaPendienteViewModel.conteo.value = " Conteo: " + sesionAplicacion?.cinId.toString()
-        consultaPendienteViewModel.numconteo.value = " Número: " + sesionAplicacion?.numConteo.toString()
-        consultaPendienteViewModel.usuario.value = " Usuario: " + sesionAplicacion?.empleado?.empCodigo.toString() + " " + sesionAplicacion?.empleado?.empNombreCompleto.toString()
+        consultaPendienteViewModel.inventario.value = getString(R.string.etiqueta_inventario) + sesionAplicacion?.binId.toString()
+        consultaPendienteViewModel.conteo.value = getString(R.string.etiqueta_conteo) + sesionAplicacion?.cinId.toString()
+        consultaPendienteViewModel.numconteo.value = getString(R.string.etiqueta_numero)+ sesionAplicacion?.numConteo.toString()
+        consultaPendienteViewModel.usuario.value = getString(R.string.etiqueta_usuario) + sesionAplicacion?.empleado?.empCodigo.toString() + " " + sesionAplicacion?.empleado?.empNombreCompleto.toString()
 
         editZona?.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus) {
@@ -100,7 +99,7 @@ class ConsultaPendienteFragment : Fragment() {
     }
 
     fun cargarDatosPantalla() {
-        dialog = ProgressDialog.setProgressDialog(this!!.activity!!, "Recuperando ítems...")
+        dialog = ProgressDialog.setProgressDialog(this!!.activity!!, getString(R.string.recuperar_items))
         dialog?.show()
         AsyncTaskCargarPendientes(this.activity as MainActivity?, this, editBarra?.text.toString(), editZona?.text.toString()).execute()
     }
@@ -131,7 +130,7 @@ class ConsultaPendienteFragment : Fragment() {
                         reconteos = conteoDao?.getConteoPendienteByBarra(barra)
                     }
                     for (reconteo in reconteos!!) {
-                        conteoPendiente!!.add(ConteoPendiente(reconteo.barra, "", reconteo.cantidad))
+                        conteoPendiente!!.add(ConteoPendiente(reconteo.barra, "", reconteo.cantidad, ""))
                     }
                 }
             }else if(sesionAplicacion?.tipo.equals(Constantes.ES_CONTEO)) {
@@ -149,7 +148,7 @@ class ConsultaPendienteFragment : Fragment() {
                     conteos = conteoDao?.getConteoPendienteByBarraAndZona(barra, zona)
                 }
                 for (conteo in conteos!!) {
-                    conteoPendiente!!.add(ConteoPendiente(conteo.barra, conteo.zona, conteo.cantidad))
+                    conteoPendiente!!.add(ConteoPendiente(conteo.barra, conteo.zona, conteo.cantidad, ""))
                 }
             }
             return 0
@@ -161,13 +160,13 @@ class ConsultaPendienteFragment : Fragment() {
 
             if(conteoPendiente?.isEmpty()!!) {
                 val dialogBuilder = AlertDialog.Builder(activity!!)
-                dialogBuilder.setMessage("No existen ítems.")
+                dialogBuilder.setMessage(activity?.getString(R.string.no_items))
                     .setCancelable(false)
                     .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, id ->
                     })
 
                 val alert = dialogBuilder.create()
-                alert.setTitle("Información")
+                alert.setTitle(activity?.getString(R.string.informacion))
                 alert.show()
             }
             var conteoPendienteAdapter = ConteoPendienteAdapter(activity?.applicationContext!!, conteoPendiente)
