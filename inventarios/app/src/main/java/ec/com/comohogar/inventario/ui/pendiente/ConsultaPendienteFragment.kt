@@ -22,6 +22,7 @@ import ec.com.comohogar.inventario.modelo.ConteoPendiente
 import ec.com.comohogar.inventario.persistencia.InventarioDatabase
 import ec.com.comohogar.inventario.persistencia.dao.ReconteoLocalDao
 import ec.com.comohogar.inventario.persistencia.entities.Conteo
+import ec.com.comohogar.inventario.persistencia.entities.ReconteoBodega
 import ec.com.comohogar.inventario.util.Constantes
 import ec.com.comohogar.inventario.util.ProgressDialog
 
@@ -119,18 +120,52 @@ class ConsultaPendienteFragment : Fragment() {
             if(sesionAplicacion?.tipo.equals(Constantes.ES_RECONTEO)) {
                 if (sesionAplicacion?.tipoInventario!!.equals(Constantes.INVENTARIO_BODEGA)) {
                     //Bodega
+                    var conteos: List<Conteo>? = null
+                    conteos  = mutableListOf()
+                    if(barra.isNullOrBlank() && zona.isNullOrBlank() ) {
+                        conteos = conteoDao?.getConteoPendiente()
+                    }else if(!barra.isNullOrBlank()){
+                        conteos = conteoDao?.getConteoPendienteByBarra(barra)
+                    }else if(!zona.isNullOrBlank()){
+                        conteos = conteoDao?.getConteoPendienteByZona(zona)
+                    }else{
+                        conteos = conteoDao?.getConteoPendienteByBarraAndZona(barra, zona)
+                    }
+
+                    var reconteoBodegaDao = db?.reconteoBodegaDao()
+                    var reconteos: List<ReconteoBodega>? = null
+                    reconteos  = mutableListOf()
+                    if(barra.isNullOrBlank() && zona.isNullOrBlank() ) {
+                        reconteos = reconteoBodegaDao?.getReconteoBodegaPendiente()
+                    }else if(!barra.isNullOrBlank()){
+                        reconteos = reconteoBodegaDao?.getReconteoPendienteByBarra(barra)
+                    }else if(!zona.isNullOrBlank()){
+                        reconteos = reconteoBodegaDao?.getReconteoPendienteByZona(zona)
+                    }else{
+                        reconteos = reconteoBodegaDao?.getReconteoPendienteByBarraAndZona(barra, zona)
+                    }
+
+                    for (reconteo in reconteos!!) {
+                        conteoPendiente!!.add(ConteoPendiente(reconteo.barra, reconteo.rcoUbicacion, reconteo.cantidad, ""))
+                    }
+                    for (conteo in conteos!!) {
+                        conteoPendiente!!.add(ConteoPendiente(conteo.barra, conteo.zona, conteo.cantidad, ""))
+                    }
                 } else {
                    //Local
-                    var reconteos: List<Conteo>? = null
-                    var reconteoLocalDao = db?.reconteoLocalDao()
-                    reconteos  = mutableListOf()
-                    if(barra.isNullOrBlank()) {
-                        reconteos = conteoDao?.getConteoPendiente()
-                    }else {
-                        reconteos = conteoDao?.getConteoPendienteByBarra(barra)
+                    var conteos: List<Conteo>? = null
+                    conteos  = mutableListOf()
+                    if(barra.isNullOrBlank() && zona.isNullOrBlank() ) {
+                        conteos = conteoDao?.getConteoPendiente()
+                    }else if(!barra.isNullOrBlank()){
+                        conteos = conteoDao?.getConteoPendienteByBarra(barra)
+                    }else if(!zona.isNullOrBlank()){
+                        conteos = conteoDao?.getConteoPendienteByZona(zona)
+                    }else{
+                        conteos = conteoDao?.getConteoPendienteByBarraAndZona(barra, zona)
                     }
-                    for (reconteo in reconteos!!) {
-                        conteoPendiente!!.add(ConteoPendiente(reconteo.barra, "", reconteo.cantidad, ""))
+                    for (conteo in conteos!!) {
+                        conteoPendiente!!.add(ConteoPendiente(conteo.barra, "", conteo.cantidad, ""))
                     }
                 }
             }else if(sesionAplicacion?.tipo.equals(Constantes.ES_CONTEO)) {

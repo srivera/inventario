@@ -41,6 +41,15 @@ interface ReconteoBodegaDao {
     @Query("SELECT count(*) FROM ReconteoBodega WHERE estado = 'INS'")
     fun countInsertado(): Int
 
-    @Query("SELECT * FROM ReconteoBodega WHERE estado == 'PEN'")
+    @Query("SELECT * FROM ReconteoBodega WHERE estado = 'PEN'")
     fun getReconteoBodegaPendiente(): List<ReconteoBodega>
+
+    @Query("SELECT * FROM ReconteoBodega WHERE estado = 'PEN' and barra = :barra")
+    fun getReconteoPendienteByBarra(barra: String?): List<ReconteoBodega>
+
+    @Query("SELECT * FROM ReconteoBodega WHERE estado = 'PEN' and rcoUbicacion = :zona")
+    fun getReconteoPendienteByZona(zona: String?): List<ReconteoBodega>
+
+    @Query("SELECT * FROM ReconteoBodega WHERE estado = 'PEN' and barra = :barra and rcoUbicacion = :zona")
+    fun getReconteoPendienteByBarraAndZona(barra: String?, zona: String?): List<ReconteoBodega>
 }
