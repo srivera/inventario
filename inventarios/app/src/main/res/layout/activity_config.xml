@@ -1,0 +1,71 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/WizardPageContainer">
+
+    <TextView
+        android:id="@+id/titulo"
+        style="@style/WizardPageTitle"
+        android:text="Configuración de conexión" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@color/colorPrimaryDark" />
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="172dp"
+        android:layout_weight="1"
+        android:paddingLeft="16dp"
+        android:paddingTop="10dp"
+        android:paddingRight="16dp"
+        android:saveEnabled="false"
+        android:scrollbarStyle="outsideOverlay" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="true"
+        android:minHeight="?android:listPreferredItemHeightSmall"
+        android:orientation="vertical"
+        android:paddingLeft="?android:listPreferredItemPaddingLeft"
+        android:paddingTop="12dp"
+        android:paddingRight="?android:listPreferredItemPaddingRight"
+        android:paddingBottom="12dp">
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/versionName"
+        style="?android:textAppearanceSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="16dp"
+        android:layout_margin="5dp"
+        android:layout_gravity="center_vertical|end"
+        android:justificationMode="inter_word"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="Versión"
+        android:textColor="@color/text_light" />
+    <LinearLayout
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnGuardar"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/selectable_item_background"
+            android:text="@string/guardar"
+            android:textColor="@color/colorPrimaryDark" />
+
+    </LinearLayout>
+</LinearLayout>

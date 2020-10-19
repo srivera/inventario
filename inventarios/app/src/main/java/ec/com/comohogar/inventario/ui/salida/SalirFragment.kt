@@ -208,7 +208,10 @@ class SalirFragment : Fragment() {
                 } else {
                     //Local
                     var reconteoLocalDao = db?.reconteoLocalDao()
-                    reconteoLocalDao?.eliminar()
+                    reconteoLocalDao?.eliminarTodo()
+
+                    var conteoDao = db?.conteoDao()
+                    conteoDao?.eliminar()
                 }
             }
             return 0
@@ -218,6 +221,8 @@ class SalirFragment : Fragment() {
             super.onPostExecute(result)
             val inventarioPreferences: SharedPreferences = activity!!.getSharedPreferences(Constantes.PREF_NAME, 0)
             inventarioPreferences.edit().clear().commit()
+            android.os.Process.killProcess(android.os.Process.myPid());
+
             activity!!.finish()
         }
     }

@@ -40,6 +40,12 @@ public class SesionAplicacion extends Application {
 
     private String nombreLocal;
 
+    private String zonaActual;
+
+    private String ultimaBarra;
+
+    private String ultimaCantidad;
+
     private Boolean primeraVez = true;
 
     public List<ReconteoBodega> getListaReconteoBodega() {
@@ -153,4 +159,30 @@ public class SesionAplicacion extends Application {
     public void setNombreLocal(String nombreLocal) {
         this.nombreLocal = nombreLocal;
     }
+
+
+    public String getZonaActual() {
+        return zonaActual;
+    }
+
+    public void setZonaActual(String zonaActual) {
+        this.zonaActual = zonaActual;
+    }
+
+    public String getUltimaBarra() {
+        return ultimaBarra;
+    }
+
+    public void setUltimaBarra(String ultimaBarra) {
+        this.ultimaBarra = ultimaBarra;
+    }
+
+    public String getUltimaCantidad() {
+        return ultimaCantidad;
+    }
+
+    public void setUltimaCantidad(String ultimaCantidad) {
+        this.ultimaCantidad = ultimaCantidad;
+    }
+
 }

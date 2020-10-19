@@ -30,6 +30,9 @@ import ec.com.comohogar.inventario.ui.reconteolocal.ReconteoLocalFragment
 import ec.com.comohogar.inventario.webservice.ApiClient
 import retrofit2.Call
 import java.util.*
+import android.view.MenuItem
+import ec.com.comohogar.inventario.ui.config.ConfigActivity
+
 
 class MainActivity : ScanActivity() {
 
@@ -84,7 +87,7 @@ class MainActivity : ScanActivity() {
             val asignacionUsuario = gson.fromJson(json, AsignacionUsuario::class.java)
             sesionAplicacion?.binId = asignacionUsuario.binId
             sesionAplicacion?.cinId = asignacionUsuario.cinId
-            sesionAplicacion?.usuId = asignacionUsuario.usuId
+           // sesionAplicacion?.usuId = asignacionUsuario.usuId
             sesionAplicacion?.numConteo = asignacionUsuario.numeroConteo.toInt()
         } else if (sesionAplicacion?.tipo.equals(Constantes.ES_CONTEO)) {
             val gson = Gson()
@@ -92,7 +95,7 @@ class MainActivity : ScanActivity() {
             val conteo = gson.fromJson(json, Conteo::class.java)
             sesionAplicacion?.binId = conteo.binId
             sesionAplicacion?.cinId = conteo.cinId
-            sesionAplicacion?.usuId = conteo.usuId
+            //sesionAplicacion?.usuId = conteo.usuId
             sesionAplicacion?.numConteo = conteo.cinNumConteo.toInt()
         }
 
@@ -129,7 +132,7 @@ class MainActivity : ScanActivity() {
                         }
                     },
                     0,
-                    10000
+                    30000
                 )
                 t.scheduleAtFixedRate(
                     object : TimerTask() {
@@ -138,7 +141,7 @@ class MainActivity : ScanActivity() {
                         }
                     },
                     0,
-                    10000
+                    30000
                 )
                 navView.menu.clear()
                 navView.inflateMenu(R.menu.menu_reconteo_bodega)
@@ -158,7 +161,7 @@ class MainActivity : ScanActivity() {
                         }
                     },
                     0,
-                    10000
+                    30000
                 )
                 navView.menu.clear()
                 navView.inflateMenu(R.menu.menu_reconteo_local)
@@ -178,7 +181,7 @@ class MainActivity : ScanActivity() {
                     }
                 },
                 0,
-                10000
+                30000
             )
             navView.menu.clear()
             navView.inflateMenu(R.menu.menu_conteo)
@@ -267,6 +270,7 @@ class MainActivity : ScanActivity() {
         var json = inventarioPreferences.getString(Constantes.EMPLEADO, "");
         val empleado = gson.fromJson(json, Empleado::class.java)
         sesionAplicacion?.empleado = empleado
+        sesionAplicacion?.usuId = empleado?.usuId
 
         json = inventarioPreferences.getString(Constantes.CONTEO, "");
         val conteo = gson.fromJson(json, Conteo::class.java)
@@ -324,6 +328,18 @@ class MainActivity : ScanActivity() {
             } else if (fragment is ReconteoLocalFragment) {
                 fragment.refrescarEstado(estado)
             }
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        when (item.getItemId()) {
+            R.id.action_settings -> {
+                val intent = Intent(this, ConfigActivity::class.java)
+                startActivity(intent)
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
         }
     }
 }

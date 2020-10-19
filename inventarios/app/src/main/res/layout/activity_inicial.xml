@@ -112,7 +112,16 @@
             android:layout_weight="1"
             android:background="@drawable/selectable_item_background"
             android:enabled="false" />
-
+        <Button
+            android:id="@+id/btnConfigurar"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/selectable_item_background"
+            android:enabled="true"
+            android:text="@string/red_btn"
+            android:textColor="@color/colorPrimaryDark" />
         <Button
             android:id="@+id/btnSiguiente"
             style="?android:attr/buttonBarButtonStyle"

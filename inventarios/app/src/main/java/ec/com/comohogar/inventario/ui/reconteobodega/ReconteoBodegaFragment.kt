@@ -32,6 +32,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import ec.com.comohogar.inventario.persistencia.entities.ReconteoBodega
+import ec.com.comohogar.inventario.util.ProgressDialog
 import ec.com.comohogar.inventario.validacion.ValidacionBarra
 import ec.com.comohogar.inventario.validacion.ValidacionCantidad
 
@@ -58,6 +59,8 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
     private var reconteoBodegaDao: ReconteoBodegaDao? = null
 
     private var sesionAplicacion: SesionAplicacion? = null
+
+    var dialog: AlertDialog? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -139,7 +142,7 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
             if(reconteoBodegaViewModel.cantidad.value.isNullOrBlank()) {
                 editCantidad?.error = getString(R.string.ingrese_cantidad)
                 editCantidad?.requestFocus()
-            }else if(ValidacionCantidad.validarCantidad(reconteoBodegaViewModel.cantidad.value!!.toInt())) {
+            }else if(ValidacionCantidad.validarCantidad(reconteoBodegaViewModel.cantidad.value!!.toLong())) {
                 editCantidad?.error = getString(R.string.error_rango)
                 editCantidad?.requestFocus()
             }else {
@@ -255,7 +258,7 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
         if (editCantidad?.text.isNullOrBlank()) {
             editCantidad?.error = getString(R.string.ingrese_cantidad)
             guardar = false
-        }else if(ValidacionCantidad.validarCantidad(reconteoBodegaViewModel.cantidad.value!!.toInt())){
+        }else if(ValidacionCantidad.validarCantidad(reconteoBodegaViewModel.cantidad.value!!.toLong())){
             editCantidad?.error =  getString(R.string.error_rango)
             editCantidad?.requestFocus()
             guardar = false
@@ -266,12 +269,14 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
             var reconteoBodega: ReconteoBodega
             reconteoBodega =
                 sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!)!!
-            if (!reconteoBodegaViewModel.barra.value.equals(reconteoBodega.barra)) {
+            if (!reconteoBodegaViewModel.barra.value.equals(reconteoBodega.barra) && !reconteoBodegaViewModel.barra.value.equals(reconteoBodega.codigoItem) ) {
                 editCodigoBarra?.error = getString(R.string.codigo_no_corresponde)
                 guardar = false
-            }else if(!ValidacionBarra.validarFormatoBarra(reconteoBodegaViewModel.barra.value.toString()) || !ValidacionBarra.validarEAN13Barra(reconteoBodegaViewModel.barra.value.toString()) ){
-                editCodigoBarra?.error =  getString(R.string.formato_incorrecto)
-                guardar = false
+            }else if(!reconteoBodegaViewModel.barra.value.toString().contains("-")){
+                if(!ValidacionBarra.validarFormatoBarra(reconteoBodegaViewModel.barra.value.toString()) || !ValidacionBarra.validarEAN13Barra(reconteoBodegaViewModel.barra.value.toString()) ) {
+                    editCodigoBarra?.error = getString(R.string.formato_incorrecto)
+                    guardar = false
+                }
             }else{
                 editCodigoBarra?.error = null
             }
@@ -280,6 +285,10 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
     }
 
     private fun recuperarReconteo() {
+
+        dialog = ProgressDialog.setProgressDialog(this!!.activity!!, getString(R.string.recuperar_items))
+        dialog?.show()
+
         val inventarioPreferences: SharedPreferences = activity!!.getSharedPreferences(Constantes.PREF_NAME, 0)
         val gson =  Gson()
         val json = inventarioPreferences.getString(Constantes.ASIGNACION_USUARIO, "");
@@ -304,7 +313,7 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
                     if(!listaReconteoBodega.isEmpty()) {
                         cargarDatosPantalla()
                     }else{
-
+                        dialog?.cancel()
                         this@ReconteoBodegaFragment.activity?.runOnUiThread(java.lang.Runnable {
                             val dialogBuilder = AlertDialog.Builder(this@ReconteoBodegaFragment.activity!!)
                             dialogBuilder.setMessage(getString(R.string.no_reconteo_pendiente))
@@ -328,6 +337,19 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
 
             override fun onFailure(call: Call<List<ReconteoBodega>>, t: Throwable) {
                 Log.i("error", "error")
+                dialog?.cancel()
+                val dialogBuilder = AlertDialog.Builder(this@ReconteoBodegaFragment.activity!!)
+
+                dialogBuilder.setMessage(getString(R.string.error_red))
+                    .setCancelable(false)
+                    .setPositiveButton("OK", DialogInterface.OnClickListener {
+                            dialog, id ->
+                        dialog.cancel()
+                    })
+
+                val alert = dialogBuilder.create()
+                alert.setTitle("Error")
+                alert.show()
             }
 
         })
@@ -458,6 +480,7 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
                 alert.setTitle(reconteoBodegaFragment?.getString(R.string.informacion))
                 alert.show()
             }
+            reconteoBodegaFragment?.dialog?.cancel()
         }
     }
 }

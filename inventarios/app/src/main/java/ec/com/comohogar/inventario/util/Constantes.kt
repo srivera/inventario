@@ -13,6 +13,7 @@ class Constantes {
         const val ES_CONTEO_RECONTEO = "ES_CONTEO_RECONTEO"
         const val ES_CONTEO = "CONTEO"
         const val ES_RECONTEO = "RECONTEO"
+        const val URL_CONEXION = "URL_CONEXION"
 
         const val TITULO_INICIAL = "Tipo de Conteo"
 

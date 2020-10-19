@@ -10,7 +10,9 @@ import java.util.concurrent.TimeUnit
 object ApiClient {
 
 
-    var BASE_URL:String="http://200.105.234.42:8080/"
+    var BASE_URL_INTERNET:String="http://200.105.234.42:8080/"
+    var BASE_URL_WIFI:String="http://192.168.4.75:8080/"
+    var BASE_URL:String="http://192.168.4.75:8080/"
     val getClient: APIService
 
         get() {
@@ -30,7 +32,7 @@ object ApiClient {
             val interceptor = HttpLoggingInterceptor()
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
             val client = OkHttpClient.Builder().addInterceptor(interceptor)
-                .connectTimeout(60, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
                 .readTimeout(60, TimeUnit.SECONDS).build()
 
             val retrofit = Retrofit.Builder()

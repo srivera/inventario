@@ -10,6 +10,7 @@ import ec.com.comohogar.inventario.ui.login.LoginActivity
 import ec.com.comohogar.inventario.util.Constantes
 import java.util.ArrayList
 import ec.com.comohogar.inventario.BuildConfig
+import ec.com.comohogar.inventario.ui.config.ConfigActivity
 
 
 class InicialActivity  : AppCompatActivity() {
@@ -22,6 +23,7 @@ class InicialActivity  : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inicial)
 
+        var btnConfigurar = findViewById<Button>(R.id.btnConfigurar)
         var btnSiguiente = findViewById<Button>(R.id.btnSiguiente)
         var textTitulo = findViewById<TextView>(R.id.titulo)
         val listView = findViewById(android.R.id.list) as ListView
@@ -45,6 +47,11 @@ class InicialActivity  : AppCompatActivity() {
             }else{
                 intent.putExtra(Constantes.ES_CONTEO_RECONTEO, Constantes.ES_RECONTEO)
             }
+            startActivity(intent)
+        }
+
+        btnConfigurar.setOnClickListener {
+            val intent = Intent(this, ConfigActivity::class.java)
             startActivity(intent)
         }
 

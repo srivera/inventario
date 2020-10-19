@@ -5,7 +5,7 @@ import ec.com.comohogar.inventario.util.Constantes
 class ValidacionCantidad {
 
     companion object {
-        fun validarCantidad(cantidad: Int): Boolean {
+        fun validarCantidad(cantidad: Long): Boolean {
             return cantidad.compareTo(Constantes.CANTIDAD_MAXIMA) > 0 || cantidad.compareTo(Constantes.CANTIDAD_MINIMA) < 0
         }
     }

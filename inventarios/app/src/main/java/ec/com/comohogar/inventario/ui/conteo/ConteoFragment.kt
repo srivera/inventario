@@ -68,6 +68,7 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
         textBarraAnterior = root.findViewById(R.id.textBarraAnterior)
         textCantidadAnterior = root.findViewById(R.id.textCantidadAnterior)
 
+
         buttonGuardar = root.findViewById(R.id.buttonGuardar)
 
         editCantidad?.setOnKeyListener(this)
@@ -101,6 +102,15 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
         conteoViewModel.numconteo.value = getString(R.string.etiqueta_numero) + sesionAplicacion?.numConteo.toString()
         conteoViewModel.usuario.value = getString(R.string.etiqueta_usuario) + sesionAplicacion?.empleado?.empCodigo.toString() + " " + sesionAplicacion?.empleado?.empNombreCompleto.toString()
 
+
+        conteoViewModel.barraAnterior.value = sesionAplicacion?.ultimaBarra
+        conteoViewModel.cantidadAnterior.value = sesionAplicacion?.ultimaCantidad
+        conteoViewModel.zona.value =  sesionAplicacion?.zonaActual
+        if(!conteoViewModel.zona.value.isNullOrBlank() ){
+            editBarra?.requestFocus()
+        }
+
+
         return root
     }
 
@@ -127,7 +137,7 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
              if(conteoViewModel.cantidad.value.isNullOrBlank()) {
                  editCantidad?.error = getString(R.string.ingrese_cantidad)
                  editCantidad?.requestFocus()
-             }else if(ValidacionCantidad.validarCantidad(conteoViewModel.cantidad.value!!.toInt())){
+             }else if(ValidacionCantidad.validarCantidad(conteoViewModel.cantidad.value!!.toLong())){
                  editCantidad?.error =  getString(R.string.error_rango)
                  editCantidad?.requestFocus()
              }else {
@@ -141,6 +151,9 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
                      conteoViewModel.saltoPorScaneo = true
                      conteoViewModel.barraAnterior.value = conteoViewModel.barra.value
                      conteoViewModel.cantidadAnterior.value = conteoViewModel.cantidad.value
+                     sesionAplicacion?.ultimaBarra = conteoViewModel.barra.value
+                     sesionAplicacion?.ultimaCantidad = conteoViewModel.cantidad.value
+                     sesionAplicacion?.zonaActual = conteoViewModel.zona.value
                      conteoViewModel.barra.value = codigoLeido
                      conteoViewModel.cantidad.value = ""
                      editBarra!!.setText(codigoLeido)
@@ -172,6 +185,9 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
         }else{
             var guardar: Boolean? = validarCampos()
             if(guardar!!) {
+                sesionAplicacion?.ultimaBarra = conteoViewModel.barra.value
+                sesionAplicacion?.ultimaCantidad = conteoViewModel.cantidad.value
+                sesionAplicacion?.zonaActual = conteoViewModel.zona.value
                 conteoViewModel?.barraAnterior.value = conteoViewModel?.barra.value.toString()
                 conteoViewModel?.cantidadAnterior.value =
                     conteoViewModel?.cantidad.value.toString()
@@ -217,7 +233,9 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
         if (editBarra?.text.isNullOrBlank()) {
             editBarra?.error = getString(R.string.ingrese_barra)
             guardar = false
-        }else if(editBarra?.text.toString().contains(" ") || !ValidacionBarra.validarFormatoBarra(editBarra?.text.toString()) || !ValidacionBarra.validarEAN13Barra(editBarra?.text.toString()) ){
+        }else if((editBarra?.text.toString().contains(" ") )|| ( (!editBarra?.text.toString().contains("-") ) && (!ValidacionBarra.validarFormatoBarra(editBarra?.text.toString()) || !ValidacionBarra.validarEAN13Barra(editBarra?.text.toString())))
+                    || (editBarra?.text.toString().contains("-") && !ValidacionBarra.validarCodigoInterno(editBarra?.text.toString())))
+             {
             editBarra?.error =  getString(R.string.formato_incorrecto)
             guardar = false
         } else {
@@ -226,7 +244,7 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
         if (editCantidad?.text.isNullOrBlank()) {
             editCantidad?.error = getString(R.string.ingrese_cantidad)
             guardar = false
-        }else if(ValidacionCantidad.validarCantidad(conteoViewModel.cantidad.value!!.toInt())){
+        }else if(ValidacionCantidad.validarCantidad(conteoViewModel.cantidad.value!!.toLong())){
             editCantidad?.error =  getString(R.string.error_rango)
             editCantidad?.requestFocus()
             guardar = false

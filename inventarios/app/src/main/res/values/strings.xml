@@ -38,6 +38,7 @@
     <string name="siguiente_button">Siguiente</string>
     <string name="anterior">Anterior</string>
     <string name="siguiente_btn">Siguiente</string>
+    <string name="red_btn">Red</string>
     <string name="ingresar">Ingresar</string>
     <string name="seleccione_el_local">Seleccione el local</string>
     <string name="ingresa_tu_n_mero_de_empleado">Ingrese su número de empleado</string>
@@ -63,6 +64,7 @@
     <string name="item_escaneado_error">El ítem escaneado no es el actual. Verifique.</string>
     <string name="error_debe_escanear">Debe escanear el ítem o digitar el código</string>
     <string name="no_reconteo_pendiente">No tiene pendientes de recontar.</string>
+    <string name="error_red">Error de conexión, verifique el wifi.</string>
     <string name="termino_reconteo">Ha terminado de realizar el reconteo</string>
     <string name="item_no_conteo">El ítem escaneado no está en el reconteo. Verifique.</string>
     <string name="salir_inventario">Está seguro que desea salir del inventario?</string>

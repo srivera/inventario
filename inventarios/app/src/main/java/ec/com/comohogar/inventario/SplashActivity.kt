@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Handler
 import ec.com.comohogar.inventario.ui.inicial.InicialActivity
 import ec.com.comohogar.inventario.util.Constantes
+import ec.com.comohogar.inventario.webservice.ApiClient
 
 class SplashActivity : AppCompatActivity() {
 
@@ -26,6 +27,9 @@ class SplashActivity : AppCompatActivity() {
             var tipo = inventarioPreferences.getString(Constantes.ES_CONTEO_RECONTEO, "")
             sesionAplicacion?.tipo = tipo
             sesionAplicacion?.tipoInventario = tipoInventario
+
+            var urlConexion = inventarioPreferences.getString(Constantes.URL_CONEXION, ApiClient.BASE_URL_WIFI)
+            ApiClient.BASE_URL = urlConexion!!
 
             if(tipo.equals(Constantes.ES_RECONTEO)) {
                 if (tipoInventario.equals(-1)) {

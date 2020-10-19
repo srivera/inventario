@@ -32,12 +32,12 @@ class ReconteoLocalAdapter(val context: Context, var listItemsTxt: List<Reconteo
         }
 
         val params = view.layoutParams
-        params.height = 36
+        params.height = 68
         view.layoutParams = params
 
         vh.codigo?.text = listItemsTxt?.get(position)?.codigoItem.toString()
         vh.barra?.text = listItemsTxt?.get(position)?.barra.toString()
-        vh.descripcion?.text = listItemsTxt?.get(position)?.descripcionItem?.substring(0, 10)
+        vh.descripcion?.text = listItemsTxt?.get(position)?.descripcionItem
         vh.stock?.text = listItemsTxt?.get(position)?.stock.toString()
 
         if(!listItemsTxt?.get(position)?.estado.equals(Constantes.ESTADO_INSERTADO)){

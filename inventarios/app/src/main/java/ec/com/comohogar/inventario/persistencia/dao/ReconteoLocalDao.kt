@@ -17,6 +17,9 @@ interface ReconteoLocalDao {
     @Query("DELETE FROM ReconteoLocal where estado = 'INS'")
     fun eliminar()
 
+    @Query("DELETE FROM ReconteoLocal")
+    fun eliminarTodo()
+
     @Query("SELECT * FROM ReconteoLocal WHERE id = :id")
     fun getReconteoLocalById(id: Int): List<ReconteoLocal>
 

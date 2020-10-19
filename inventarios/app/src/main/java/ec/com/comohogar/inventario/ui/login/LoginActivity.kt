@@ -137,7 +137,7 @@ class LoginActivity : AppCompatActivity() {
 
             override fun onFailure(call: Call<List<Lugar>>, t: Throwable) {
                 Log.i("error", "error")
-                val dialogBuilder = AlertDialog.Builder(this@LoginActivity)
+                /*val dialogBuilder = AlertDialog.Builder(this@LoginActivity)
 
                 dialogBuilder.setMessage(getString(R.string.error_wifi))
                     .setCancelable(false)
@@ -147,7 +147,7 @@ class LoginActivity : AppCompatActivity() {
 
                 val alert = dialogBuilder.create()
                 alert.setTitle("Error")
-                alert.show()
+                alert.show()*/
             }
 
         })

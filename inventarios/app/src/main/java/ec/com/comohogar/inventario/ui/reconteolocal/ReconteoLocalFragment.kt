@@ -139,7 +139,7 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
                 reconteoLocalViewModel?.saltoPorScaneo = false
                 editCantidad?.error = getString(R.string.ingrese_cantidad)
                 editCantidad?.requestFocus()
-            }else if(ValidacionCantidad.validarCantidad(reconteoLocalViewModel.cantidad.value!!.toInt())){
+            }else if(ValidacionCantidad.validarCantidad(reconteoLocalViewModel.cantidad.value!!.toLong())){
                 reconteoLocalViewModel?.saltoPorScaneo = false
                 editCantidad?.error =  getString(R.string.error_rango)
                 editCantidad?.requestFocus()
@@ -220,7 +220,10 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
         if (editBarra?.text.isNullOrBlank()) {
             editBarra?.error = getString(R.string.ingrese_barra)
             guardar = false
-        }else if(editBarra?.text.toString().contains(" ") || !ValidacionBarra.validarFormatoBarra(editBarra?.text.toString()) || !ValidacionBarra.validarEAN13Barra(editBarra?.text.toString()) ){
+        }else if((editBarra?.text.toString().contains(" ") )|| ( (!editBarra?.text.toString().contains("-") ) && (!ValidacionBarra.validarFormatoBarra(editBarra?.text.toString()) || !ValidacionBarra.validarEAN13Barra(editBarra?.text.toString())))
+            || (editBarra?.text.toString().contains("-") && !ValidacionBarra.validarCodigoInterno(editBarra?.text.toString())))
+        {
+        //}else if(editBarra?.text.toString().contains(" ") || !ValidacionBarra.validarFormatoBarra(editBarra?.text.toString()) || !ValidacionBarra.validarEAN13Barra(editBarra?.text.toString()) ){
             editBarra?.error =  getString(R.string.formato_incorrecto)
             guardar = false
         } else {
@@ -229,7 +232,7 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
         if (editCantidad?.text.isNullOrBlank()) {
             editCantidad?.error = getString(R.string.ingrese_cantidad)
             guardar = false
-        }else if(ValidacionCantidad.validarCantidad(reconteoLocalViewModel.cantidad.value!!.toInt())){
+        }else if(ValidacionCantidad.validarCantidad(reconteoLocalViewModel.cantidad.value!!.toLong())){
             editCantidad?.error =  getString(R.string.error_rango)
             editCantidad?.requestFocus()
             guardar = false
@@ -248,7 +251,7 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
         val json = inventarioPreferences.getString(Constantes.ASIGNACION_USUARIO, "");
         val asignacionUsuario = gson.fromJson(json, AsignacionUsuario::class.java)
 
-        val call: Call<List<ReconteoLocal>> = ApiClient.getClient.consultarReconteoUsuario(asignacionUsuario.binId, asignacionUsuario.numeroConteo, asignacionUsuario.usuId)
+        val call: Call<List<ReconteoLocal>> = ApiClient.getClient.consultarReconteoUsuario(asignacionUsuario.binId, asignacionUsuario.numeroConteo, sesionAplicacion?.usuId!!.toLong())
         call.enqueue(object : Callback<List<ReconteoLocal>> {
 
             override fun onResponse(call: Call<List<ReconteoLocal>>?, response: Response<List<ReconteoLocal>>?) {
@@ -289,6 +292,19 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
 
             override fun onFailure(call: Call<List<ReconteoLocal>>, t: Throwable) {
                 Log.i("error", "error")
+                dialog?.cancel()
+                val dialogBuilder = AlertDialog.Builder(this@ReconteoLocalFragment.activity!!)
+
+                dialogBuilder.setMessage(getString(R.string.error_red))
+                    .setCancelable(false)
+                    .setPositiveButton("OK", DialogInterface.OnClickListener {
+                            dialog, id ->
+                        dialog.cancel()
+                    })
+
+                val alert = dialogBuilder.create()
+                alert.setTitle("Error")
+                alert.show()
             }
 
         })
@@ -335,6 +351,8 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
             reconteoLocalDao = db?.reconteoLocalDao()
             conteoDao =  db?.conteoDao()
             val reconteoLocal = sesionAplicacion?.listaReconteoLocal!!.filter { it.barra.equals(reconteoLocalFragmet?.reconteoLocalViewModel?.barraAnterior?.value!!) }
+            val reconteoLocalCodigoInterno = sesionAplicacion?.listaReconteoLocal!!.filter { it.codigoItem.equals(reconteoLocalFragmet?.reconteoLocalViewModel?.barraAnterior?.value!!) }
+
             if(!reconteoLocal?.isEmpty()) {
                 reconteoLocal?.get(0).estado= Constantes.ESTADO_PENDIENTE
                 reconteoLocalDao?.actualizarConteo(reconteoLocal?.get(0))
@@ -346,6 +364,18 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
                     cinId = reconteoLocal?.get(0).cinId, binId = sesionAplicacion?.binId,
                     numConteo =  sesionAplicacion?.numConteo, usuId = sesionAplicacion?.usuId)
                 conteoDao?.insertarConteo(conteo)
+            }else  if(!reconteoLocalCodigoInterno?.isEmpty()) {
+                reconteoLocalCodigoInterno?.get(0).estado= Constantes.ESTADO_PENDIENTE
+                reconteoLocalDao?.actualizarConteo(reconteoLocalCodigoInterno?.get(0))
+
+                val conteo =  Conteo(barra = reconteoLocalFragmet?.reconteoLocalViewModel?.barraAnterior?.value!!,
+                    zona = "-",
+                    cantidad = reconteoLocalFragmet?.reconteoLocalViewModel?.cantidadAnterior?.value!!.toInt(),
+                    estado = Constantes.ESTADO_PENDIENTE,
+                    cinId = reconteoLocalCodigoInterno?.get(0).cinId, binId = sesionAplicacion?.binId,
+                    numConteo =  sesionAplicacion?.numConteo, usuId = sesionAplicacion?.usuId)
+                conteoDao?.insertarConteo(conteo)
+
             }
             return 0
         }
