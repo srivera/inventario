@@ -32,7 +32,7 @@ class ReconteoLocalAdapter(val context: Context, var listItemsTxt: List<Reconteo
         }
 
         val params = view.layoutParams
-        params.height = 68
+        params.height = 88
         view.layoutParams = params
 
         vh.codigo?.text = listItemsTxt?.get(position)?.codigoItem.toString()
