@@ -54,10 +54,10 @@ interface APIService {
     @GET("erp-movil/inv/consultarZona/{codigo}")
     fun consultarZona(@Path(value="codigo") codigo: String): Call<EstructuraBodega>
 
-    @GET("erp-movil/inv/ingresarConteo/{idUsuario}/{numeroConteo}/{barra}/{cantidad}")
+    @GET("erp-movil/inv/ingresarConteo/{idUsuario}/{numeroConteo}/{barra}/{cantidad}/{fechaConteo}")
     fun ingresarConteo(@Path(value="idUsuario") idUsuario: Long?,  @Path(value="numeroConteo")  numeroConteo: Long?,
                        @Path(value="barra")  barra: String, @Path(value="cantidad")  cantidad: Int,
-                       @Query(value="zona")  zona: String): Call<Long>
+                       @Path(value="fechaConteo")  fechaConteo: Long?, @Query(value="zona")  zona: String  ): Call<Long>
 
     @GET("erp-movil/inv/ingresarConteoUsuario/{idUsuario}/{idConteo}/{zona}/{barra}/{cantidad}/{idInventario}/{numeroConteo}")
     fun ingresarConteoUsuario(@Path(value="idUsuario") idUsuario: Long, @Path(value="idConteo")  idConteo: Long,
@@ -65,11 +65,11 @@ interface APIService {
                               @Path(value="cantidad")  cantidad: Long, @Path(value="idInventario") idInventario: Long,
                               @Path(value="numeroConteo")  numeroConteo: Int): Call<Long>
 
-    @GET("erp-movil/inv/insertarConteoUsuarioRuta/{idUsuario}/{idConteo}/{zona}/{barra}/{cantidad}/{idInventario}/{idRuta}")
+    @GET("erp-movil/inv/insertarConteoUsuarioRuta/{idUsuario}/{idConteo}/{zona}/{barra}/{cantidad}/{idInventario}/{idRuta}/{fechaConteo}")
     fun insertarConteoUsuarioRuta(@Path(value="idUsuario") idUsuario: Long, @Path(value="idConteo")  idConteo: Long,
                               @Path(value="zona")  zona: String, @Path(value="barra")  barra: String,
                               @Path(value="cantidad")  cantidad: Long, @Path(value="idInventario") idInventario: Long,
-                              @Path(value="idRuta")  idRuta: Int): Call<Long>
+                              @Path(value="idRuta")  idRuta: Int, @Path(value="fechaConteo")  fechaConteo: Long?  ): Call<Long>
 
     @GET("erp-movil/inv/ingresarUsuario/{idUsuario}/{idConteo}/{nombrePocket}")
     fun ingresarUsuario(@Path(value="idUsuario") idUsuario: Long, @Path(value="idConteo")  idConteo: Long,

@@ -268,6 +268,7 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
                         }
                         if(filtered == null || filtered.isEmpty()) {
                             reconteo.estado = Constantes.ESTADO_INSERTADO
+                            reconteo.fecha = System.currentTimeMillis()
                             reconteoLocalDao?.insertarReconteoLocal(reconteo)
                         }
                     }
@@ -362,7 +363,7 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
                     cantidad = reconteoLocalFragmet?.reconteoLocalViewModel?.cantidadAnterior?.value!!.toInt(),
                     estado = Constantes.ESTADO_PENDIENTE,
                     cinId = reconteoLocal?.get(0).cinId, binId = sesionAplicacion?.binId,
-                    numConteo =  sesionAplicacion?.numConteo, usuId = sesionAplicacion?.usuId)
+                    numConteo =  sesionAplicacion?.numConteo, usuId = sesionAplicacion?.usuId, fecha = System.currentTimeMillis())
                 conteoDao?.insertarConteo(conteo)
             }else  if(!reconteoLocalCodigoInterno?.isEmpty()) {
                 reconteoLocalCodigoInterno?.get(0).estado= Constantes.ESTADO_PENDIENTE
@@ -373,7 +374,7 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
                     cantidad = reconteoLocalFragmet?.reconteoLocalViewModel?.cantidadAnterior?.value!!.toInt(),
                     estado = Constantes.ESTADO_PENDIENTE,
                     cinId = reconteoLocalCodigoInterno?.get(0).cinId, binId = sesionAplicacion?.binId,
-                    numConteo =  sesionAplicacion?.numConteo, usuId = sesionAplicacion?.usuId)
+                    numConteo =  sesionAplicacion?.numConteo, usuId = sesionAplicacion?.usuId, fecha = System.currentTimeMillis() )
                 conteoDao?.insertarConteo(conteo)
 
             }

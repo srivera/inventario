@@ -31,6 +31,7 @@ class ReconteoLocalAdapter(val context: Context, var listItemsTxt: List<Reconteo
             vh = view.tag as ItemRowHolder
         }
 
+
         val params = view.layoutParams
         params.height = 88
         view.layoutParams = params

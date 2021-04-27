@@ -19,4 +19,5 @@ class ReconteoBodega (
     var rcoId: Long,
     var estado: String,
     var cantidad: Int,
-    var binId: Long)
+    var binId: Long,
+    var fecha: Long?)

@@ -115,6 +115,10 @@ class MainActivity : ScanActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
+        val prefsEditor = inventarioPreferences.edit()
+        prefsEditor.putString(Constantes.ENVIANDO_CONTEOS, "N")
+        prefsEditor.commit()
+
     }
 
     private fun inicializarMenuFragment(
@@ -122,6 +126,7 @@ class MainActivity : ScanActivity() {
         navView: NavigationView,
         drawerLayout: DrawerLayout
     ) {
+        val tiempo: Long = 30000
         if (tipo.equals(Constantes.ES_RECONTEO)) {
             if (tipoInventario!!.equals(Constantes.INVENTARIO_BODEGA)) {
                 val t = Timer()
@@ -132,7 +137,7 @@ class MainActivity : ScanActivity() {
                         }
                     },
                     0,
-                    30000
+                    tiempo
                 )
                 t.scheduleAtFixedRate(
                     object : TimerTask() {
@@ -141,7 +146,7 @@ class MainActivity : ScanActivity() {
                         }
                     },
                     0,
-                    30000
+                    tiempo
                 )
                 navView.menu.clear()
                 navView.inflateMenu(R.menu.menu_reconteo_bodega)
@@ -161,7 +166,7 @@ class MainActivity : ScanActivity() {
                         }
                     },
                     0,
-                    30000
+                    tiempo
                 )
                 navView.menu.clear()
                 navView.inflateMenu(R.menu.menu_reconteo_local)
@@ -181,7 +186,7 @@ class MainActivity : ScanActivity() {
                     }
                 },
                 0,
-                30000
+                tiempo
             )
             navView.menu.clear()
             navView.inflateMenu(R.menu.menu_conteo)
@@ -198,46 +203,78 @@ class MainActivity : ScanActivity() {
         var db: InventarioDatabase? = InventarioDatabase.getInventarioDataBase(this@MainActivity)
         var conteoDao = db?.conteoDao()
         val conteos = conteoDao?.getConteoPendiente()
-        for (conteo in conteos!!) {
-            val call: Call<Long> = ApiClient.getClient.ingresarConteo(
-                conteo.usuId,
-                conteo.cinId,  conteo.barra,
-                conteo.cantidad, conteo.zona
-            )
-            try {
-                val response = call.execute()
-                val apiResponse = response.body()
-                if (apiResponse!!.equals(1L)) {
-                    conteo.estado = Constantes.ESTADO_ENVIADO
-                    conteoDao?.actualizarConteo(conteo)
+        val inventarioPreferences: SharedPreferences =
+            getSharedPreferences(Constantes.PREF_NAME, 0)
+        val procesando = inventarioPreferences.getString(Constantes.ENVIANDO_CONTEOS, "N");
+
+
+        Log.d("procesando afuera", procesando)
+        if (procesando.equals("N")){
+            val prefsEditor = inventarioPreferences.edit()
+            prefsEditor.putString(Constantes.ENVIANDO_CONTEOS, "S")
+            prefsEditor.commit()
+            val procesando = inventarioPreferences.getString(Constantes.ENVIANDO_CONTEOS, "N");
+            Log.d("procesando adentro", procesando)
+            for (conteo in conteos!!) {
+                val call: Call<Long> = ApiClient.getClient.ingresarConteo(
+                    conteo.usuId,
+                    conteo.cinId,  conteo.barra,
+                    conteo.cantidad,  conteo.fecha, conteo.zona
+                )
+                try {
+                    val response = call.execute()
+                    val apiResponse = response.body()
+                    if (apiResponse!!.equals(1L)) {
+                        conteo.estado = Constantes.ESTADO_ENVIADO
+                        conteoDao?.actualizarConteo(conteo)
+                    }
+                } catch (ex: Exception) {
+                    ex.printStackTrace()
                 }
-            } catch (ex: Exception) {
-                ex.printStackTrace()
+
             }
+            prefsEditor.putString(Constantes.ENVIANDO_CONTEOS, "N")
+            prefsEditor.commit()
         }
+
     }
 
     private fun procesarReconteosBodega() {
         var db: InventarioDatabase? = InventarioDatabase.getInventarioDataBase(this@MainActivity)
         var reconteoBodegaDao = db?.reconteoBodegaDao()
         val reconteos = reconteoBodegaDao?.getReconteoBodegaPendiente()
-        for (reconteo in reconteos!!) {
-            val call: Call<Long> = ApiClient.getClient.insertarConteoUsuarioRuta(
-                reconteo.usuIdAsignado.toLong(), reconteo.cinId,
-                reconteo.rcoUbicacion, reconteo.barra,
-                reconteo.cantidad.toLong(), reconteo.binId,
-                reconteo.rcoId.toInt()
-            )
-            try {
-                val response = call.execute()
-                val apiResponse = response.body()
-                if (apiResponse!!.equals(1L)) {
-                    reconteo.estado = Constantes.ESTADO_ENVIADO
-                    reconteoBodegaDao?.actualizarConteo(reconteo)
+        val inventarioPreferences: SharedPreferences =
+            getSharedPreferences(Constantes.PREF_NAME, 0)
+        val procesando = inventarioPreferences.getString(Constantes.ENVIANDO_CONTEOS, "N");
+
+
+        Log.d("procesando afuera bodega", procesando)
+        if (procesando.equals("N")){
+            val prefsEditor = inventarioPreferences.edit()
+            prefsEditor.putString(Constantes.ENVIANDO_CONTEOS, "S")
+            prefsEditor.commit()
+            val procesando = inventarioPreferences.getString(Constantes.ENVIANDO_CONTEOS, "N");
+            Log.d("procesando adentro bodega", procesando)
+            for (reconteo in reconteos!!) {
+                val call: Call<Long> = ApiClient.getClient.insertarConteoUsuarioRuta(
+                    reconteo.usuIdAsignado.toLong(), reconteo.cinId,
+                    reconteo.rcoUbicacion, reconteo.barra,
+                    reconteo.cantidad.toLong(), reconteo.binId,
+                    reconteo.rcoId.toInt(), reconteo.fecha
+                )
+                try {
+                    val response = call.execute()
+                    val apiResponse = response.body()
+                    if (apiResponse!!.equals(1L)) {
+                        reconteo.estado = Constantes.ESTADO_ENVIADO
+                        reconteoBodegaDao?.actualizarConteo(reconteo)
+                    }
+                } catch (ex: Exception) {
+                    ex.printStackTrace()
                 }
-            } catch (ex: Exception) {
-                ex.printStackTrace()
             }
+            prefsEditor.putString(Constantes.ENVIANDO_CONTEOS, "N")
+            prefsEditor.commit()
         }
     }
 
@@ -249,9 +286,7 @@ class MainActivity : ScanActivity() {
             val call: Call<Long> = ApiClient.getClient.ingresarConteo(
                sesionAplicacion?.usuId, reconteo.cinId,
                 reconteo.barra,
-                reconteo.cantidad,
-                ""
-            )
+                reconteo.cantidad,  reconteo.fecha, "")
             try {
                 val response = call.execute()
                 val apiResponse = response.body()

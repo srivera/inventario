@@ -195,6 +195,7 @@ class LoginActivity : AppCompatActivity() {
                     val gson = Gson()
                     val json = gson.toJson(response.body())
                     prefsEditor.putString(Constantes.EMPLEADO, json)
+                    prefsEditor.putString(Constantes.ENVIANDO_CONTEOS, "N")
                     prefsEditor.commit()
                     btnSiguiente.setEnabled(true)
                     if(tipo.equals(Constantes.ES_RECONTEO)) {

@@ -24,6 +24,7 @@ import ec.com.comohogar.inventario.util.Constantes
 import ec.com.comohogar.inventario.validacion.ValidacionBarra
 import ec.com.comohogar.inventario.validacion.ValidacionCantidad
 import ec.com.comohogar.inventario.validacion.ValidacionZona
+import java.util.*
 
 
 class ConteoFragment : Fragment(), View.OnKeyListener {
@@ -209,7 +210,8 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
                 cinId = sesionAplicacion?.cinId,
                 binId = sesionAplicacion?.binId,
                 numConteo = sesionAplicacion?.numConteo,
-                usuId = sesionAplicacion?.usuId
+                usuId = sesionAplicacion?.usuId,
+                fecha = System.currentTimeMillis()
             )
             db = InventarioDatabase.getInventarioDataBase(context = activity?.applicationContext!!)
             conteoDao = db?.conteoDao()

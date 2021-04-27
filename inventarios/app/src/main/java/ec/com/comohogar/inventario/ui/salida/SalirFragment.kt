@@ -158,7 +158,7 @@ class SalirFragment : Fragment() {
                 } else {
                     //Local
                     var reconteoLocalDao = db?.reconteoLocalDao()
-                    total = reconteoLocalDao?.count()
+                    total = conteoDao?.count()
                     totalEnviado = conteoDao?.countEnviado()
                     totalPendiente = conteoDao?.countPendiente()
                 }

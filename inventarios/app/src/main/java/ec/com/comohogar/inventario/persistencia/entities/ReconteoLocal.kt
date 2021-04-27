@@ -15,4 +15,5 @@ class ReconteoLocal (
     var cinId: kotlin.Long,
     val itmId: Long,
     var estado: String,
-    var cantidad: Int)
+    var cantidad: Int,
+    var fecha: Long?)

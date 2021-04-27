@@ -306,6 +306,7 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
                     reconteoBodegaDao?.eliminarInsertado()
                     for(reconteo in listaReconteoBodega!!){
                         reconteo.estado = Constantes.ESTADO_INSERTADO
+                        reconteo.fecha = System.currentTimeMillis()
                         reconteoBodegaDao?.insertarReconteoBodega(reconteo)
                         val i = reconteoBodegaDao?.count()
                         Log.i("total", i.toString())
