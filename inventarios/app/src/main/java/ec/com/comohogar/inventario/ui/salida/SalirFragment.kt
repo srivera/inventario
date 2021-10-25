@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
@@ -44,6 +45,8 @@ class SalirFragment : Fragment() {
     private var textTotalValor: TextView? = null
     private var textEnviadoValor: TextView? = null
     private var textPendienteValor: TextView? = null
+
+    private var imgError: ImageView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -82,6 +85,9 @@ class SalirFragment : Fragment() {
         salirViewModel.usuario.value = getString(R.string.etiqueta_usuario) + sesionAplicacion?.empleado?.empCodigo.toString() + " " + sesionAplicacion?.empleado?.empNombreCompleto.toString()
 
         cargarDatosPantalla()
+
+        imgError = root.findViewById(R.id.imgError)
+        (activity as MainActivity)?.errorPendiente?.let { refrescarError(it) }
 
         return root
     }
@@ -137,6 +143,14 @@ class SalirFragment : Fragment() {
         AsyncTaskCargarDatosReconteo(this.activity as MainActivity?, this).execute()
     }
 
+    fun refrescarError(error: Boolean) {
+        if(error) {
+            imgError!!.visibility = View.VISIBLE
+        }else{
+            imgError!!.visibility = View.GONE
+        }
+    }
+
     class AsyncTaskCargarDatosReconteo(private var activity: MainActivity?, var salirFragment: SalirFragment) : AsyncTask<String, String, Int>() {
 
         var sesionAplicacion: SesionAplicacion? = null
@@ -149,19 +163,19 @@ class SalirFragment : Fragment() {
             var db: InventarioDatabase? = InventarioDatabase.getInventarioDataBase(context = activity?.applicationContext!!)
             var conteoDao = db?.conteoDao()
             if(sesionAplicacion?.tipo.equals(Constantes.ES_RECONTEO)) {
-                if (sesionAplicacion?.tipoInventario!!.equals(Constantes.INVENTARIO_BODEGA)) {
+               // if (sesionAplicacion?.tipoInventario!!.equals(Constantes.INVENTARIO_BODEGA)) {
                     //Bodega
                     var reconteoBodegaDao = db?.reconteoBodegaDao()
                     total = reconteoBodegaDao?.count()
                     totalEnviado = reconteoBodegaDao?.countEnviado()?.plus(conteoDao?.countEnviado()!!)
                     totalPendiente = reconteoBodegaDao?.countPendiente()?.plus(conteoDao?.countPendiente()!!)
-                } else {
+               // } else {
                     //Local
-                    var reconteoLocalDao = db?.reconteoLocalDao()
-                    total = conteoDao?.count()
-                    totalEnviado = conteoDao?.countEnviado()
-                    totalPendiente = conteoDao?.countPendiente()
-                }
+               //     var reconteoLocalDao = db?.reconteoLocalDao()
+               //     total = conteoDao?.count()
+               //     totalEnviado = conteoDao?.countEnviado()
+               //     totalPendiente = conteoDao?.countPendiente()
+                // }
             }else if(sesionAplicacion?.tipo.equals(Constantes.ES_CONTEO)) {
                 //Conteo
                 total = conteoDao?.count()
@@ -180,6 +194,19 @@ class SalirFragment : Fragment() {
                 salirFragment?.buttonSalir?.setEnabled(false)
                 val dialogBuilder = AlertDialog.Builder(activity!!)
                 dialogBuilder.setMessage(activity?.getString(R.string.pendientes_al_salir))
+                    .setCancelable(false)
+                    .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, id ->
+                    })
+
+                val alert = dialogBuilder.create()
+                alert.setTitle(activity?.getString(R.string.informacion))
+                alert.show()
+            }
+
+            if(activity!!.errorPendiente!!){
+                salirFragment?.buttonSalir?.setEnabled(false)
+                val dialogBuilder = AlertDialog.Builder(activity!!)
+                dialogBuilder.setMessage(activity?.getString(R.string.error_al_salir))
                     .setCancelable(false)
                     .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, id ->
                     })
@@ -212,6 +239,9 @@ class SalirFragment : Fragment() {
 
                     var conteoDao = db?.conteoDao()
                     conteoDao?.eliminar()
+
+                    var reconteoBodegaDao = db?.reconteoBodegaDao()
+                    reconteoBodegaDao?.eliminarTodo()
                 }
             }
             return 0

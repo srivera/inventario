@@ -6,9 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -18,9 +15,10 @@ import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.os.AsyncTask
 import android.view.KeyEvent
-import android.widget.CheckBox
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import com.google.gson.Gson
+import ec.com.comohogar.inventario.MainActivity
 import ec.com.comohogar.inventario.SesionAplicacion
 import ec.com.comohogar.inventario.databinding.FragmentReconteoBodegaBinding
 import ec.com.comohogar.inventario.modelo.AsignacionUsuario
@@ -32,6 +30,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import ec.com.comohogar.inventario.persistencia.entities.ReconteoBodega
+import ec.com.comohogar.inventario.persistencia.entities.ReconteoLocal
 import ec.com.comohogar.inventario.util.ProgressDialog
 import ec.com.comohogar.inventario.validacion.ValidacionBarra
 import ec.com.comohogar.inventario.validacion.ValidacionCantidad
@@ -46,6 +45,10 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
     private var textItem: TextView? = null
     private var textDescripcion: TextView? = null
     private var textPaginacion: TextView? = null
+    private var title: TextView? = null
+    private var textStock: TextView? = null
+
+    public var layoutStock: LinearLayout? = null
 
     private var editCodigoBarra: EditText? = null
     private var editCantidad: EditText? = null
@@ -59,6 +62,8 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
     private var reconteoBodegaDao: ReconteoBodegaDao? = null
 
     private var sesionAplicacion: SesionAplicacion? = null
+
+    private var imgError: ImageView? = null
 
     var dialog: AlertDialog? = null
 
@@ -83,6 +88,9 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
         textItem = root.findViewById(R.id.textItem)
         textDescripcion = root.findViewById(R.id.textDescripcion)
         textPaginacion = root.findViewById(R.id.textPaginacion)
+        title = root.findViewById(R.id.title)
+        textStock = root.findViewById(R.id.textStock)
+        layoutStock = root.findViewById(R.id.layoutStock)
 
         editCodigoBarra = root.findViewById(R.id.editCodigoBarra)
         editCantidad = root.findViewById(R.id.editCantidadReconteoBodega)
@@ -90,6 +98,7 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
         checkBarra = root.findViewById(R.id.checkBarra)
         buttonVacio = root.findViewById(R.id.buttonVacio)
         buttonGuardar = root.findViewById(R.id.buttonSiguiente)
+        imgError = root.findViewById(R.id.imgError)
 
         editCantidad?.setOnKeyListener(this)
         editCantidad?.requestFocus()
@@ -128,12 +137,26 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
         reconteoBodegaViewModel.usuario.value = getString(R.string.etiqueta_usuario) + sesionAplicacion?.empleado?.empCodigo.toString() + " " + sesionAplicacion?.empleado?.empNombreCompleto.toString()
 
         if(sesionAplicacion?.primeraVez!!) {
-            recuperarReconteo()
+
+            if (sesionAplicacion?.tipoInventario!!.equals(Constantes.INVENTARIO_BODEGA)) {
+                recuperarReconteo()
+                layoutStock!!.visibility = View.GONE
+            }else{
+                recuperarReconteoLocal()
+                title!!.text = getString(R.string.reconteo_local)
+            }
             sesionAplicacion?.primeraVez = false
         }else{
             cargarDatosPantalla()
         }
 
+        if (sesionAplicacion?.tipoInventario!!.equals(Constantes.INVENTARIO_BODEGA)) {
+            layoutStock!!.visibility = View.GONE
+        }else{
+            title!!.text = getString(R.string.reconteo_local)
+        }
+
+        (activity as MainActivity)?.errorPendiente?.let { refrescarError(it) }
         return root
     }
 
@@ -307,6 +330,8 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
                     for(reconteo in listaReconteoBodega!!){
                         reconteo.estado = Constantes.ESTADO_INSERTADO
                         reconteo.fecha = System.currentTimeMillis()
+                        reconteo.pendiente = ""
+                        reconteo.noPistoleado = ""
                         reconteoBodegaDao?.insertarReconteoBodega(reconteo)
                         val i = reconteoBodegaDao?.count()
                         Log.i("total", i.toString())
@@ -356,9 +381,95 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
         })
     }
 
+
+    private fun recuperarReconteoLocal() {
+
+        dialog = ProgressDialog.setProgressDialog(this!!.activity!!, getString(R.string.recuperar_items))
+        dialog?.show()
+
+        val inventarioPreferences: SharedPreferences = activity!!.getSharedPreferences(Constantes.PREF_NAME, 0)
+        val gson =  Gson()
+        val json = inventarioPreferences.getString(Constantes.ASIGNACION_USUARIO, "");
+        val asignacionUsuario = gson.fromJson(json, AsignacionUsuario::class.java)
+
+        val call: Call<List<ReconteoBodega>> = ApiClient.getClient.consultarReconteoUsuarioV2(asignacionUsuario.binId, asignacionUsuario.numeroConteo, sesionAplicacion?.usuId!!.toLong())
+        call.enqueue(object : Callback<List<ReconteoBodega>> {
+
+            override fun onResponse(call: Call<List<ReconteoBodega>>?, response: Response<List<ReconteoBodega>>?) {
+//                Log.i("respuesta",response!!.body()!!.toString())
+
+                var listaReconteoBodega = response!!.body()
+
+                AsyncTask.execute {
+                    reconteoBodegaDao?.eliminarInsertado()
+                    for(reconteo in listaReconteoBodega!!){
+                        reconteo.estado = Constantes.ESTADO_INSERTADO
+                        reconteo.fecha = System.currentTimeMillis()
+                        reconteo.binId = asignacionUsuario.binId
+                        if(reconteo.noPistoleado == null){
+                            reconteo.noPistoleado = "N"
+                        }
+                        reconteoBodegaDao?.insertarReconteoBodega(reconteo)
+                        val i = reconteoBodegaDao?.count()
+                        Log.i("total", i.toString())
+                    }
+                    if(!listaReconteoBodega.isEmpty()) {
+                        cargarDatosPantalla()
+                    }else{
+                        dialog?.cancel()
+                        this@ReconteoBodegaFragment.activity?.runOnUiThread(java.lang.Runnable {
+                            val dialogBuilder = AlertDialog.Builder(this@ReconteoBodegaFragment.activity!!)
+                            dialogBuilder.setMessage(getString(R.string.no_reconteo_pendiente))
+                                .setCancelable(false)
+                                .setPositiveButton("OK", DialogInterface.OnClickListener {
+                                        dialog, id ->
+                                })
+
+                            val alert = dialogBuilder.create()
+                            alert.setTitle(activity?.getString(R.string.informacion))
+                            alert.show()
+                            buttonGuardar?.isEnabled = false
+                            buttonVacio?.isEnabled = false
+                            checkBarra?.isEnabled = false
+                            editCantidad?.isEnabled = false
+                        })
+
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<List<ReconteoBodega>>, t: Throwable) {
+                Log.i("error", "error")
+                dialog?.cancel()
+                val dialogBuilder = AlertDialog.Builder(this@ReconteoBodegaFragment.activity!!)
+
+                dialogBuilder.setMessage(getString(R.string.error_red))
+                    .setCancelable(false)
+                    .setPositiveButton("OK", DialogInterface.OnClickListener {
+                            dialog, id ->
+                        dialog.cancel()
+                    })
+
+                val alert = dialogBuilder.create()
+                alert.setTitle("Error")
+                alert.show()
+            }
+
+        })
+    }
+
+
     private fun cargarDatosPantalla() {
         AsyncTaskCargarDatosReconteo(this, reconteoBodegaViewModel).execute()
 
+    }
+
+    fun refrescarError(error: Boolean) {
+        if(error) {
+            imgError!!.visibility = View.VISIBLE
+        }else{
+            imgError!!.visibility = View.GONE
+        }
     }
 
     fun moverSiguiente() {
@@ -378,6 +489,13 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
             reconteoBodegaViewModel.item.value =
                 sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!)
                     ?.codigoItem
+            reconteoBodegaViewModel.stock.value =
+                sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!)
+                    ?.stock.toString()
+            reconteoBodegaViewModel.noPistoleado.value =
+                sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!)
+                    ?.noPistoleado
+
 
             if ((sesionAplicacion?.listaReconteoBodega?.size!! - 1) > (reconteoBodegaViewModel.indice.value!!)
             ) {
@@ -389,6 +507,19 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
             }
             reconteoBodegaViewModel.paginacion.value =
                 "Reg. " + (reconteoBodegaViewModel.indice.value!! + 1) + "/" + reconteoBodegaViewModel.total.value.toString()
+
+          //  if (sesionAplicacion?.tipoInventario!!.equals(Constantes.INVENTARIO_LOCAL)) {
+                if (sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!)
+                        ?.noPistoleado.equals("S") || (sesionAplicacion?.listaReconteoBodega?.get(
+                        reconteoBodegaViewModel.indice.value!!
+                    )
+                        ?.stockActual)!!.compareTo(0) < 0
+                ) {
+                    layoutStock!!.visibility = View.VISIBLE
+                } else {
+                    layoutStock!!.visibility = View.INVISIBLE
+                }
+           // }
         }else{
             reconteoBodegaViewModel.zonaActual.value = ""
             reconteoBodegaViewModel.descripcion.value = ""
@@ -397,6 +528,8 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
             reconteoBodegaViewModel.zonaSiguiente.value = ""
             reconteoBodegaViewModel.cantidad.value = ""
             reconteoBodegaViewModel.paginacion.value =  ""
+            reconteoBodegaViewModel.noPistoleado.value =  ""
+            reconteoBodegaViewModel.stock.value =  "0"
             buttonGuardar?.isEnabled = false
             buttonVacio?.isEnabled = false
             checkBarra?.isEnabled = false
@@ -445,6 +578,12 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
                 reconteoBodegaViewModel.item.value =
                     sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!)
                         ?.codigoItem
+                reconteoBodegaViewModel.stock.value =
+                    sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!)
+                        ?.stock.toString()
+                reconteoBodegaViewModel.noPistoleado.value =
+                    sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!)
+                        ?.noPistoleado
 
                 if ((sesionAplicacion?.listaReconteoBodega?.size!! - 1) >= (reconteoBodegaViewModel.indice.value?.plus(
                         1
@@ -458,6 +597,15 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
                 }
                 reconteoBodegaViewModel.paginacion.value =
                     "Reg. " + (reconteoBodegaViewModel.indice.value!! + 1) + "/" + reconteoBodegaViewModel.total.value.toString()
+
+                //if()
+                if( sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!)
+                        ?.noPistoleado.equals("S") || (sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!)
+                        ?.stockActual)!!.compareTo(0) < 0) {
+                    reconteoBodegaFragment!!.layoutStock!!.visibility = View.VISIBLE
+                }else{
+                    reconteoBodegaFragment!!.layoutStock!!.visibility = View.INVISIBLE
+                }
             }else{
                 reconteoBodegaViewModel.zonaActual.value = ""
                 reconteoBodegaViewModel.descripcion.value = ""
@@ -466,6 +614,8 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
                 reconteoBodegaViewModel.zonaSiguiente.value = ""
                 reconteoBodegaViewModel.cantidad.value = ""
                 reconteoBodegaViewModel.paginacion.value =  ""
+                reconteoBodegaViewModel.noPistoleado.value =  ""
+                reconteoBodegaViewModel.stock.value =  "0"
                 reconteoBodegaFragment?.buttonGuardar?.isEnabled = false
                 reconteoBodegaFragment?.buttonVacio?.isEnabled = false
                 reconteoBodegaFragment?.checkBarra?.isEnabled = false

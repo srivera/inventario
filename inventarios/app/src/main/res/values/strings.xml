@@ -13,6 +13,9 @@
     <string name="menu_enviados">Consulta enviados</string>
     <string name="menu_error">Consulta errores</string>
     <string name="menu_salir">Salir</string>
+    <string name="menu_correccion">Corrección</string>
+    <string name="menu_consulta">Consulta usuarios</string>
+    <string name="menu_consulta_conteo">Consulta conteos</string>
     <string name="zona">Zona:</string>
     <string name="barra">Barra:</string>
     <string name="cantidad">Cantidad:</string>
@@ -20,6 +23,7 @@
     <string name="barraAnterior">Barra anterior</string>
     <string name="cantidadAnterior">Cantidad anterior</string>
     <string name="buttonGuardar">Guardar</string>
+    <string name="buttonCancelar">Cancelar</string>
     <string name="title_activity_login">Inventario</string>
     <string name="empleado">Número de empleado</string>
     <string name="prompt_password">Password</string>
@@ -53,6 +57,7 @@
     <string name="etiqueta_conteo"> Conteo: </string>
     <string name="etiqueta_numero"> Número: </string>
     <string name="etiqueta_usuario"> Usuario: </string>
+    <string name="etiqueta_stock"> Stock: </string>
     <string name="recuperar_items">Recuperando ítems...</string>
     <string name="no_items">No existen ítems.</string>
     <string name="informacion">Información</string>
@@ -71,4 +76,5 @@
     <string name="confirmacion">Confirmación</string>
     <string name="error_wifi_salir">Debe conectarse a la red wifi para salir del inventario</string>
     <string name="pendientes_al_salir">Existen ítems pendientes de enviar. Revise el wifi de su dispositivo para enviar los ítems y vuelva a intentar salir</string>
+    <string name="error_al_salir">Existen ítems con errores. Debe corregirlos antes de salir</string>
 </resources>

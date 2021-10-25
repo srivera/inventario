@@ -258,6 +258,12 @@
                             android:textSize="10sp"
                             android:textStyle="bold" />
 
+                        <ImageView
+                            android:id="@+id/imgError"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/warning"
+                            android:visibility="gone"/>
 
                     </LinearLayout>
 

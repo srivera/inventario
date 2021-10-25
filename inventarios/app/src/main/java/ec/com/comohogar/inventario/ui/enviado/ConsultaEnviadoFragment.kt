@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.ListView
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
@@ -32,6 +33,8 @@ class ConsultaEnviadoFragment : Fragment() {
     private var editZona: EditText? = null
     private var buttonBuscar: ImageButton? = null
     var listview: ListView? = null
+
+    private var imgError: ImageView? = null
 
     private var sesionAplicacion: SesionAplicacion? = null
 
@@ -59,6 +62,7 @@ class ConsultaEnviadoFragment : Fragment() {
         editZona = root.findViewById(R.id.editZona)
         buttonBuscar = root.findViewById(R.id.buttonGuardar)
         listview = root.findViewById(R.id.listview)
+        imgError = root.findViewById(R.id.imgError)
 
         editZona?.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus) {
@@ -79,6 +83,7 @@ class ConsultaEnviadoFragment : Fragment() {
 
         recuperarReconteo()
 
+        (activity as MainActivity)?.errorPendiente?.let { refrescarError(it) }
         return root
     }
 
@@ -97,6 +102,14 @@ class ConsultaEnviadoFragment : Fragment() {
         dialog = ProgressDialog.setProgressDialog(this!!.activity!!, getString(R.string.recuperar_items))
         dialog?.show()
         AsyncTaskConsultarHistorico(this.activity as MainActivity?, this, editBarra?.text.toString(), editZona?.text.toString()).execute()
+    }
+
+    fun refrescarError(error: Boolean) {
+        if(error) {
+            imgError!!.visibility = View.VISIBLE
+        }else{
+            imgError!!.visibility = View.GONE
+        }
     }
 
     class AsyncTaskConsultarHistorico(private var activity: MainActivity?, var consultaEnviadoFragment: ConsultaEnviadoFragment?,

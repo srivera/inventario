@@ -15,4 +15,6 @@ class Conteo (
     var binId: Long?,
     var numConteo: Int?,
     var usuId: Long?,
-    var fecha: Long?)
+    var fecha: Long?,
+    var pocId: Long?,
+    var barraAnterior: String)

@@ -4,10 +4,7 @@
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_conteo"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="@string/menu_conteo" />
+
         <item
             android:id="@+id/nav_reconteo_local"
             android:icon="@drawable/ic_menu_camera"
@@ -28,6 +25,10 @@
             android:id="@+id/nav_error"
             android:icon="@drawable/ic_menu_manage"
             android:title="@string/menu_error" />
+        <item
+            android:id="@+id/nav_consulta_usuario"
+            android:icon="@drawable/logout"
+            android:title="@string/menu_consulta" />
         <item
             android:id="@+id/nav_salir"
             android:icon="@drawable/ic_menu_manage"

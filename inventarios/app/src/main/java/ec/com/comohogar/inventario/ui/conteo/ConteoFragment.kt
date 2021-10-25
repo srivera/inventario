@@ -19,12 +19,14 @@ import ec.com.comohogar.inventario.persistencia.InventarioDatabase
 import ec.com.comohogar.inventario.persistencia.dao.ConteoDao
 import ec.com.comohogar.inventario.persistencia.entities.Conteo
 import android.os.AsyncTask
+import android.widget.ImageView
+import ec.com.comohogar.inventario.MainActivity
 import ec.com.comohogar.inventario.SesionAplicacion
 import ec.com.comohogar.inventario.util.Constantes
 import ec.com.comohogar.inventario.validacion.ValidacionBarra
 import ec.com.comohogar.inventario.validacion.ValidacionCantidad
 import ec.com.comohogar.inventario.validacion.ValidacionZona
-import java.util.*
+
 
 
 class ConteoFragment : Fragment(), View.OnKeyListener {
@@ -39,6 +41,7 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
 
     private var textBarraAnterior: TextView? = null
     private var textCantidadAnterior: TextView? = null
+    private var imgError: ImageView? = null
 
     private var buttonGuardar: Button? = null
 
@@ -68,7 +71,7 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
 
         textBarraAnterior = root.findViewById(R.id.textBarraAnterior)
         textCantidadAnterior = root.findViewById(R.id.textCantidadAnterior)
-
+        imgError = root.findViewById(R.id.imgError)
 
         buttonGuardar = root.findViewById(R.id.buttonGuardar)
 
@@ -111,7 +114,7 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
             editBarra?.requestFocus()
         }
 
-
+        (activity as MainActivity)?.errorPendiente?.let { refrescarError(it) }
         return root
     }
 
@@ -143,11 +146,33 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
                  editCantidad?.requestFocus()
              }else {
                  editCantidad?.error =  null
-                 if (codigoLeido.contains(" ") || !ValidacionBarra.validarFormatoBarra(codigoLeido) || !ValidacionBarra.validarEAN13Barra(codigoLeido)) {
+                 if (codigoLeido.contains(" ")) {
                      editBarra?.error = getString(R.string.formato_incorrecto)
                      conteoViewModel.cantidad.value = ""
                      conteoViewModel.barra.value = ""
                      editBarra?.requestFocus()
+                 } else if(!ValidacionBarra.validarFormatoBarra(codigoLeido) || !ValidacionBarra.validarEAN13Barra(codigoLeido)){
+                     if(!ValidacionZona.validarZona(codigoLeido, sesionAplicacion!!)){
+                         editBarra?.error = getString(R.string.formato_incorrecto)
+                         conteoViewModel.cantidad.value = ""
+                         conteoViewModel.barra.value = ""
+                         editBarra?.requestFocus()
+                     }else{
+                         conteoViewModel.saltoPorScaneo = true
+                         conteoViewModel.barraAnterior.value = conteoViewModel.barra.value
+                         conteoViewModel.cantidadAnterior.value = conteoViewModel.cantidad.value
+                         sesionAplicacion?.ultimaBarra = conteoViewModel.barra.value
+                         sesionAplicacion?.ultimaCantidad = conteoViewModel.cantidad.value
+                         sesionAplicacion?.zonaActual = conteoViewModel.zona.value
+                         conteoViewModel.zona.value = codigoLeido
+                         conteoViewModel.barra.value = ""
+                         conteoViewModel.cantidad.value = ""
+                        // editBarra!!.setText(codigoLeido)
+                         editBarra?.error = null
+                         editBarra?.requestFocus()
+                         guardarConteo()
+                     }
+
                  } else {
                      conteoViewModel.saltoPorScaneo = true
                      conteoViewModel.barraAnterior.value = conteoViewModel.barra.value
@@ -168,6 +193,14 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
      }
 
     fun refrescarEstado(estado: String) {
+    }
+
+    fun refrescarError(error: Boolean) {
+        if(error) {
+            imgError!!.visibility = View.VISIBLE
+        }else{
+            imgError!!.visibility = View.GONE
+        }
     }
 
     override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
@@ -211,7 +244,9 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
                 binId = sesionAplicacion?.binId,
                 numConteo = sesionAplicacion?.numConteo,
                 usuId = sesionAplicacion?.usuId,
-                fecha = System.currentTimeMillis()
+                fecha = System.currentTimeMillis(),
+                pocId = 0,
+                barraAnterior = ""
             )
             db = InventarioDatabase.getInventarioDataBase(context = activity?.applicationContext!!)
             conteoDao = db?.conteoDao()

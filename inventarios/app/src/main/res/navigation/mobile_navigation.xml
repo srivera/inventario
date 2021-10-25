@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/nav_reconteo_bodega"
         android:name="ec.com.comohogar.inventario.ui.reconteobodega.ReconteoBodegaFragment"
-        android:label="Reconteo Bodega"
+        android:label="Reconteo"
         tools:layout="@layout/fragment_reconteo_bodega" />
 
     <fragment
@@ -46,4 +46,22 @@
         android:name="ec.com.comohogar.inventario.ui.salida.SalirFragment"
         android:label="@string/menu_salir"
         tools:layout="@layout/fragment_salir" />
+
+    <fragment
+        android:id="@+id/nav_correccion"
+        android:name="ec.com.comohogar.inventario.ui.correccion.CorreccionFragment"
+        android:label="@string/menu_correccion"
+        tools:layout="@layout/fragment_correccion" />
+
+    <fragment
+        android:id="@+id/nav_consulta_usuario"
+        android:name="ec.com.comohogar.inventario.ui.consulta.ConsultaUsuariosFragment"
+        android:label="@string/menu_consulta"
+        tools:layout="@layout/fragment_consulta_usuario" />
+
+    <fragment
+        android:id="@+id/nav_consulta_conteo_usuario"
+        android:name="ec.com.comohogar.inventario.ui.consultaconteo.ConsultaConteoUsuarioFragment"
+        android:label="@string/menu_consulta"
+        tools:layout="@layout/fragment_consulta_conteo_usuario" />
 </navigation>

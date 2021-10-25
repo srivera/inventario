@@ -5,9 +5,13 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_reconteo_local"
+            android:id="@+id/nav_reconteo_bodega"
             android:icon="@drawable/shelf"
             android:title="@string/reconteo_local" />
+        <item
+            android:id="@+id/nav_conteo"
+            android:icon="@drawable/bug"
+            android:title="Correcciones" />
         <item
             android:id="@+id/nav_pendiente"
             android:icon="@drawable/clock"

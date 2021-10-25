@@ -17,6 +17,8 @@ class ReconteoBodegaViewModel : BaseViewModel() {
 
     var indiceAnterior = MutableLiveData<Int>()
     var indice = MutableLiveData<Int>()
+    var stock = MutableLiveData<String>()
+    var noPistoleado = MutableLiveData<String>()
 
     var total = MutableLiveData<Int>()
 

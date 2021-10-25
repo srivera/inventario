@@ -1,13 +1,14 @@
 package ec.com.comohogar.inventario.validacion
 
-import ec.com.comohogar.inventario.SesionAplicacion
-import ec.com.comohogar.inventario.util.Constantes
 
 
 class ValidacionBarra {
 
     companion object {
         fun validarEAN13Barra(barra : String): Boolean {
+            if(barra.length != 13){
+                return  false
+            }
             val codeWithoutVd = barra.substring(0, 12)
             val regex = Regex(pattern = "[0-9]+")
             for (i in 0..barra.length-1) {

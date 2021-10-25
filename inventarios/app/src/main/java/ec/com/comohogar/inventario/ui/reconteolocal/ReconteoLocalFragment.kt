@@ -49,6 +49,8 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
     private var reconteoLocalDao: ReconteoLocalDao? = null
     private var sesionAplicacion: SesionAplicacion? = null
 
+    private var imgError: ImageView? = null
+
     var dialog: AlertDialog? = null
 
     override fun onCreateView(
@@ -94,6 +96,7 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
             }
 
         }
+        imgError = root.findViewById(R.id.imgError)
 
         reconteoLocalViewModel.inventario.value = getString(R.string.etiqueta_inventario) + sesionAplicacion?.binId.toString()
         reconteoLocalViewModel.conteo.value = getString(R.string.etiqueta_conteo) + sesionAplicacion?.cinId.toString()
@@ -108,6 +111,7 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
             listview?.adapter  = reconteoLocalAdapter
         }
 
+        (activity as MainActivity)?.errorPendiente?.let { refrescarError(it) }
         return root
     }
 
@@ -316,6 +320,14 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
         AsyncTaskCargarDatosReconteo(this.activity as MainActivity?, this).execute()
     }
 
+    fun refrescarError(error: Boolean) {
+        if(error) {
+            imgError!!.visibility = View.VISIBLE
+        }else{
+            imgError!!.visibility = View.GONE
+        }
+    }
+
     class AsyncTaskCargarDatosReconteo(private var activity: MainActivity?, var reconteoLocalFragmet: ReconteoLocalFragment?) : AsyncTask<String, String, Int>() {
 
         var sesionAplicacion: SesionAplicacion? = null
@@ -363,7 +375,7 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
                     cantidad = reconteoLocalFragmet?.reconteoLocalViewModel?.cantidadAnterior?.value!!.toInt(),
                     estado = Constantes.ESTADO_PENDIENTE,
                     cinId = reconteoLocal?.get(0).cinId, binId = sesionAplicacion?.binId,
-                    numConteo =  sesionAplicacion?.numConteo, usuId = sesionAplicacion?.usuId, fecha = System.currentTimeMillis())
+                    numConteo =  sesionAplicacion?.numConteo, usuId = sesionAplicacion?.usuId, fecha = System.currentTimeMillis(), pocId = 0, barraAnterior = "")
                 conteoDao?.insertarConteo(conteo)
             }else  if(!reconteoLocalCodigoInterno?.isEmpty()) {
                 reconteoLocalCodigoInterno?.get(0).estado= Constantes.ESTADO_PENDIENTE
@@ -374,7 +386,7 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
                     cantidad = reconteoLocalFragmet?.reconteoLocalViewModel?.cantidadAnterior?.value!!.toInt(),
                     estado = Constantes.ESTADO_PENDIENTE,
                     cinId = reconteoLocalCodigoInterno?.get(0).cinId, binId = sesionAplicacion?.binId,
-                    numConteo =  sesionAplicacion?.numConteo, usuId = sesionAplicacion?.usuId, fecha = System.currentTimeMillis() )
+                    numConteo =  sesionAplicacion?.numConteo, usuId = sesionAplicacion?.usuId, fecha = System.currentTimeMillis(), pocId = 0, barraAnterior = "")
                 conteoDao?.insertarConteo(conteo)
 
             }

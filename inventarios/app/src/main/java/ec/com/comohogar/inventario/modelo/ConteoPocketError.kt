@@ -21,5 +21,7 @@ data class ConteoPocketError(
     @SerializedName("pocEstadoSync")
     val pocEstadoSync: Int,
     @SerializedName("pocObservacion")
-    var pocObservacion: String
+    var pocObservacion: String,
+    @SerializedName("corregido")
+    var corregido: String
 )

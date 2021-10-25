@@ -26,8 +26,14 @@ interface ConteoDao {
     @Query("SELECT * FROM Conteo WHERE estado = 'PEN'")
     fun getConteoPendiente(): List<Conteo>
 
+    @Query("SELECT * FROM Conteo WHERE estado = 'PCO'")
+    fun getConteoPendienteCorreccion(): List<Conteo>
+
     @Query("SELECT count(*) FROM Conteo")
     fun count(): Int
+
+    @Query("SELECT * FROM Conteo WHERE estado = 'PEN' or estado = 'PCO'")
+    fun getConteoPendienteTodos(): List<Conteo>
 
     @Query("SELECT count(*) FROM Conteo WHERE estado = 'PEN'")
     fun countPendiente(): Int
@@ -35,12 +41,12 @@ interface ConteoDao {
     @Query("SELECT count(*) FROM Conteo WHERE estado = 'ENV'")
     fun countEnviado(): Int
 
-    @Query("SELECT * FROM Conteo WHERE estado = 'PEN' and barra = :barra")
+    @Query("SELECT * FROM Conteo WHERE (estado = 'PEN' or estado = 'PCO') and barra = :barra")
     fun getConteoPendienteByBarra(barra: String?): List<Conteo>
 
-    @Query("SELECT * FROM Conteo WHERE estado = 'PEN' and zona = :zona")
+    @Query("SELECT * FROM Conteo WHERE (estado = 'PEN' or estado = 'PCO') and zona = :zona")
     fun getConteoPendienteByZona(zona: String?): List<Conteo>
 
-    @Query("SELECT * FROM Conteo WHERE estado = 'PEN' and barra = :barra and zona = :zona")
+    @Query("SELECT * FROM Conteo WHERE (estado = 'PEN' or estado = 'PCO') and barra = :barra and zona = :zona")
     fun getConteoPendienteByBarraAndZona(barra: String?, zona: String?): List<Conteo>
 }

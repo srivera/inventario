@@ -257,6 +257,41 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/layoutStock"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="6dp"
+                        android:layout_marginBottom="6dp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.3"
+                            android:fontFamily="sans-serif"
+                            android:text="@string/etiqueta_stock"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textStock"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.7"
+                            android:background="@drawable/rounded_corner"
+                            android:fontFamily="sans-serif"
+                            android:singleLine="true"
+                            android:text="@={reconteoBodegaViewModel.stock}"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:layout_gravity="center|center_vertical"
@@ -407,6 +442,12 @@
                             android:textSize="10sp"
                             android:textStyle="bold" />
 
+                        <ImageView
+                            android:id="@+id/imgError"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/warning"
+                            android:visibility="gone"/>
 
                     </LinearLayout>
 

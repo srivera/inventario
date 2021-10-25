@@ -20,4 +20,9 @@ class ReconteoBodega (
     var estado: String,
     var cantidad: Int,
     var binId: Long,
-    var fecha: Long?)
+    var fecha: Long?,
+    var pendiente: String,
+    val stock: Int,
+    var noPistoleado: String,
+    val stockActual: Int
+    )

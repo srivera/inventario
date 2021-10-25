@@ -23,6 +23,7 @@ class Constantes {
         const val INVENTARIO_LOCAL = 1
 
         //Estados de envío
+        const val ESTADO_PENDIENTE_CORRECCION = "PCO"
         const val ESTADO_PENDIENTE = "PEN"
         const val ESTADO_ENVIADO = "ENV"
         const val ESTADO_ERROR = "ERR"

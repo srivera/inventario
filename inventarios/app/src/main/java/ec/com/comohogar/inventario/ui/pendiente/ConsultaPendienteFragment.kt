@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.ListView
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
@@ -39,6 +40,8 @@ class ConsultaPendienteFragment : Fragment() {
     private var reconteoLocalDao: ReconteoLocalDao? = null
     private var sesionAplicacion: SesionAplicacion? = null
 
+    private var imgError: ImageView? = null
+
     var dialog: AlertDialog? = null
 
     override fun onCreateView(
@@ -66,6 +69,7 @@ class ConsultaPendienteFragment : Fragment() {
         editZona = root.findViewById(R.id.editZona)
         buttonBuscar = root.findViewById(R.id.buttonGuardar)
         listview = root.findViewById(R.id.listview)
+        imgError = root.findViewById(R.id.imgError)
 
         consultaPendienteViewModel.inventario.value = getString(R.string.etiqueta_inventario) + sesionAplicacion?.binId.toString()
         consultaPendienteViewModel.conteo.value = getString(R.string.etiqueta_conteo) + sesionAplicacion?.cinId.toString()
@@ -84,6 +88,7 @@ class ConsultaPendienteFragment : Fragment() {
             }
         }
 
+        (activity as MainActivity)?.errorPendiente?.let { refrescarError(it) }
         cargarDatosPantalla()
         return root
     }
@@ -96,6 +101,14 @@ class ConsultaPendienteFragment : Fragment() {
         } else if (editZona!!.hasFocus()) {
             editZona!!.setText(codigoLeido)
             cargarDatosPantalla()
+        }
+    }
+
+    fun refrescarError(error: Boolean) {
+        if(error) {
+            imgError!!.visibility = View.VISIBLE
+        }else{
+            imgError!!.visibility = View.GONE
         }
     }
 
@@ -123,7 +136,7 @@ class ConsultaPendienteFragment : Fragment() {
                     var conteos: List<Conteo>? = null
                     conteos  = mutableListOf()
                     if(barra.isNullOrBlank() && zona.isNullOrBlank() ) {
-                        conteos = conteoDao?.getConteoPendiente()
+                        conteos = conteoDao?.getConteoPendienteTodos()
                     }else if(!barra.isNullOrBlank()){
                         conteos = conteoDao?.getConteoPendienteByBarra(barra)
                     }else if(!zona.isNullOrBlank()){
@@ -156,7 +169,7 @@ class ConsultaPendienteFragment : Fragment() {
                     var conteos: List<Conteo>? = null
                     conteos  = mutableListOf()
                     if(barra.isNullOrBlank() && zona.isNullOrBlank() ) {
-                        conteos = conteoDao?.getConteoPendiente()
+                        conteos = conteoDao?.getConteoPendienteTodos()
                     }else if(!barra.isNullOrBlank()){
                         conteos = conteoDao?.getConteoPendienteByBarra(barra)
                     }else if(!zona.isNullOrBlank()){
@@ -174,7 +187,7 @@ class ConsultaPendienteFragment : Fragment() {
                 var conteos: List<Conteo>? = null
                 conteos  = mutableListOf()
                 if(barra.isNullOrBlank() && zona.isNullOrBlank() ) {
-                    conteos = conteoDao?.getConteoPendiente()
+                    conteos = conteoDao?.getConteoPendienteTodos()
                 }else if(!barra.isNullOrBlank()){
                     conteos = conteoDao?.getConteoPendienteByBarra(barra)
                 }else if(!zona.isNullOrBlank()){

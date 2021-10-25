@@ -41,4 +41,6 @@ data class Empleado(
         @SerializedName("lugId")
         val lugId: Int,
         @SerializedName("usuUtilizaPocket")
-        val usuUtilizaPocket: Int)
+        val usuUtilizaPocket: Int,
+        @SerializedName("esAuditor")
+        var esAuditor: kotlin.String)
