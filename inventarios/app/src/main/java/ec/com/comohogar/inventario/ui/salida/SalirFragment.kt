@@ -100,7 +100,7 @@ class SalirFragment : Fragment() {
                 if(sesionAplicacion?.tipo.equals(Constantes.ES_RECONTEO)) {
                     cerrarReconteo()
                 }else if(sesionAplicacion?.tipo.equals(Constantes.ES_CONTEO)) {
-                    AsyncTaskEliminarDatos(this@SalirFragment.activity as MainActivity?).execute()
+                    cerrarReconteo()
                 }
             }).setNegativeButton("No", DialogInterface.OnClickListener { dialog, id ->
                 dialog.cancel()
