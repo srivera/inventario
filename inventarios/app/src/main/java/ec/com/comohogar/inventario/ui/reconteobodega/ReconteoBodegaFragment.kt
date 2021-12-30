@@ -292,9 +292,11 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
             var reconteoBodega: ReconteoBodega
             reconteoBodega =
                 sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indice.value!!)!!
-            if (!reconteoBodegaViewModel.barra.value.equals(reconteoBodega.barra) && !reconteoBodegaViewModel.barra.value.equals(reconteoBodega.codigoItem) ) {
-                editCodigoBarra?.error = getString(R.string.codigo_no_corresponde)
-                guardar = false
+            if (!reconteoBodegaViewModel.barra.value.equals(reconteoBodega.barra)) {
+                if(!reconteoBodegaViewModel.barra.value.equals(reconteoBodega.codigoItem) ) {
+                    editCodigoBarra?.error = getString(R.string.codigo_no_corresponde)
+                    guardar = false
+                }
             }else if(!reconteoBodegaViewModel.barra.value.toString().contains("-")){
                 if(!ValidacionBarra.validarFormatoBarra(reconteoBodegaViewModel.barra.value.toString()) || !ValidacionBarra.validarEAN13Barra(reconteoBodegaViewModel.barra.value.toString()) ) {
                     editCodigoBarra?.error = getString(R.string.formato_incorrecto)
