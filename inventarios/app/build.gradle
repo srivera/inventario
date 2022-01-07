@@ -18,8 +18,8 @@ android {
         applicationId "ec.com.comohogar.inventario"
         minSdkVersion 24
         targetSdkVersion 29
-        versionCode 5
-        versionName "1.4"
+        versionCode 8
+        versionName "1.7"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
