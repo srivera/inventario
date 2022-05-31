@@ -75,7 +75,7 @@ class ConsultaUsuariosFragment : Fragment() {
 
 
     fun recuperarReconteo() {
-        dialog = ProgressDialog.setProgressDialog(this!!.activity!!, getString(R.string.recuperar_items))
+        dialog = ProgressDialog.setProgressDialog(this!!.requireActivity(), getString(R.string.recuperar_items))
         dialog?.show()
         AsyncTaskConsultarHistorico(this.activity as MainActivity?, this).execute()
     }

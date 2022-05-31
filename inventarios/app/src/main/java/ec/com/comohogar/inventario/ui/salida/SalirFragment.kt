@@ -47,6 +47,8 @@ class SalirFragment : Fragment() {
     private var textPendienteValor: TextView? = null
 
     private var imgError: ImageView? = null
+    private var imgConexion: ImageView? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -87,13 +89,28 @@ class SalirFragment : Fragment() {
         cargarDatosPantalla()
 
         imgError = root.findViewById(R.id.imgError)
+        imgConexion = root.findViewById(R.id.imgConexion)
+
         (activity as MainActivity)?.errorPendiente?.let { refrescarError(it) }
+
+        refrescarConexion()
 
         return root
     }
 
+    fun refrescarConexion() {
+        val inventarioPreferences: SharedPreferences =
+            requireActivity().getSharedPreferences(Constantes.PREF_NAME, 0)
+        val conexion = inventarioPreferences.getString(Constantes.URL_CONEXION, "");
+        if (conexion.equals(ApiClient.BASE_URL_WIFI)) {
+            imgConexion?.setImageResource(R.drawable.wifi)
+        } else {
+            imgConexion?.setImageResource(R.drawable.internet)
+        }
+    }
+
     fun salir() {
-        val dialogBuilder = AlertDialog.Builder(activity!!)
+        val dialogBuilder = AlertDialog.Builder(requireActivity())
         dialogBuilder.setMessage(getString(R.string.salir_inventario))
             .setCancelable(false)
             .setPositiveButton("Si", DialogInterface.OnClickListener { dialog, id ->
@@ -187,9 +204,9 @@ class SalirFragment : Fragment() {
 
         override fun onPostExecute(result: Int?) {
             super.onPostExecute(result)
-            salirFragment?.salirViewModel?.total.value = total.toString()
-            salirFragment?.salirViewModel?.totalEnviado.value = totalEnviado.toString()
-            salirFragment?.salirViewModel?.totalPendiente.value = totalPendiente.toString()
+            salirFragment?.salirViewModel?.total?.value = total.toString()
+            salirFragment?.salirViewModel?.totalEnviado?.value = totalEnviado.toString()
+            salirFragment?.salirViewModel?.totalPendiente?.value = totalPendiente.toString()
             if(totalPendiente?.compareTo(0)!! > 0){
                 salirFragment?.buttonSalir?.setEnabled(false)
                 val dialogBuilder = AlertDialog.Builder(activity!!)

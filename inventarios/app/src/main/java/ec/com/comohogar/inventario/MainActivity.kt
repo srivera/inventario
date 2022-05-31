@@ -10,38 +10,40 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph
+import androidx.navigation.NavInflater
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
-import androidx.appcompat.widget.Toolbar
-import android.view.Menu
-import android.widget.TextView
-import androidx.navigation.NavGraph
-import androidx.navigation.fragment.NavHostFragment
 import com.google.gson.Gson
 import ec.com.comohogar.inventario.modelo.*
 import ec.com.comohogar.inventario.persistencia.InventarioDatabase
 import ec.com.comohogar.inventario.scanner.ScanActivity
+import ec.com.comohogar.inventario.ui.config.ConfigActivity
+import ec.com.comohogar.inventario.ui.consultaconteo.ConsultaConteoUsuarioFragment
 import ec.com.comohogar.inventario.ui.conteo.ConteoFragment
+import ec.com.comohogar.inventario.ui.correccion.CorreccionFragment
 import ec.com.comohogar.inventario.ui.enviado.ConsultaEnviadoFragment
+import ec.com.comohogar.inventario.ui.error.ConsultaErrorFragment
 import ec.com.comohogar.inventario.ui.pendiente.ConsultaPendienteFragment
-import ec.com.comohogar.inventario.util.Constantes
 import ec.com.comohogar.inventario.ui.reconteobodega.ReconteoBodegaFragment
 import ec.com.comohogar.inventario.ui.reconteolocal.ReconteoLocalFragment
+import ec.com.comohogar.inventario.ui.salida.SalirFragment
+import ec.com.comohogar.inventario.util.Constantes
 import ec.com.comohogar.inventario.webservice.ApiClient
 import retrofit2.Call
 import java.util.*
-import android.view.MenuItem
-import androidx.navigation.NavController
-import androidx.navigation.NavInflater
-import ec.com.comohogar.inventario.ui.config.ConfigActivity
-import ec.com.comohogar.inventario.ui.consultaconteo.ConsultaConteoUsuarioFragment
-import ec.com.comohogar.inventario.ui.correccion.CorreccionFragment
-import ec.com.comohogar.inventario.ui.error.ConsultaErrorFragment
 
 class MainActivity : ScanActivity() {
 
@@ -145,6 +147,30 @@ class MainActivity : ScanActivity() {
         prefsEditor.commit()
 
 
+    }
+
+    override fun onPostResume() {
+        super.onPostResume()
+        val navHostFragment = supportFragmentManager.fragments.first() as? NavHostFragment
+        if (navHostFragment != null) {
+            val childFragments = navHostFragment.childFragmentManager.fragments
+            val fragment = childFragments.get(0)
+            if (fragment is ConteoFragment) {
+                fragment.refrescarConexion()
+            } else if (fragment is ReconteoBodegaFragment) {
+                fragment.refrescarConexion()
+            } else if (fragment is ConsultaEnviadoFragment) {
+                fragment.refrescarConexion()
+            } else if (fragment is ConsultaPendienteFragment) {
+                fragment.refrescarConexion()
+            } else if (fragment is SalirFragment) {
+                fragment.refrescarConexion()
+            } else if (fragment is ConsultaErrorFragment) {
+                fragment.refrescarConexion()
+            } else if (fragment is CorreccionFragment) {
+                fragment.refrescarConexion()
+            }
+        }
     }
 
     private fun inicializarMenuFragment(
@@ -301,13 +327,15 @@ class MainActivity : ScanActivity() {
         val procesando = inventarioPreferences.getString(Constantes.ENVIANDO_CONTEOS, "N");
 
 
-        Log.d("procesando afuera ANTES", procesando)
+        if (procesando != null) {
+            Log.d("procesando afuera ANTES", procesando)
+        }
         if (procesando.equals("N")) {
             val prefsEditor = inventarioPreferences.edit()
             prefsEditor.putString(Constantes.ENVIANDO_CONTEOS, "S")
             prefsEditor.commit()
             val procesando = inventarioPreferences.getString(Constantes.ENVIANDO_CONTEOS, "N");
-            Log.d("procesando adentro  INGRESOOOOOO", procesando)
+            //Log.d("procesando adentro  INGRESOOOOOO", procesando)
             //   Thread.sleep(60000)
             for (conteo in conteos!!) {
                 val call: Call<Long> = ApiClient.getClient.ingresarConteo(
@@ -376,13 +404,13 @@ class MainActivity : ScanActivity() {
         val procesando = inventarioPreferences.getString(Constantes.ENVIANDO_CONTEOS, "N");
 
 
-        Log.d("procesando afuera bodega", procesando)
+       // Log.d("procesando afuera bodega", procesando)
         if (procesando.equals("N")){
             val prefsEditor = inventarioPreferences.edit()
             prefsEditor.putString(Constantes.ENVIANDO_CONTEOS, "S")
             prefsEditor.commit()
             val procesando = inventarioPreferences.getString(Constantes.ENVIANDO_CONTEOS, "N");
-            Log.d("procesando adentro bodega", procesando)
+          //  Log.d("procesando adentro bodega", procesando)
             for (reconteo in reconteos!!) {
                 val call: Call<Long> = ApiClient.getClient.insertarConteoUsuarioRuta(
                     reconteo.usuIdAsignado.toLong(), reconteo.cinId,

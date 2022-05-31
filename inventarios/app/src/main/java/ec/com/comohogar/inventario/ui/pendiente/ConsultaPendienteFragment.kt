@@ -1,6 +1,7 @@
 package ec.com.comohogar.inventario.ui.pendiente
 
 import android.content.DialogInterface
+import android.content.SharedPreferences
 import android.os.AsyncTask
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -26,6 +27,7 @@ import ec.com.comohogar.inventario.persistencia.entities.Conteo
 import ec.com.comohogar.inventario.persistencia.entities.ReconteoBodega
 import ec.com.comohogar.inventario.util.Constantes
 import ec.com.comohogar.inventario.util.ProgressDialog
+import ec.com.comohogar.inventario.webservice.ApiClient
 
 class ConsultaPendienteFragment : Fragment() {
 
@@ -41,6 +43,7 @@ class ConsultaPendienteFragment : Fragment() {
     private var sesionAplicacion: SesionAplicacion? = null
 
     private var imgError: ImageView? = null
+    private var imgConexion: ImageView? = null
 
     var dialog: AlertDialog? = null
 
@@ -70,6 +73,7 @@ class ConsultaPendienteFragment : Fragment() {
         buttonBuscar = root.findViewById(R.id.buttonGuardar)
         listview = root.findViewById(R.id.listview)
         imgError = root.findViewById(R.id.imgError)
+        imgConexion = root.findViewById(R.id.imgConexion)
 
         consultaPendienteViewModel.inventario.value = getString(R.string.etiqueta_inventario) + sesionAplicacion?.binId.toString()
         consultaPendienteViewModel.conteo.value = getString(R.string.etiqueta_conteo) + sesionAplicacion?.cinId.toString()
@@ -88,6 +92,8 @@ class ConsultaPendienteFragment : Fragment() {
             }
         }
 
+        refrescarConexion()
+
         (activity as MainActivity)?.errorPendiente?.let { refrescarError(it) }
         cargarDatosPantalla()
         return root
@@ -104,6 +110,17 @@ class ConsultaPendienteFragment : Fragment() {
         }
     }
 
+    fun refrescarConexion() {
+        val inventarioPreferences: SharedPreferences =
+            requireActivity().getSharedPreferences(Constantes.PREF_NAME, 0)
+        val conexion = inventarioPreferences.getString(Constantes.URL_CONEXION, "");
+        if (conexion.equals(ApiClient.BASE_URL_WIFI)) {
+            imgConexion?.setImageResource(R.drawable.wifi)
+        } else {
+            imgConexion?.setImageResource(R.drawable.internet)
+        }
+    }
+
     fun refrescarError(error: Boolean) {
         if(error) {
             imgError!!.visibility = View.VISIBLE
@@ -113,7 +130,7 @@ class ConsultaPendienteFragment : Fragment() {
     }
 
     fun cargarDatosPantalla() {
-        dialog = ProgressDialog.setProgressDialog(this!!.activity!!, getString(R.string.recuperar_items))
+        dialog = ProgressDialog.setProgressDialog(this!!.requireActivity(), getString(R.string.recuperar_items))
         dialog?.show()
         AsyncTaskCargarPendientes(this.activity as MainActivity?, this, editBarra?.text.toString(), editZona?.text.toString()).execute()
     }

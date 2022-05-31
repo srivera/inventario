@@ -1,5 +1,6 @@
 package ec.com.comohogar.inventario.ui.reconteolocal
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
@@ -128,7 +129,7 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
                     editCantidad?.requestFocus()
                 }
             }else{
-                val dialogBuilder = AlertDialog.Builder(activity!!)
+                val dialogBuilder = AlertDialog.Builder(requireActivity())
                 dialogBuilder.setMessage(getString(R.string.item_no_conteo))
                     .setCancelable(false)
                     .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, id ->
@@ -175,9 +176,9 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
     private fun verificarExisteCodigo(codigoLeido: String): Boolean {
         var existe = false
         var reconteoLocal = sesionAplicacion?.listaReconteoLocal!!.filter { it.barra.equals(codigoLeido) }
-        if (reconteoLocal?.isEmpty()) {
+        if (reconteoLocal.isEmpty()) {
             reconteoLocal = sesionAplicacion?.listaReconteoLocal!!.filter { it.codigoItem.equals(codigoLeido) }
-            if (!reconteoLocal?.isEmpty()) {
+            if (!reconteoLocal?.isEmpty()!!) {
                 existe = true
             }
         } else {
@@ -204,8 +205,8 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
         }else{
             var guardar: Boolean? = validarCampos()
             if(guardar!!) {
-                reconteoLocalViewModel?.barraAnterior.value = reconteoLocalViewModel?.barra.value.toString()
-                reconteoLocalViewModel?.cantidadAnterior.value = reconteoLocalViewModel?.cantidad.value.toString()
+                reconteoLocalViewModel?.barraAnterior?.value = reconteoLocalViewModel?.barra?.value.toString()
+                reconteoLocalViewModel?.cantidadAnterior?.value = reconteoLocalViewModel?.cantidad?.value.toString()
                 reconteoLocalViewModel.barra.value = ""
                 reconteoLocalViewModel.cantidad.value = ""
                 editBarra?.requestFocus()
@@ -247,10 +248,10 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
     }
 
     private fun recuperarReconteo() {
-        dialog = ProgressDialog.setProgressDialog(this!!.activity!!, getString(R.string.recuperar_items))
+        dialog = ProgressDialog.setProgressDialog(this!!.requireActivity(), getString(R.string.recuperar_items))
         dialog?.show()
 
-        val inventarioPreferences: SharedPreferences = activity!!.getSharedPreferences(Constantes.PREF_NAME, 0)
+        val inventarioPreferences: SharedPreferences = requireActivity().getSharedPreferences(Constantes.PREF_NAME, 0)
         val gson =  Gson()
         val json = inventarioPreferences.getString(Constantes.ASIGNACION_USUARIO, "");
         val asignacionUsuario = gson.fromJson(json, AsignacionUsuario::class.java)
@@ -295,6 +296,7 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
                 }
             }
 
+            @SuppressLint("UseRequireInsteadOfGet")
             override fun onFailure(call: Call<List<ReconteoLocal>>, t: Throwable) {
                 Log.i("error", "error")
                 dialog?.cancel()
@@ -366,26 +368,26 @@ class ReconteoLocalFragment : Fragment(), View.OnKeyListener {
             val reconteoLocal = sesionAplicacion?.listaReconteoLocal!!.filter { it.barra.equals(reconteoLocalFragmet?.reconteoLocalViewModel?.barraAnterior?.value!!) }
             val reconteoLocalCodigoInterno = sesionAplicacion?.listaReconteoLocal!!.filter { it.codigoItem.equals(reconteoLocalFragmet?.reconteoLocalViewModel?.barraAnterior?.value!!) }
 
-            if(!reconteoLocal?.isEmpty()) {
-                reconteoLocal?.get(0).estado= Constantes.ESTADO_PENDIENTE
-                reconteoLocalDao?.actualizarConteo(reconteoLocal?.get(0))
+            if(!reconteoLocal?.isEmpty()!!) {
+                reconteoLocal?.get(0)?.estado= Constantes.ESTADO_PENDIENTE
+                reconteoLocalDao?.actualizarConteo(reconteoLocal?.get(0)!!)
 
                 val conteo =  Conteo(barra = reconteoLocalFragmet?.reconteoLocalViewModel?.barraAnterior?.value!!,
                     zona = "-",
                     cantidad = reconteoLocalFragmet?.reconteoLocalViewModel?.cantidadAnterior?.value!!.toInt(),
                     estado = Constantes.ESTADO_PENDIENTE,
-                    cinId = reconteoLocal?.get(0).cinId, binId = sesionAplicacion?.binId,
+                    cinId = reconteoLocal?.get(0)?.cinId, binId = sesionAplicacion?.binId,
                     numConteo =  sesionAplicacion?.numConteo, usuId = sesionAplicacion?.usuId, fecha = System.currentTimeMillis(), pocId = 0, barraAnterior = "")
                 conteoDao?.insertarConteo(conteo)
-            }else  if(!reconteoLocalCodigoInterno?.isEmpty()) {
-                reconteoLocalCodigoInterno?.get(0).estado= Constantes.ESTADO_PENDIENTE
-                reconteoLocalDao?.actualizarConteo(reconteoLocalCodigoInterno?.get(0))
+            }else  if(!reconteoLocalCodigoInterno?.isEmpty()!!) {
+                reconteoLocalCodigoInterno?.get(0)?.estado= Constantes.ESTADO_PENDIENTE
+                reconteoLocalDao?.actualizarConteo(reconteoLocalCodigoInterno?.get(0)!!)
 
                 val conteo =  Conteo(barra = reconteoLocalFragmet?.reconteoLocalViewModel?.barraAnterior?.value!!,
                     zona = "-",
                     cantidad = reconteoLocalFragmet?.reconteoLocalViewModel?.cantidadAnterior?.value!!.toInt(),
                     estado = Constantes.ESTADO_PENDIENTE,
-                    cinId = reconteoLocalCodigoInterno?.get(0).cinId, binId = sesionAplicacion?.binId,
+                    cinId = reconteoLocalCodigoInterno?.get(0)?.cinId, binId = sesionAplicacion?.binId,
                     numConteo =  sesionAplicacion?.numConteo, usuId = sesionAplicacion?.usuId, fecha = System.currentTimeMillis(), pocId = 0, barraAnterior = "")
                 conteoDao?.insertarConteo(conteo)
 

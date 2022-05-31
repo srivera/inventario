@@ -280,6 +280,12 @@
                             android:layout_height="wrap_content"
                             android:src="@drawable/warning"
                             android:visibility="gone"/>
+
+                        <ImageView
+                            android:id="@+id/imgConexion"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/wifi"/>
                     </LinearLayout>
 
 

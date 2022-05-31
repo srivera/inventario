@@ -14,19 +14,21 @@ import androidx.lifecycle.ViewModelProviders
 import ec.com.comohogar.inventario.R
 import ec.com.comohogar.inventario.databinding.FragmentConteoBinding
 import android.content.Context
+import android.content.SharedPreferences
 import android.view.KeyEvent
 import ec.com.comohogar.inventario.persistencia.InventarioDatabase
 import ec.com.comohogar.inventario.persistencia.dao.ConteoDao
 import ec.com.comohogar.inventario.persistencia.entities.Conteo
 import android.os.AsyncTask
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import ec.com.comohogar.inventario.MainActivity
 import ec.com.comohogar.inventario.SesionAplicacion
 import ec.com.comohogar.inventario.util.Constantes
 import ec.com.comohogar.inventario.validacion.ValidacionBarra
 import ec.com.comohogar.inventario.validacion.ValidacionCantidad
 import ec.com.comohogar.inventario.validacion.ValidacionZona
-
+import ec.com.comohogar.inventario.webservice.ApiClient
 
 
 class ConteoFragment : Fragment(), View.OnKeyListener {
@@ -42,6 +44,7 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
     private var textBarraAnterior: TextView? = null
     private var textCantidadAnterior: TextView? = null
     private var imgError: ImageView? = null
+    private var imgConexion: ImageView? = null
 
     private var buttonGuardar: Button? = null
 
@@ -72,6 +75,7 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
         textBarraAnterior = root.findViewById(R.id.textBarraAnterior)
         textCantidadAnterior = root.findViewById(R.id.textCantidadAnterior)
         imgError = root.findViewById(R.id.imgError)
+        imgConexion = root.findViewById(R.id.imgConexion)
 
         buttonGuardar = root.findViewById(R.id.buttonGuardar)
 
@@ -94,7 +98,9 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
         }
         editZona?.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus) {
-                conteoViewModel.zona.value = ""
+                if(conteoViewModel.zona.value?.length == 4){
+                    conteoViewModel.zona.value = ""
+                }
                 val imm = activity?.applicationContext?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(view.windowToken, 0)
             }
@@ -113,6 +119,8 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
         if(!conteoViewModel.zona.value.isNullOrBlank() ){
             editBarra?.requestFocus()
         }
+
+        refrescarConexion()
 
         (activity as MainActivity)?.errorPendiente?.let { refrescarError(it) }
         return root
@@ -195,6 +203,17 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
     fun refrescarEstado(estado: String) {
     }
 
+    fun refrescarConexion() {
+        val inventarioPreferences: SharedPreferences =
+            requireActivity().getSharedPreferences(Constantes.PREF_NAME, 0)
+        val conexion = inventarioPreferences.getString(Constantes.URL_CONEXION, "");
+        if (conexion.equals(ApiClient.BASE_URL_WIFI)) {
+            imgConexion?.setImageResource(R.drawable.wifi)
+        } else {
+            imgConexion?.setImageResource(R.drawable.internet)
+        }
+    }
+
     fun refrescarError(error: Boolean) {
         if(error) {
             imgError!!.visibility = View.VISIBLE
@@ -222,9 +241,9 @@ class ConteoFragment : Fragment(), View.OnKeyListener {
                 sesionAplicacion?.ultimaBarra = conteoViewModel.barra.value
                 sesionAplicacion?.ultimaCantidad = conteoViewModel.cantidad.value
                 sesionAplicacion?.zonaActual = conteoViewModel.zona.value
-                conteoViewModel?.barraAnterior.value = conteoViewModel?.barra.value.toString()
-                conteoViewModel?.cantidadAnterior.value =
-                    conteoViewModel?.cantidad.value.toString()
+                conteoViewModel?.barraAnterior?.value = conteoViewModel?.barra?.value.toString()
+                conteoViewModel?.cantidadAnterior?.value =
+                    conteoViewModel?.cantidad?.value.toString()
                 conteoViewModel.barra.value = ""
                 conteoViewModel.cantidad.value = ""
                 editBarra?.requestFocus()

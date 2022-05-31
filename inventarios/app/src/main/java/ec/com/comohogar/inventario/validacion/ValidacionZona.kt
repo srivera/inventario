@@ -13,7 +13,7 @@ class ValidacionZona {
                 return zona.matches(regex) || zona.matches(regexDos)
             }else{
                 val regex = "\\d{4}".toRegex()
-                return zona.matches(regex)
+                return zona.matches(regex) && zona.length == 4
             }
         }
     }

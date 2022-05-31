@@ -1,6 +1,8 @@
 package ec.com.comohogar.inventario.ui.enviado
 
+import android.annotation.SuppressLint
 import android.content.DialogInterface
+import android.content.SharedPreferences
 import android.os.AsyncTask
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -21,6 +23,7 @@ import ec.com.comohogar.inventario.adapter.ConteoPendienteAdapter
 import ec.com.comohogar.inventario.databinding.FragmentEnviadoBinding
 import ec.com.comohogar.inventario.modelo.ConteoPendiente
 import ec.com.comohogar.inventario.modelo.ConteoPocketHistorico
+import ec.com.comohogar.inventario.util.Constantes
 import ec.com.comohogar.inventario.util.ProgressDialog
 import ec.com.comohogar.inventario.webservice.ApiClient
 import retrofit2.Call
@@ -35,6 +38,7 @@ class ConsultaEnviadoFragment : Fragment() {
     var listview: ListView? = null
 
     private var imgError: ImageView? = null
+    private var imgConexion: ImageView? = null
 
     private var sesionAplicacion: SesionAplicacion? = null
 
@@ -63,6 +67,8 @@ class ConsultaEnviadoFragment : Fragment() {
         buttonBuscar = root.findViewById(R.id.buttonGuardar)
         listview = root.findViewById(R.id.listview)
         imgError = root.findViewById(R.id.imgError)
+        imgConexion = root.findViewById(R.id.imgConexion)
+
 
         editZona?.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus) {
@@ -83,6 +89,8 @@ class ConsultaEnviadoFragment : Fragment() {
 
         recuperarReconteo()
 
+        refrescarConexion()
+
         (activity as MainActivity)?.errorPendiente?.let { refrescarError(it) }
         return root
     }
@@ -98,10 +106,22 @@ class ConsultaEnviadoFragment : Fragment() {
         }
     }
 
+    @SuppressLint("UseRequireInsteadOfGet")
     fun recuperarReconteo() {
-        dialog = ProgressDialog.setProgressDialog(this!!.activity!!, getString(R.string.recuperar_items))
+        dialog = ProgressDialog.setProgressDialog(this!!.requireActivity(), getString(R.string.recuperar_items))
         dialog?.show()
         AsyncTaskConsultarHistorico(this.activity as MainActivity?, this, editBarra?.text.toString(), editZona?.text.toString()).execute()
+    }
+
+    fun refrescarConexion() {
+        val inventarioPreferences: SharedPreferences =
+            requireActivity().getSharedPreferences(Constantes.PREF_NAME, 0)
+        val conexion = inventarioPreferences.getString(Constantes.URL_CONEXION, "");
+        if (conexion.equals(ApiClient.BASE_URL_WIFI)) {
+            imgConexion?.setImageResource(R.drawable.wifi)
+        } else {
+            imgConexion?.setImageResource(R.drawable.internet)
+        }
     }
 
     fun refrescarError(error: Boolean) {

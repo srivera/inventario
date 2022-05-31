@@ -1,5 +1,6 @@
 package ec.com.comohogar.inventario.ui.reconteobodega
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -30,7 +31,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import ec.com.comohogar.inventario.persistencia.entities.ReconteoBodega
-import ec.com.comohogar.inventario.persistencia.entities.ReconteoLocal
 import ec.com.comohogar.inventario.util.ProgressDialog
 import ec.com.comohogar.inventario.validacion.ValidacionBarra
 import ec.com.comohogar.inventario.validacion.ValidacionCantidad
@@ -64,6 +64,7 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
     private var sesionAplicacion: SesionAplicacion? = null
 
     private var imgError: ImageView? = null
+    private var imgConexion: ImageView? = null
 
     var dialog: AlertDialog? = null
 
@@ -99,6 +100,7 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
         buttonVacio = root.findViewById(R.id.buttonVacio)
         buttonGuardar = root.findViewById(R.id.buttonSiguiente)
         imgError = root.findViewById(R.id.imgError)
+        imgConexion = root.findViewById(R.id.imgConexion)
 
         editCantidad?.setOnKeyListener(this)
         editCantidad?.requestFocus()
@@ -156,6 +158,8 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
             title!!.text = getString(R.string.reconteo_local)
         }
 
+        refrescarConexion()
+
         (activity as MainActivity)?.errorPendiente?.let { refrescarError(it) }
         return root
     }
@@ -172,7 +176,7 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
                 editCantidad?.error = null
 
                 if (codigoLeido.contains(" ") || !ValidacionBarra.validarFormatoBarra(codigoLeido) || !ValidacionBarra.validarEAN13Barra(codigoLeido)) {
-                    val dialogBuilder = AlertDialog.Builder(activity!!)
+                    val dialogBuilder = AlertDialog.Builder(requireActivity())
                     dialogBuilder.setMessage(getString(R.string.formato_incorrecto))
                         .setCancelable(false)
                         .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, id ->
@@ -194,7 +198,7 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
                         guardarReconteoBodega()
                     } else {
                         reconteoBodegaViewModel?.saltoPorScaneo = false
-                        val dialogBuilder = AlertDialog.Builder(activity!!)
+                        val dialogBuilder = AlertDialog.Builder(requireActivity())
                         dialogBuilder.setMessage(getString(R.string.item_escaneado_error))
                             .setCancelable(false)
                             .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, id ->
@@ -206,6 +210,17 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
                     }
                 }
             }
+        }
+    }
+
+    fun refrescarConexion() {
+        val inventarioPreferences: SharedPreferences =
+            requireActivity().getSharedPreferences(Constantes.PREF_NAME, 0)
+        val conexion = inventarioPreferences.getString(Constantes.URL_CONEXION, "");
+        if (conexion.equals(ApiClient.BASE_URL_WIFI)) {
+            imgConexion?.setImageResource(R.drawable.wifi)
+        } else {
+            imgConexion?.setImageResource(R.drawable.internet)
         }
     }
 
@@ -223,7 +238,7 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
 
     fun guardarReconteoBodega() {
         if(!reconteoBodegaViewModel?.saltoPorScaneo!! && !checkBarra?.isChecked!! ){
-            val dialogBuilder = AlertDialog.Builder(activity!!)
+            val dialogBuilder = AlertDialog.Builder(requireActivity())
             dialogBuilder.setMessage(getString(R.string.error_debe_escanear))
                 .setCancelable(false)
                 .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, id ->
@@ -270,7 +285,7 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
             reconteoBodega =
                 sesionAplicacion?.listaReconteoBodega?.get(reconteoBodegaViewModel.indiceAnterior.value!!)!!
             reconteoBodega?.cantidad =
-                reconteoBodegaViewModel?.cantidadAnterior.value!!.toInt()
+                reconteoBodegaViewModel?.cantidadAnterior?.value!!.toInt()
             reconteoBodega?.estado = Constantes.ESTADO_PENDIENTE
             reconteoBodegaDao?.actualizarConteo(reconteoBodega)
         }
@@ -311,10 +326,10 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
 
     private fun recuperarReconteo() {
 
-        dialog = ProgressDialog.setProgressDialog(this!!.activity!!, getString(R.string.recuperar_items))
+        dialog = ProgressDialog.setProgressDialog(this!!.requireActivity(), getString(R.string.recuperar_items))
         dialog?.show()
 
-        val inventarioPreferences: SharedPreferences = activity!!.getSharedPreferences(Constantes.PREF_NAME, 0)
+        val inventarioPreferences: SharedPreferences = requireActivity().getSharedPreferences(Constantes.PREF_NAME, 0)
         val gson =  Gson()
         val json = inventarioPreferences.getString(Constantes.ASIGNACION_USUARIO, "");
         val asignacionUsuario = gson.fromJson(json, AsignacionUsuario::class.java)
@@ -322,6 +337,7 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
         val call: Call<List<ReconteoBodega>> = ApiClient.getClient.consultarRutaUsuario(asignacionUsuario.binId, asignacionUsuario.numeroConteo, asignacionUsuario.usuId)
         call.enqueue(object : Callback<List<ReconteoBodega>> {
 
+            @SuppressLint("UseRequireInsteadOfGet")
             override fun onResponse(call: Call<List<ReconteoBodega>>?, response: Response<List<ReconteoBodega>>?) {
                 Log.i("respuesta",response!!.body()!!.toString())
 
@@ -363,6 +379,7 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
                 }
             }
 
+            @SuppressLint("UseRequireInsteadOfGet")
             override fun onFailure(call: Call<List<ReconteoBodega>>, t: Throwable) {
                 Log.i("error", "error")
                 dialog?.cancel()
@@ -386,10 +403,10 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
 
     private fun recuperarReconteoLocal() {
 
-        dialog = ProgressDialog.setProgressDialog(this!!.activity!!, getString(R.string.recuperar_items))
+        dialog = ProgressDialog.setProgressDialog(this!!.requireActivity(), getString(R.string.recuperar_items))
         dialog?.show()
 
-        val inventarioPreferences: SharedPreferences = activity!!.getSharedPreferences(Constantes.PREF_NAME, 0)
+        val inventarioPreferences: SharedPreferences = requireActivity().getSharedPreferences(Constantes.PREF_NAME, 0)
         val gson =  Gson()
         val json = inventarioPreferences.getString(Constantes.ASIGNACION_USUARIO, "");
         val asignacionUsuario = gson.fromJson(json, AsignacionUsuario::class.java)
@@ -397,6 +414,7 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
         val call: Call<List<ReconteoBodega>> = ApiClient.getClient.consultarReconteoUsuarioV2(asignacionUsuario.binId, asignacionUsuario.numeroConteo, sesionAplicacion?.usuId!!.toLong())
         call.enqueue(object : Callback<List<ReconteoBodega>> {
 
+            @SuppressLint("UseRequireInsteadOfGet")
             override fun onResponse(call: Call<List<ReconteoBodega>>?, response: Response<List<ReconteoBodega>>?) {
 //                Log.i("respuesta",response!!.body()!!.toString())
 
@@ -440,6 +458,7 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
                 }
             }
 
+            @SuppressLint("UseRequireInsteadOfGet")
             override fun onFailure(call: Call<List<ReconteoBodega>>, t: Throwable) {
                 Log.i("error", "error")
                 dialog?.cancel()
@@ -537,7 +556,7 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
             checkBarra?.isEnabled = false
             editCantidad?.isEnabled = false
 
-            val dialogBuilder = AlertDialog.Builder(activity!!)
+            val dialogBuilder = AlertDialog.Builder(requireActivity())
             dialogBuilder.setMessage(getString(R.string.termino_reconteo))
                 .setCancelable(false)
                 .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, id ->
@@ -554,6 +573,7 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
 
         var sesionAplicacion: SesionAplicacion? = null
 
+        @SuppressLint("UseRequireInsteadOfGet")
         override fun doInBackground(vararg p0: String?): Int? {
             sesionAplicacion = reconteoBodegaFragment?.activity?.applicationContext as SesionAplicacion?
             var db: InventarioDatabase? = null
@@ -623,7 +643,7 @@ class ReconteoBodegaFragment : Fragment(), View.OnKeyListener {
                 reconteoBodegaFragment?.checkBarra?.isEnabled = false
                 reconteoBodegaFragment?.editCantidad?.isEnabled = false
 
-                val dialogBuilder = AlertDialog.Builder(reconteoBodegaFragment?.activity!!)
+                val dialogBuilder = AlertDialog.Builder(reconteoBodegaFragment?.requireActivity()!!.parent)
                 dialogBuilder.setMessage(reconteoBodegaFragment?.getString(R.string.termino_reconteo))
                     .setCancelable(false)
                     .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, id ->

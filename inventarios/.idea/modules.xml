@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Inventario.iml" filepath="$PROJECT_DIR$/Inventario.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/inventarios.iml" filepath="$PROJECT_DIR$/.idea/inventarios.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Inventario.iml" filepath="$PROJECT_DIR$/.idea/modules/Inventario.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Inventario.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Inventario.app.iml" />
     </modules>
   </component>
 </project>

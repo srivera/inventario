@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import ec.com.comohogar.inventario.R
 import android.content.Context
+import android.content.SharedPreferences
 import android.view.KeyEvent
 import ec.com.comohogar.inventario.persistencia.InventarioDatabase
 import ec.com.comohogar.inventario.persistencia.dao.ConteoDao
@@ -27,6 +28,7 @@ import ec.com.comohogar.inventario.util.Constantes
 import ec.com.comohogar.inventario.validacion.ValidacionBarra
 import ec.com.comohogar.inventario.validacion.ValidacionCantidad
 import ec.com.comohogar.inventario.validacion.ValidacionZona
+import ec.com.comohogar.inventario.webservice.ApiClient
 
 
 class CorreccionFragment : Fragment(), View.OnKeyListener {
@@ -43,6 +45,7 @@ class CorreccionFragment : Fragment(), View.OnKeyListener {
     private var textZonaAnterior: TextView? = null
 
     private var imgError: ImageView? = null
+    private var imgConexion: ImageView? = null
 
     private var buttonGuardar: Button? = null
 
@@ -69,6 +72,7 @@ class CorreccionFragment : Fragment(), View.OnKeyListener {
         editBarra = root.findViewById(R.id.editBarra)
         editCantidad = root.findViewById(R.id.editCantidad)
         imgError = root.findViewById(R.id.imgError)
+        imgConexion = root.findViewById(R.id.imgConexion)
 
         textBarraAnterior = root.findViewById(R.id.textBarraAnterior)
         textCantidadAnterior = root.findViewById(R.id.textCantidadAnterior)
@@ -120,6 +124,8 @@ class CorreccionFragment : Fragment(), View.OnKeyListener {
 
         editZona?.requestFocus()
 
+        refrescarConexion()
+
         (activity as MainActivity)?.errorPendiente?.let { refrescarError(it) }
         return root
     }
@@ -154,6 +160,17 @@ class CorreccionFragment : Fragment(), View.OnKeyListener {
 
     private fun insertarConteo() {
         AsyncTaskGuardarCorreccion(this.activity as MainActivity?, this).execute()
+    }
+
+    fun refrescarConexion() {
+        val inventarioPreferences: SharedPreferences =
+            requireActivity().getSharedPreferences(Constantes.PREF_NAME, 0)
+        val conexion = inventarioPreferences.getString(Constantes.URL_CONEXION, "");
+        if (conexion.equals(ApiClient.BASE_URL_WIFI)) {
+            imgConexion?.setImageResource(R.drawable.wifi)
+        } else {
+            imgConexion?.setImageResource(R.drawable.internet)
+        }
     }
 
     fun refrescarError(error: Boolean) {

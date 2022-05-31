@@ -89,7 +89,7 @@ class ConsultaConteoUsuarioFragment : Fragment() {
     }
 
     fun recuperarReconteo() {
-        dialog = ProgressDialog.setProgressDialog(this!!.activity!!, getString(R.string.recuperar_items))
+        dialog = ProgressDialog.setProgressDialog(this!!.requireActivity(), getString(R.string.recuperar_items))
         dialog?.show()
         AsyncTaskConsultarHistorico(this.activity as MainActivity?, this).execute()
     }
@@ -116,7 +116,7 @@ class ConsultaConteoUsuarioFragment : Fragment() {
     }
 
     private fun bindData(page: Int) {
-        reconteoItemAdapter = ReconteoItemAdapter(activity!!.applicationContext, p.getCurrentConteos(page, listaItems!!.size, listaItems))
+        reconteoItemAdapter = ReconteoItemAdapter(requireActivity().applicationContext, p.getCurrentConteos(page, listaItems!!.size, listaItems))
         listview?.setAdapter(reconteoItemAdapter)
     }
 

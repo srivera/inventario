@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="app/src/main/res/layout/fragment_consulta_conteo_usuario.xml" value="0.2925" />
+        <entry key="app/src/main/res/layout/fragment_consulta_usuario.xml" value="0.2925" />
+        <entry key="app/src/main/res/layout/fragment_conteo.xml" value="0.7795574951171875" />
+        <entry key="app/src/main/res/layout/fragment_correccion.xml" value="0.2925" />
+        <entry key="app/src/main/res/layout/fragment_enviado.xml" value="0.2925" />
+        <entry key="app/src/main/res/layout/fragment_error.xml" value="0.2925" />
+        <entry key="app/src/main/res/layout/fragment_pendiente.xml" value="0.2925" />
+        <entry key="app/src/main/res/layout/fragment_reconteo_bodega.xml" value="0.2925" />
+        <entry key="app/src/main/res/layout/fragment_salir.xml" value="0.2925" />
+        <entry key="app/src/main/res/layout/item_conteo_error.xml" value="0.2925" />
+        <entry key="app/src/main/res/layout/item_reconteo_asignado.xml" value="0.2925" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
